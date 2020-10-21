@@ -144,22 +144,10 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<Category> insertAll(List<Category> list) {
-		StringBuilder sql = new StringBuilder();
-		sql.append(" INSERT INTO  ");
-		sql.append(" 	TB_CATEGORY(NM_CATEGORY) ");
-		sql.append(" VALUES ");
-		sql.append(" (:name) ");
-
-		Map<String, Object>[] names = new Map[list.size()];
-		for (int i = 0; i < list.size(); i++) {
-			names[i] = new HashMap<String, Object>();
-			names[i].put("name", list.get(i).getName());
-		}
-
-		namedJdbcTemplate.batchUpdate(sql.toString(), names);
-		return null;
+		for(Category category: list)
+			insert(category);
+		return list;
 	}
 
 	private RowMapper<Category> rowMapper = (rs, rownum) -> {
