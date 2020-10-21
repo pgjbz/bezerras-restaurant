@@ -1,7 +1,5 @@
 package com.pgbezerra.bezerras.repository.impl;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +45,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("name", obj.getName());
 		int rowsAffected = 0;
-		
+
 		try {
 			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
 		} catch (DataIntegrityViolationException e) {
@@ -73,11 +71,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 		sql.append(" 	NM_CATEGORY = :name ");
 		sql.append(" WHERE ");
 		sql.append(" 	ID_CATEGORY = :id ");
-		
+
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("name", obj.getName());
 		parameters.put("id", obj.getId());
-		
+
 		try {
 			return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
 		} catch (DataIntegrityViolationException e) {
@@ -93,10 +91,10 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 		sql.append(" 	TB_CATEGORY ");
 		sql.append(" WHERE ");
 		sql.append(" 	ID_CATEGORY = :id ");
-		
+
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", id);
-		
+
 		return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
 	}
 
@@ -110,7 +108,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 		sql.append(" 	TB_CATEGORY ");
 		List<Category> categories = null;
 		try {
-			return namedJdbcTemplate.query(sql.toString(), CategoryRowMapper.getInstance());
+			return namedJdbcTemplate.query(sql.toString(), rowMapper);
 		} catch (EmptyResultDataAccessException e) {
 			categories = new ArrayList<>();
 		}
@@ -129,42 +127,20 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 		sql.append(" 	TB_CATEGORY ");
 		sql.append(" WHERE ");
 		sql.append(" 	ID_CATEGORY = :id ");
-		
+
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("id", id);
-		
+
 		Category category = null;
-		
+
 		try {
-			category =  namedJdbcTemplate.queryForObject(sql.toString(), paramSource, CategoryRowMapper.getInstance());
+			category = namedJdbcTemplate.queryForObject(sql.toString(), paramSource, rowMapper);
 			LOG.info(String.format("Category with id: %s found successfuly %s", id, category.toString()));
 		} catch (EmptyResultDataAccessException e) {
 			LOG.warn(String.format("No category found with id: %s", id));
 		}
-		
+
 		return Optional.ofNullable(category);
-	}
-
-	private static class CategoryRowMapper implements RowMapper<Category> {
-		
-		private static CategoryRowMapper _instance;
-		
-		private CategoryRowMapper() {}
-		
-		public static CategoryRowMapper getInstance() {
-			if(_instance == null)
-				_instance = new CategoryRowMapper();
-			return _instance;
-		}
-
-		@Override
-		public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Category category = new Category();
-			category.setId(rs.getInt("ID_CATEGORY"));
-			category.setName(rs.getString("NM_CATEGORY"));
-			return category;
-		}
-
 	}
 
 	@Override
@@ -175,16 +151,22 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 		sql.append(" 	TB_CATEGORY(NM_CATEGORY) ");
 		sql.append(" VALUES ");
 		sql.append(" (:name) ");
-		
-		
+
 		Map<String, Object>[] names = new Map[list.size()];
-		for(int i = 0; i < list.size(); i++) {
+		for (int i = 0; i < list.size(); i++) {
 			names[i] = new HashMap<String, Object>();
 			names[i].put("name", list.get(i).getName());
 		}
-		
+
 		namedJdbcTemplate.batchUpdate(sql.toString(), names);
 		return null;
 	}
-	
+
+	private RowMapper<Category> rowMapper = (rs, rownum) -> {
+		Category category = new Category();
+		category.setId(rs.getInt("ID_CATEGORY"));
+		category.setName(rs.getString("NM_CATEGORY"));
+		return category;
+	};
+
 }
