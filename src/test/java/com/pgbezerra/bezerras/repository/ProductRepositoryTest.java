@@ -41,8 +41,9 @@ public class ProductRepositoryTest {
 		Category c2 = new Category(null, "Drink");
 		Product p1 = new Product(null, "Feijoada", BigDecimal.valueOf(25.0), c1);
 		Product p2 = new Product(null, "Beer", BigDecimal.valueOf(25.0), c2);
+		Product p3 = new Product(null, "Baiao de 2", BigDecimal.valueOf(25.0), c1);
 		categories.addAll(Arrays.asList(c1, c2));
-		products.addAll(Arrays.asList(p1, p2));
+		products.addAll(Arrays.asList(p1, p2, p3));
 	}
 	
 	@Test(expected = DatabaseException.class)
@@ -167,6 +168,8 @@ public class ProductRepositoryTest {
 		categoryRepository.insertAll(ProductRepositoryTest.categories);
 		productRepository.insertAll(ProductRepositoryTest.products);
 		List<Product> products = productRepository.findAll();
+		for(Product p: products)
+			System.out.println(p.toString());
 		Assert.assertNotEquals(0, products.size());
 	}
 	

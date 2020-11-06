@@ -131,7 +131,9 @@ public class ProductRepositoryImpl implements ProductRepository{
 		
 		List<Product> products = null;
 		try {
-			return namedJdbcTemplate.query(sql.toString(), rowMapper);
+			products = namedJdbcTemplate.query(sql.toString(), rowMapper);
+			categories.clear();
+			return products;
 		} catch (EmptyResultDataAccessException e) {
 			products = new ArrayList<>();
 		}
@@ -159,9 +161,10 @@ public class ProductRepositoryImpl implements ProductRepository{
 
 		try {
 			product = namedJdbcTemplate.queryForObject(sql.toString(), paramSource, rowMapper);
-			LOG.info(String.format("Category with id: %s found successfuly %s", id, product.toString()));
+			LOG.info(String.format("Product with id: %s found successfuly %s", id, product.toString()));
+			categories.clear();
 		} catch (EmptyResultDataAccessException e) {
-			LOG.warn(String.format("No category found with id: %s", id));
+			LOG.warn(String.format("No product found with id: %s", id));
 		}
 
 		return Optional.ofNullable(product);
@@ -183,9 +186,12 @@ public class ProductRepositoryImpl implements ProductRepository{
 		
 		Integer idCategory = rs.getInt("ID_CATEGORY");
 		
-		if(categories.containsKey(idCategory))
+		if(categories.containsKey(idCategory)) {
+			LOG.info(String.format("The category[%s] has already been found", idCategory));
 			product.setCategory(categories.get(idCategory));
+		}
 		else {
+			LOG.info(String.format("Finding category %s", idCategory));
 			Optional<Category>  category = categoryRepository.findById(idCategory);
 			if(category.isPresent()) {
 				categories.put(idCategory, category.get());
