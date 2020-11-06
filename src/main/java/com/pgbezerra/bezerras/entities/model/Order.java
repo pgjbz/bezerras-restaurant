@@ -2,7 +2,9 @@ package com.pgbezerra.bezerras.entities.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.pgbezerra.bezerras.entities.enums.OrderStatus;
 import com.pgbezerra.bezerras.entities.enums.OrderType;
@@ -14,6 +16,8 @@ public class Order implements Serializable{
 	private Integer id;
 	private Date date;
 	private BigDecimal value;
+	private BigDecimal deliveryValue;
+	private List<OrderItem> items = new ArrayList<>();;
 	private OrderStatus orderStatus;
 	private OrderType orderType;
 	
@@ -54,6 +58,18 @@ public class Order implements Serializable{
 	public OrderStatus getOrderStatus() {
 		return orderStatus;
 	}
+	
+	public BigDecimal getDeliveryValue() {
+		return deliveryValue;
+	}
+
+	public void setDeliveryValue(BigDecimal deliveryValue) {
+		this.deliveryValue = deliveryValue;
+	}
+
+	public List<OrderItem> getItems() {
+		return items;
+	}
 
 	public void setOrderStatus(OrderStatus orderStatus) {
 		this.orderStatus = orderStatus;
@@ -66,7 +82,7 @@ public class Order implements Serializable{
 	public void setOrderType(OrderType orderType) {
 		this.orderType = orderType;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
