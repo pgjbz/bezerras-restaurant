@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.pgbezerra.bezerras.entities.enums.OrderStatus;
+import com.pgbezerra.bezerras.entities.enums.OrderType;
 
 public class Order implements Serializable{
 
@@ -14,6 +15,7 @@ public class Order implements Serializable{
 	private Date date;
 	private BigDecimal value;
 	private OrderStatus orderStatus;
+	private OrderType orderType;
 	
 	public Order() {
 	}
@@ -55,6 +57,14 @@ public class Order implements Serializable{
 
 	public void setOrderStatus(OrderStatus orderStatus) {
 		this.orderStatus = orderStatus;
+	}
+	
+	public OrderType getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(OrderType orderType) {
+		this.orderType = orderType;
 	}
 
 	@Override
