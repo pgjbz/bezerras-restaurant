@@ -20,15 +20,21 @@ public class Order implements Serializable{
 	private List<OrderItem> items = new ArrayList<>();;
 	private OrderStatus orderStatus;
 	private OrderType orderType;
+	private OrderAddress orderAddress;
 	
 	public Order() {
 	}
 
-	public Order(Integer id, Date date, BigDecimal value, OrderStatus orderStatus) {
+	public Order(Integer id, Date date, BigDecimal value, BigDecimal deliveryValue, List<OrderItem> items,
+			OrderStatus orderStatus, OrderType orderType, OrderAddress orderAddress) {
 		this.id = id;
 		this.date = date;
 		this.value = value;
+		this.deliveryValue = deliveryValue;
+		this.items = items;
 		this.orderStatus = orderStatus;
+		this.orderType = orderType;
+		this.orderAddress = orderAddress;
 	}
 
 	public Integer getId() {
@@ -83,6 +89,14 @@ public class Order implements Serializable{
 		this.orderType = orderType;
 	}
 	
+	public OrderAddress getOrderAddress() {
+		return orderAddress;
+	}
+
+	public void setOrderAddress(OrderAddress orderAddress) {
+		this.orderAddress = orderAddress;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
