@@ -7,7 +7,7 @@ public class OrderItem implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Integer id;
+	private Long id;
 	private Product product;
 	private Order order;
 	private Byte quantity;
@@ -16,7 +16,7 @@ public class OrderItem implements Serializable {
 	public OrderItem() {
 	}
 
-	public OrderItem(Integer id, Product product, Order order, Byte quantity, BigDecimal value) {
+	public OrderItem(Long id, Product product, Order order, Byte quantity, BigDecimal value) {
 		this.id = id;
 		this.product = product;
 		this.order = order;
@@ -24,11 +24,11 @@ public class OrderItem implements Serializable {
 		this.value = value;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

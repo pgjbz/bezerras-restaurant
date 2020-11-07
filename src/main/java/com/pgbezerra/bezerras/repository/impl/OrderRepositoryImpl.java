@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
@@ -53,15 +54,15 @@ public class OrderRepositoryImpl implements OrderRepository {
 		sql.append(" 	:status, ");
 		sql.append(" 	:type, ");
 		sql.append(" 	:orderAddress) ");
-		
+
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("date", obj.getDate());
 		paramSource.addValue("value", obj.getValue());
 		paramSource.addValue("valueDelivery", obj.getDeliveryValue());
-		paramSource.addValue("status", obj.getOrderStatus() != null ? obj.getOrderStatus().getStatusCode() : null);
-		paramSource.addValue("type", obj.getOrderType() != null ? obj.getOrderType().getOrderTypeCode() : null);
-		paramSource.addValue("orderAddress", obj.getOrderAddress() != null ? obj.getOrderAddress().getId() : null );
+		paramSource.addValue("status", Objects.nonNull(obj.getOrderStatus()) ? obj.getOrderStatus().getStatusCode() : null);
+		paramSource.addValue("type", Objects.nonNull(obj.getOrderType()) ? obj.getOrderType().getOrderTypeCode() : null);
+		paramSource.addValue("orderAddress", Objects.nonNull(obj.getOrderAddress()) ? obj.getOrderAddress().getId() : null);
 		int rowsAffected = 0;
 
 		try {
@@ -94,16 +95,16 @@ public class OrderRepositoryImpl implements OrderRepository {
 		sql.append(" 	ID_ORDER_ADDRESS = :orderAddress ");
 		sql.append(" WHERE ");
 		sql.append(" 	ID_ORDER = :id ");
-		
+
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("date", obj.getDate());
 		paramSource.addValue("value", obj.getValue());
 		paramSource.addValue("valueDelivery", obj.getDeliveryValue());
-		paramSource.addValue("status", obj.getOrderStatus() != null ? obj.getOrderStatus().getStatusCode() : null);
-		paramSource.addValue("type", obj.getOrderType() != null ? obj.getOrderType().getOrderTypeCode() : null);
-		paramSource.addValue("orderAddress", obj.getOrderAddress() != null ? obj.getOrderAddress().getId() : null );
-		paramSource.addValue("id", obj.getId() );
-		
+		paramSource.addValue("status", Objects.nonNull(obj.getOrderStatus()) ? obj.getOrderStatus().getStatusCode() : null);
+		paramSource.addValue("type", Objects.nonNull(obj.getOrderType()) ? obj.getOrderType().getOrderTypeCode() : null);
+		paramSource.addValue("orderAddress", Objects.nonNull(obj.getOrderAddress()) ? obj.getOrderAddress().getId() : null);
+		paramSource.addValue("id", obj.getId());
+
 		try {
 			return namedJdbcTemplate.update(sql.toString(), paramSource) > 0;
 		} catch (DataIntegrityViolationException e) {
@@ -162,6 +163,8 @@ public class OrderRepositoryImpl implements OrderRepository {
 		sql.append(" 	ID_ORDER_ADDRESS ");
 		sql.append(" FROM ");
 		sql.append(" 	TB_ORDER ");
+		sql.append(" WHERE ");
+		sql.append(" 	ID_ORDER = :id ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("id", id);
@@ -180,7 +183,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
 	@Override
 	public List<Order> insertAll(List<Order> list) {
-		for(Order order: list)
+		for (Order order : list)
 			insert(order);
 		return list;
 	}
@@ -193,11 +196,14 @@ public class OrderRepositoryImpl implements OrderRepository {
 		order.setDeliveryValue(rs.getBigDecimal("VL_DELIVERY"));
 		order.setOrderStatus(rs.getInt("ID_ORDER_STATUS"));
 		order.setOrderType(rs.getInt("ID_ORDER_TYPE"));
-		
-		Optional<OrderAddress> orderAddress = orderAddressRepository.findById(rs.getLong("ID_ORDER_ADDRESS"));
-		if(orderAddress.isPresent())
-			order.setOrderAddress(orderAddress.get());
-		
+
+		Long idOrderAddress = rs.getLong("ID_ORDER_ADDRESS");
+
+		if (Objects.nonNull(idOrderAddress) && idOrderAddress > 0) {
+			Optional<OrderAddress> orderAddress = orderAddressRepository.findById(idOrderAddress);
+			if (orderAddress.isPresent())
+				order.setOrderAddress(orderAddress.get());
+		}
 		return order;
 	};
 
