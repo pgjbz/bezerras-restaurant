@@ -184,5 +184,22 @@ public class OrderItemRepositoryTest {
 		Assert.assertFalse(orderItemRepository.deleteById(999L));
 	}
 	
+	@Test
+	public void findOrderItemByOrderExpectedSuccess() {
+		tableRepository.insertAll(tables);
+		categoryRepository.insertAll(categories);
+		productRepository.insertAll(products);
+		orderRepository.insertAll(orders);
+		orderItemRepository.insertAll(OrderItemRepositoryTest.orderItems);
+		List<OrderItem> orderItems = orderItemRepository.findByOrder(orders.get(0));
+		Assert.assertTrue(orderItems.size() > 0);
+	}
+	
+	@Test
+	public void findOrderItemByOrderExpectedNoReturn() {
+		List<OrderItem> orderItems = orderItemRepository.findByOrder(orders.get(0));
+		Assert.assertTrue(orderItems.size() <= 0);
+	}
+	
 
 }

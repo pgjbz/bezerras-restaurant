@@ -16,6 +16,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.pgbezerra.bezerras.entities.model.Category;
 import com.pgbezerra.bezerras.entities.model.Order;
 import com.pgbezerra.bezerras.entities.model.OrderItem;
 import com.pgbezerra.bezerras.entities.model.Product;
@@ -232,6 +233,78 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 		for(OrderItem orderItem: list)
 			insert(orderItem);
 		return list;
+	}
+
+	@Override
+	public List<OrderItem> findByOrder(Order order) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(" SELECT ");
+		sql.append(" 	OI.ID_ORDER_ITEM, ");
+		sql.append(" 	OI.ID_PRODUCT, ");
+		sql.append(" 	OI.QT_ORDER_ITEM, ");
+		sql.append(" 	OI.VL_ORDER_ITEM, ");
+		sql.append("	P.ID_PRODUCT, ");
+		sql.append(" 	P.NM_PRODUCT, ");
+		sql.append("	P.VL_PRODUCT, ");
+		sql.append(" 	C.ID_CATEGORY, ");
+		sql.append(" 	C.NM_CATEGORY ");
+		sql.append(" FROM ");
+		sql.append(" 	TB_ORDER_ITEM OI ");
+		sql.append(" 	LEFT JOIN ");
+		sql.append(" 		TB_PRODUCT P ");
+		sql.append(" 	ON OI.ID_PRODUCT = P.ID_PRODUCT ");
+		sql.append(" 	LEFT JOIN ");
+		sql.append(" 		TB_CATEGORY C ");
+		sql.append(" 		ON C.ID_CATEGORY = P.ID_CATEGORY");
+		sql.append(" WHERE ");
+		sql.append(" 	ID_ORDER = :order ");
+		
+		MapSqlParameterSource paramSource = new MapSqlParameterSource();
+		paramSource.addValue("order", order.getId());
+		
+		List<OrderItem> orderItems = null;
+		
+		final Map<Integer, Product> products = new HashMap<>();
+		final Map<Integer, Category> categories = new HashMap<>();
+		
+		try {
+			orderItems = namedJdbcTemplate.query(sql.toString(), paramSource, (rs, rownum) -> {
+				OrderItem orderItem = new OrderItem();
+				
+				orderItem.setId(rs.getLong("ID_ORDER_ITEM"));
+				orderItem.setValue(rs.getBigDecimal("VL_ORDER_ITEM"));
+				orderItem.setQuantity(rs.getByte("QT_ORDER_ITEM"));
+				
+				Integer idProduct = rs.getInt("ID_PRODUCT");
+				Integer idCategory = rs.getInt("ID_CATEGORY");
+				
+				if(products.containsKey(idProduct))
+					orderItem.setProduct(products.get(idProduct));
+				else {
+					Product product = new Product();
+					product.setId(rs.getInt("ID_PRODUCT"));
+					product.setName(rs.getString("NM_PRODUCT"));
+					product.setValue(rs.getBigDecimal("VL_PRODUCT"));
+					if(categories.containsKey(idCategory))
+						product.setCategory(categories.get(idCategory));
+					else {
+						Category category = new Category();
+						category.setId(rs.getInt("ID_CATEGORY"));
+						category.setName(rs.getString("NM_CATEGORY"));
+						product.setCategory(category);
+						categories.put(idCategory, category);
+					}
+					orderItem.setProduct(product);
+					products.put(idProduct, product);
+				}
+				return orderItem;
+			});
+		} catch(EmptyResultDataAccessException e) {
+			LOG.error(String.format("No order items founded for order: %s", order.getId()));
+			orderItems = new ArrayList<>();
+		}
+		
+		return orderItems;
 	}
 
 }
