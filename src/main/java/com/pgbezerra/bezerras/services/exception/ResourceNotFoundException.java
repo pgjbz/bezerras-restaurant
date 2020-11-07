@@ -1,4 +1,4 @@
-package com.pgbezerra.bezerras.services;
+package com.pgbezerra.bezerras.services.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
 
