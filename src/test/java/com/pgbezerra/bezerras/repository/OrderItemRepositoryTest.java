@@ -23,6 +23,7 @@ import com.pgbezerra.bezerras.entities.model.Category;
 import com.pgbezerra.bezerras.entities.model.Order;
 import com.pgbezerra.bezerras.entities.model.OrderItem;
 import com.pgbezerra.bezerras.entities.model.Product;
+import com.pgbezerra.bezerras.entities.model.Table;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 
 @SpringBootTest
@@ -35,6 +36,7 @@ public class OrderItemRepositoryTest {
 	private static final List<Product> products = new ArrayList<>();
 	private static final List<Order> orders = new ArrayList<>();
 	private static final List<OrderItem> orderItems = new ArrayList<>();
+	private static final List<Table> tables = new ArrayList<>();
 	
 	@Autowired
 	private ProductRepository productRepository;
@@ -44,6 +46,8 @@ public class OrderItemRepositoryTest {
 	private OrderRepository orderRepository;
 	@Autowired
 	private OrderItemRepository orderItemRepository;
+	@Autowired
+	private TableRepository tableRepository;
 	
 	
 	
@@ -53,22 +57,27 @@ public class OrderItemRepositoryTest {
 		Product p1 = new Product(null, "Feijoada", BigDecimal.valueOf(25.0), c1);
 		Product p2 = new Product(null, "Beer", BigDecimal.valueOf(25.0), c2);
 		Product p3 = new Product(null, "Baiao de 2", BigDecimal.valueOf(25.0), c1);
-		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.TABLE, null);
-		Order o3 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.DESK, null);
+		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d) ,BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.DOING, OrderType.TABLE, null);
+		Order o3 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, null, OrderStatus.DOING, OrderType.DESK, null);
 		OrderItem oi1 = new OrderItem(null, p1, o1, Byte.valueOf("1"), BigDecimal.valueOf(25.0));
 		OrderItem oi2 = new OrderItem(null, p2, o1, Byte.valueOf("2"), BigDecimal.valueOf(30.0));
+		Table t1 = new Table(1, "Table 1");
+		Table t2 = new Table(2, "Table 2");
 		orders.addAll(Arrays.asList(o1, o3));
 		categories.addAll(Arrays.asList(c1, c2));
 		products.addAll(Arrays.asList(p1, p2, p3));
 		orderItems.addAll(Arrays.asList(oi1, oi2));
+		tables.addAll(Arrays.asList(t1, t2));
 	}
 	
 	@Test
 	public void inserOrderitemExpectedSuccess() {
 		Category c1 = new Category(null, "Food");
 		Product p1 = new Product(null, "Feijoada", BigDecimal.valueOf(25.0), c1);
-		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.TABLE, null);
+		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.DOING, OrderType.TABLE, null);
 		OrderItem oi1 = new OrderItem(null, p1, o1, Byte.valueOf("1"), BigDecimal.valueOf(25.0));
+		Table t1 = new Table(1, "Table 1");
+		tableRepository.insert(t1);
 		categoryRepository.insert(c1);
 		productRepository.insert(p1);
 		orderRepository.insert(o1);
@@ -78,7 +87,7 @@ public class OrderItemRepositoryTest {
 	@Test(expected = DatabaseException.class)
 	public void inserOrderitemExpectedError() {
 		Category c1 = new Category(null, "Food");
-		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.TABLE, null);
+		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.DOING, OrderType.TABLE, null);
 		OrderItem oi1 = new OrderItem(null, null, o1, Byte.valueOf("1"), BigDecimal.valueOf(25.0));
 		categoryRepository.insert(c1);
 		orderRepository.insert(o1);
@@ -87,6 +96,7 @@ public class OrderItemRepositoryTest {
 	
 	@Test
 	public void findAllOrderItemExpectedSuccess() {
+		tableRepository.insertAll(tables);
 		categoryRepository.insertAll(categories);
 		productRepository.insertAll(products);
 		orderRepository.insertAll(orders);
@@ -105,8 +115,10 @@ public class OrderItemRepositoryTest {
 	public void findOrderItemByIdExpectSuccess() {
 		Category c1 = new Category(null, "Food");
 		Product p1 = new Product(null, "Feijoada", BigDecimal.valueOf(25.0), c1);
-		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.TABLE, null);
+		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.DOING, OrderType.TABLE, null);
 		OrderItem oi1 = new OrderItem(null, p1, o1, Byte.valueOf("1"), BigDecimal.valueOf(25.0));
+		Table t1 = new Table(1, "Table 1");
+		tableRepository.insert(t1);
 		categoryRepository.insert(c1);
 		productRepository.insert(p1);
 		orderRepository.insert(o1);
@@ -123,8 +135,10 @@ public class OrderItemRepositoryTest {
 	public void updateOrderItemExpectSuccess() {
 		Category c1 = new Category(null, "Food");
 		Product p1 = new Product(null, "Feijoada", BigDecimal.valueOf(25.0), c1);
-		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.TABLE, null);
+		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"),  OrderStatus.DOING, OrderType.TABLE, null);
 		OrderItem oi1 = new OrderItem(null, p1, o1, Byte.valueOf("1"), BigDecimal.valueOf(25.0));
+		Table t1 = new Table(1, "Table 1");
+		tableRepository.insert(t1);
 		categoryRepository.insert(c1);
 		productRepository.insert(p1);
 		orderRepository.insert(o1);
@@ -140,7 +154,7 @@ public class OrderItemRepositoryTest {
 	public void updateOrderItemExpectError() {
 		Category c1 = new Category(null, "Food");
 		Product p1 = new Product(null, "Feijoada", BigDecimal.valueOf(25.0), c1);
-		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.TABLE, null);
+		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.DOING, OrderType.TABLE, null);
 		OrderItem oi1 = new OrderItem(null, p1, o1, Byte.valueOf("1"), BigDecimal.valueOf(25.0));
 		categoryRepository.insert(c1);
 		productRepository.insert(p1);
@@ -154,8 +168,10 @@ public class OrderItemRepositoryTest {
 	public void deleteItemByIdExpectedSuccess() {
 		Category c1 = new Category(null, "Food");
 		Product p1 = new Product(null, "Feijoada", BigDecimal.valueOf(25.0), c1);
-		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.TABLE, null);
+		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.DOING, OrderType.TABLE, null);
 		OrderItem oi1 = new OrderItem(null, p1, o1, Byte.valueOf("1"), BigDecimal.valueOf(25.0));
+		Table t1 = new Table(1, "Table 1");
+		tableRepository.insert(t1);
 		categoryRepository.insert(c1);
 		productRepository.insert(p1);
 		orderRepository.insert(o1);

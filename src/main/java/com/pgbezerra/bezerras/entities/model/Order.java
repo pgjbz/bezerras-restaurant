@@ -17,6 +17,7 @@ public class Order implements Serializable{
 	private Date date;
 	private BigDecimal value;
 	private BigDecimal deliveryValue;
+	private Table table;
 	private List<OrderItem> items = new ArrayList<>();
 	private OrderStatus orderStatus;
 	private OrderType orderType;
@@ -25,16 +26,18 @@ public class Order implements Serializable{
 	public Order() {
 	}
 
-	public Order(Long id, Date date, BigDecimal value, BigDecimal deliveryValue,
-			OrderStatus orderStatus, OrderType orderType, OrderAddress orderAddress) {
+	public Order(Long id, Date date, BigDecimal value, BigDecimal deliveryValue, Table table, OrderStatus orderStatus,
+			OrderType orderType, OrderAddress orderAddress) {
 		this.id = id;
 		this.date = date;
 		this.value = value;
 		this.deliveryValue = deliveryValue;
+		this.table = table;
 		this.orderStatus = orderStatus;
 		this.orderType = orderType;
 		this.orderAddress = orderAddress;
 	}
+
 
 	public Long getId() {
 		return id;
@@ -67,6 +70,14 @@ public class Order implements Serializable{
 
 	public void setDeliveryValue(BigDecimal deliveryValue) {
 		this.deliveryValue = deliveryValue;
+	}
+	
+	public Table getTable() {
+		return table;
+	}
+
+	public void setTable(Table table) {
+		this.table = table;
 	}
 
 	public List<OrderItem> getItems() {
@@ -124,8 +135,11 @@ public class Order implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", date=" + date + ", value=" + value + ", orderStatus=" + orderStatus + "]";
+		return "Order [id=" + id + ", date=" + date + ", value=" + value + ", deliveryValue=" + deliveryValue
+				+ ", table=" + table + ", items=" + items + ", orderStatus=" + orderStatus + ", orderType=" + orderType
+				+ ", orderAddress=" + orderAddress + "]";
 	}
+
 	
 
 }

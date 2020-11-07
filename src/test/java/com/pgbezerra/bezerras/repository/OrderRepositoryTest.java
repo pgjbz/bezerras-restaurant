@@ -22,6 +22,7 @@ import com.pgbezerra.bezerras.entities.enums.OrderStatus;
 import com.pgbezerra.bezerras.entities.enums.OrderType;
 import com.pgbezerra.bezerras.entities.model.Order;
 import com.pgbezerra.bezerras.entities.model.OrderAddress;
+import com.pgbezerra.bezerras.entities.model.Table;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 
 @SpringBootTest
@@ -32,55 +33,67 @@ public class OrderRepositoryTest {
 
 	private static final List<OrderAddress> orderAddresses = new ArrayList<>();
 	private static final List<Order> orders = new ArrayList<>();
+	private static final List<Table> tables = new ArrayList<>();
 	
 	@Autowired
 	private OrderRepository orderRepository;
 	@Autowired
 	private OrderAddressRepository orderAddressRepository;
+	@Autowired
+	private TableRepository tableRepository;
 	
 	
 	{
+		Table t1 = new Table(1, "Table 1");
+		Table t2 = new Table(2, "Table 2");
+		tables.addAll(Arrays.asList(t1, t2));
 		OrderAddress oa1 = new OrderAddress(null,"Client A", "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
 		OrderAddress oa2 = new OrderAddress(null, "Client B", "Rua b", "123", "Centro", "Sao Paulo", "Sao Paulo");
 		orderAddresses.addAll(Arrays.asList(oa1, oa2));
-		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.TABLE, null);
-		Order o2 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.DELIVERY, oa1);
-		Order o3 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.DESK, null);
+		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, t1, OrderStatus.DOING, OrderType.TABLE, null);
+		Order o2 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, null, OrderStatus.DOING, OrderType.DELIVERY, oa1);
+		Order o3 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, t1, OrderStatus.DOING, OrderType.DESK, null);
 		orders.addAll(Arrays.asList(o1, o2, o3));
 	}
 	
 	@Test
 	public void insertOrderWithouOrderAddressExpectedSuccess() {
-		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.TABLE, null);
+		Table t1 = new Table(1, "Table 1");
+		tableRepository.insert(t1);
+		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.DOING, OrderType.TABLE, null);
 		orderRepository.insert(order);
 	}
 	
 	@Test(expected = DatabaseException.class)
 	public void inserOrderWithoutOrderStatsExpectedError() {
-		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, null, OrderType.TABLE, null);
+		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), null, OrderType.TABLE, null);
 		orderRepository.insert(order);
 	}
 	
 	@Test(expected = DatabaseException.class)
 	public void inserOrderWithInexistentOrderAddressExpetecError() {
 		OrderAddress orderAddress = new OrderAddress(1L, "Client A", "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
-		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.DELIVERY, orderAddress);
+		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, null, OrderStatus.DOING, OrderType.DELIVERY, orderAddress);
 		orderRepository.insert(order);
 	}
 	
 	@Test
 	public void insertOrderExpectedSuccess() {
+		Table t1 = new Table(1, "Table 1");
+		tableRepository.insert(t1);
 		OrderAddress orderAddress = new OrderAddress(null,"Client A", "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
 		orderAddressRepository.insert(orderAddress);
-		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.TABLE, orderAddress);
+		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.DOING, OrderType.TABLE, orderAddress);
 		orderRepository.insert(order);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void updateOrderWithouNameExpectedError() {
+	public void updateOrderWithInvalidORderTypeExpectedError() {
+		Table t1 = new Table(1, "Table 1");
+		tableRepository.insert(t1);
 		OrderAddress orderAddress = new OrderAddress(null,"Client A", "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
 		orderAddressRepository.insert(orderAddress);
-		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.DELIVERY, orderAddress);
+		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.DOING, OrderType.DELIVERY, orderAddress);
 		orderRepository.insert(order);
 		order.setOrderType(999);
 		orderRepository.update(order);
@@ -88,9 +101,11 @@ public class OrderRepositoryTest {
 	
 	@Test(expected = DatabaseException.class)
 	public void updateOrderWithoutValueExpectedError() {
+		Table t1 = new Table(1, "Table 1");
+		tableRepository.insert(t1);
 		OrderAddress orderAddress = new OrderAddress(null,"Client A", "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
 		orderAddressRepository.insert(orderAddress);
-		Order order = new Order(null, new Date(), null, BigDecimal.ZERO, OrderStatus.DOING, OrderType.DELIVERY, orderAddress);
+		Order order = new Order(null, new Date(), null, BigDecimal.ZERO, null, OrderStatus.DOING, OrderType.DELIVERY, orderAddress);
 		orderRepository.insert(order);
 		order.setValue(null);
 		orderRepository.update(order);
@@ -98,7 +113,7 @@ public class OrderRepositoryTest {
 	
 	@Test(expected = DatabaseException.class)
 	public void updateOrderWithoutOrderTypeExpectedError() {
-		Order order = new Order(null, new Date(), null, BigDecimal.ZERO, OrderStatus.DOING, null, null);
+		Order order = new Order(null, new Date(), null, BigDecimal.ZERO, null, OrderStatus.DOING, null, null);
 		orderRepository.insert(order);
 		order.setOrderAddress(null);
 		orderRepository.update(order);
@@ -106,7 +121,7 @@ public class OrderRepositoryTest {
 	
 	@Test(expected = DatabaseException.class)
 	public void updateOrderWithoutAllValuesExpectedError() {
-		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, null, OrderType.TABLE, null);
+		Order order = new Order(null, null, null, null, null, null, null, null);
 		orderRepository.insert(order);
 		order.setDate(null);
 		order.setValue(null);
@@ -119,7 +134,9 @@ public class OrderRepositoryTest {
 	
 	@Test
 	public void updateOrderExpectedSuccess() {
-		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.TABLE, null);
+		Table t1 = new Table(1, "Table 1");
+		tableRepository.insert(t1);
+		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.DOING, OrderType.TABLE, null);
 		orderRepository.insert(order);
 		order.setOrderStatus(1);
 		Assert.assertTrue(orderRepository.update(order));
@@ -127,7 +144,7 @@ public class OrderRepositoryTest {
 	
 	@Test
 	public void updateInexistentOrderExpectedNoUpdates() {
-		Order order = new Order(999L, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.TABLE, null);
+		Order order = new Order(999L, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.DOING, OrderType.TABLE, null);
 		order.setValue(BigDecimal.valueOf(500d));
 		Assert.assertFalse(orderRepository.update(order));
 	}
@@ -139,7 +156,9 @@ public class OrderRepositoryTest {
 	
 	@Test
 	public void deleteOrderExpectedSuccess() {
-		Order order = new Order(999L, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.TABLE, null);
+		Table t1 = new Table(1, "Table 1");
+		tableRepository.insert(t1);
+		Order order = new Order(999L, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, null, OrderStatus.DOING, OrderType.TABLE, null);
 		orderRepository.insert(order);
 		Assert.assertTrue(orderRepository.deleteById(order.getId()));
 	}
@@ -152,11 +171,10 @@ public class OrderRepositoryTest {
 	
 	@Test
 	public void findAllExpectReturn() {
+		tableRepository.insertAll(OrderRepositoryTest.tables);
 		orderAddressRepository.insertAll(OrderRepositoryTest.orderAddresses);
 		orderRepository.insertAll(OrderRepositoryTest.orders);
 		List<Order> orders = orderRepository.findAll();
-		for(Order p: orders)
-			System.out.println(p.toString());
 		Assert.assertNotEquals(0, orders.size());
 	}
 	
@@ -168,7 +186,9 @@ public class OrderRepositoryTest {
 	
 	@Test
 	public void findByIdExpectedSuccess() {
-		Order order = new Order(999L, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.TABLE, null);
+		Table t1 = new Table(1, "Table 1");
+		tableRepository.insert(t1);
+		Order order = new Order(999L, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.DOING, OrderType.TABLE, null);
 		orderRepository.insert(order);
 		Optional<Order> orderReturn = orderRepository.findById(order.getId());
 		Assert.assertTrue(orderReturn.isPresent());
