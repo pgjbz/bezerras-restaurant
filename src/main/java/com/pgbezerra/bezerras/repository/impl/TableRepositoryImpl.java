@@ -23,7 +23,7 @@ import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 @Repository
 public class TableRepositoryImpl implements TableRepository {
 	
-	private static final Logger LOG = Logger.getLogger(TableRepository.class);
+	private static final Logger LOG = Logger.getLogger(TableRepositoryImpl.class);
 	
 	private NamedParameterJdbcTemplate namedJdbcTemplate;
 	

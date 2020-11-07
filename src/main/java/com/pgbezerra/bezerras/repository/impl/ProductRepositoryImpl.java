@@ -26,7 +26,7 @@ import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 @Repository
 public class ProductRepositoryImpl implements ProductRepository{
 	
-	private static final Logger LOG = Logger.getLogger(CategoryRepositoryImpl.class);
+	private static final Logger LOG = Logger.getLogger(ProductRepositoryImpl.class);
 	
 	private NamedParameterJdbcTemplate namedJdbcTemplate;
 	private CategoryRepository categoryRepository;
@@ -125,7 +125,7 @@ public class ProductRepositoryImpl implements ProductRepository{
 		sql.append(" FROM ");
 		sql.append(" 	TB_PRODUCT ");
 		
-		final Map<Integer, Category> categories = new HashMap<>();;
+		final Map<Integer, Category> categories = new HashMap<>();
 		
 		List<Product> products = null;
 		try {
