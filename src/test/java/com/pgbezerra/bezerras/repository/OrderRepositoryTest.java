@@ -40,8 +40,8 @@ public class OrderRepositoryTest {
 	
 	
 	{
-		OrderAddress oa1 = new OrderAddress(null, "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
-		OrderAddress oa2 = new OrderAddress(null, "Rua b", "123", "Centro", "Sao Paulo", "Sao Paulo");
+		OrderAddress oa1 = new OrderAddress(null,"Client A", "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
+		OrderAddress oa2 = new OrderAddress(null, "Client B", "Rua b", "123", "Centro", "Sao Paulo", "Sao Paulo");
 		orderAddresses.addAll(Arrays.asList(oa1, oa2));
 		Order o1 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.TABLE, null);
 		Order o2 = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.DELIVERY, oa1);
@@ -63,14 +63,14 @@ public class OrderRepositoryTest {
 	
 	@Test(expected = DatabaseException.class)
 	public void inserOrderWithInexistentOrderAddressExpetecError() {
-		OrderAddress orderAddress = new OrderAddress(1L, "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
+		OrderAddress orderAddress = new OrderAddress(1L, "Client A", "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
 		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.DELIVERY, orderAddress);
 		orderRepository.insert(order);
 	}
 	
 	@Test
 	public void insertOrderExpectedSuccess() {
-		OrderAddress orderAddress = new OrderAddress(null, "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
+		OrderAddress orderAddress = new OrderAddress(null,"Client A", "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
 		orderAddressRepository.insert(orderAddress);
 		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.TABLE, orderAddress);
 		orderRepository.insert(order);
@@ -78,7 +78,7 @@ public class OrderRepositoryTest {
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void updateOrderWithouNameExpectedError() {
-		OrderAddress orderAddress = new OrderAddress(null, "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
+		OrderAddress orderAddress = new OrderAddress(null,"Client A", "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
 		orderAddressRepository.insert(orderAddress);
 		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, OrderStatus.DOING, OrderType.DELIVERY, orderAddress);
 		orderRepository.insert(order);
@@ -88,7 +88,7 @@ public class OrderRepositoryTest {
 	
 	@Test(expected = DatabaseException.class)
 	public void updateOrderWithoutValueExpectedError() {
-		OrderAddress orderAddress = new OrderAddress(null, "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
+		OrderAddress orderAddress = new OrderAddress(null,"Client A", "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
 		orderAddressRepository.insert(orderAddress);
 		Order order = new Order(null, new Date(), null, BigDecimal.ZERO, OrderStatus.DOING, OrderType.DELIVERY, orderAddress);
 		orderRepository.insert(order);

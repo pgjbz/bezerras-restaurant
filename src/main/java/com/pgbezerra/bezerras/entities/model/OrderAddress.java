@@ -7,6 +7,7 @@ public class OrderAddress implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
+	private String clientName;
 	private String street;
 	private String number;
 	private String complement;
@@ -17,13 +18,14 @@ public class OrderAddress implements Serializable {
 	public OrderAddress() {
 	}
 
-	public OrderAddress(Long id, String street, String number, String district, String city, String state) {
+	public OrderAddress(Long id, String clientName, String street, String number, String district, String city, String state) {
 		this.id = id;
 		this.street = street;
 		this.number = number;
 		this.district = district;
 		this.city = city;
 		this.state = state;
+		this.clientName = clientName;
 	}
 
 	public Long getId() {
@@ -32,6 +34,14 @@ public class OrderAddress implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
 	}
 
 	public String getStreet() {
@@ -109,8 +119,8 @@ public class OrderAddress implements Serializable {
 
 	@Override
 	public String toString() {
-		return "OrderAddress [id=" + id + ", street=" + street + ", number=" + number + ", district=" + district
-				+ ", city=" + city + ", state=" + state + "]";
+		return "OrderAddress [id=" + id + ", clientName=" + clientName + ", street=" + street + ", number=" + number
+				+ ", complement=" + complement + ", district=" + district + ", city=" + city + ", state=" + state + "]";
 	}
 
 

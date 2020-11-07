@@ -36,6 +36,7 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO ");
 		sql.append(" 	TB_ORDER_ADDRESS( ");
+		sql.append(" 		NM_CLIENT, ");
 		sql.append(" 		NM_STREET, ");
 		sql.append(" 		NR_NUMBER, ");
 		sql.append(" 		DS_COMPLEMENT, ");
@@ -44,6 +45,7 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 		sql.append(" 		NM_STATE) ");
 		sql.append(" VALUES ");
 		sql.append(" 	(:street, ");
+		sql.append(" 	:client, ");
 		sql.append(" 	:complement, ");
 		sql.append(" 	:number, ");
 		sql.append(" 	:district, ");
@@ -52,6 +54,7 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
+		paramSource.addValue("client", obj.getClientName());
 		paramSource.addValue("street", obj.getStreet());
 		paramSource.addValue("complement", obj.getComplement());
 		paramSource.addValue("number", obj.getNumber());
@@ -127,6 +130,7 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
 		sql.append(" 	ID_ORDER_ADDRESS, ");
+		sql.append(" 	NM_CLIENT, ");
 		sql.append(" 	NM_STREET, ");
 		sql.append(" 	NR_NUMBER, ");
 		sql.append(" 	DS_COMPLEMENT, ");
@@ -151,6 +155,7 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
 		sql.append(" 	ID_ORDER_ADDRESS, ");
+		sql.append(" 	NM_CLIENT, ");
 		sql.append(" 	NM_STREET, ");
 		sql.append(" 	NR_NUMBER, ");
 		sql.append(" 	DS_COMPLEMENT, ");
@@ -188,6 +193,7 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 
 		OrderAddress orderAddress = new OrderAddress();
 		orderAddress.setId(rs.getLong("ID_ORDER_ADDRESS"));
+		orderAddress.setClientName(rs.getString("NM_CLIENT"));
 		orderAddress.setStreet(rs.getString("NM_STREET"));
 		orderAddress.setNumber(rs.getString("NR_NUMBER"));
 		orderAddress.setComplement(rs.getString("DS_COMPLEMENT"));

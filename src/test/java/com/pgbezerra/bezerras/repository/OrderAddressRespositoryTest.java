@@ -30,14 +30,14 @@ public class OrderAddressRespositoryTest {
 	private static final List<OrderAddress> orderAddresses = new ArrayList<>();
 	
 	{
-		OrderAddress oa1 = new OrderAddress(null, "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
-		OrderAddress oa2 = new OrderAddress(null, "Rua b", "123", "Centro", "Sao Paulo", "Sao Paulo");
+		OrderAddress oa1 = new OrderAddress(null, "Client A", "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
+		OrderAddress oa2 = new OrderAddress(null, "Client B", "Rua b", "123", "Centro", "Sao Paulo", "Sao Paulo");
 		orderAddresses.addAll(Arrays.asList(oa1, oa2));
 	}
 	
 	@Test
 	public void insertNewOrderAddressExpectedSuccessAndReturnNewPK() {
-		OrderAddress orderAddress = new OrderAddress(null, "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
+		OrderAddress orderAddress = new OrderAddress(null, "Client A", "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
 		orderAddressRepository.insert(orderAddress);
 		
 		Assert.assertNotEquals(null, orderAddress.getId());
@@ -45,7 +45,7 @@ public class OrderAddressRespositoryTest {
 	
 	@Test(expected = DatabaseException.class)
 	public void insertNewOrderAddressWithOutStreetExpectedException() {
-		OrderAddress orderAddress = new OrderAddress(null, null, "123", "Centro", "Sao Paulo", "Sao Paulo");
+		OrderAddress orderAddress = new OrderAddress(null, "Client A", null, "123", "Centro", "Sao Paulo", "Sao Paulo");
 		orderAddressRepository.insert(orderAddress);
 	}
 	
@@ -93,7 +93,7 @@ public class OrderAddressRespositoryTest {
 	
 	@Test
 	public void updateOrderAddressExpectedNoUpdate() {
-		OrderAddress orderAddress = new OrderAddress(999L, "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
+		OrderAddress orderAddress = new OrderAddress(999L, "Client A", "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
 		Assert.assertFalse(orderAddressRepository.update(orderAddress));
 	}
 	
