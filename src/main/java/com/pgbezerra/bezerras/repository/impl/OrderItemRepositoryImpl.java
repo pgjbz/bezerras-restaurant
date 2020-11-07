@@ -10,7 +10,6 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -135,9 +134,44 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 		sql.append(" FROM ");
 		sql.append(" 	TB_ORDER_ITEM ");
 		
+		final Map<Integer, Product> products = new HashMap<>();
+		final Map<Long, Order> orders = new HashMap<>();
+		
 		List<OrderItem> ordersItems = null;
 		try {
-			return namedJdbcTemplate.query(sql.toString(), rowMapper);
+			return namedJdbcTemplate.query(sql.toString(), (rs, rownum) -> {
+				OrderItem oi = new OrderItem();
+				oi.setId(rs.getLong("ID_ORDER_ITEM"));
+				oi.setQuantity(rs.getByte("QT_ORDER_ITEM"));
+				oi.setValue(rs.getBigDecimal("VL_ORDER_ITEM"));
+				
+				Integer idProduct = rs.getInt("ID_PRODUCT");
+				
+				if(products.containsKey(idProduct))
+					oi.setProduct(products.get(idProduct));
+				else {
+					Optional<Product> product = productRepository.findById(idProduct);
+					if(product.isPresent()) {
+						oi.setProduct(product.get());
+						products.put(idProduct, product.get());
+					}
+				}
+				
+				Long idOrder = rs.getLong("ID_ORDER");
+				
+				if(orders.containsKey(idOrder)) 
+					oi.setOrder(orders.get(idOrder));
+				else {
+					Optional<Order> order = orderRepository.findById(idOrder);
+					
+					if(order.isPresent()) {
+						oi.setOrder(order.get());
+						orders.put(idOrder, order.get());
+					}
+				}
+				
+				return oi;
+			});
 		} catch (EmptyResultDataAccessException e) {
 			ordersItems = new ArrayList<>();
 		}
@@ -166,7 +200,23 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 		OrderItem orderItem = null;
 
 		try {
-			orderItem = namedJdbcTemplate.queryForObject(sql.toString(), paramSource, rowMapper);
+			orderItem = namedJdbcTemplate.queryForObject(sql.toString(), paramSource, (rs, rownum) -> {
+				OrderItem oi = new OrderItem();
+				oi.setId(rs.getLong("ID_ORDER_ITEM"));
+				oi.setQuantity(rs.getByte("QT_ORDER_ITEM"));
+				oi.setValue(rs.getBigDecimal("VL_ORDER_ITEM"));
+				
+				Optional<Product> product = productRepository.findById(rs.getInt("ID_PRODUCT"));
+				Optional<Order> order = orderRepository.findById(rs.getLong("ID_ORDER"));
+				
+				if(product.isPresent())
+					oi.setProduct(product.get());
+				
+				if(order.isPresent())
+					oi.setOrder(order.get());
+				
+				return oi;
+			});
 			LOG.info(String.format("Order item with id: %s found successfuly %s", id, orderItem.toString()));
 		} catch (EmptyResultDataAccessException e) {
 			LOG.warn(String.format("No order item found with id: %s", id));
@@ -181,24 +231,5 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 			insert(orderItem);
 		return list;
 	}
-	
-	private RowMapper<OrderItem> rowMapper = (rs, rownum) -> {
-		OrderItem orderItem = new OrderItem();
-		orderItem.setId(rs.getLong("ID_ORDER_ITEM"));
-		orderItem.setQuantity(rs.getByte("QT_ORDER_ITEM"));
-		orderItem.setValue(rs.getBigDecimal("VL_ORDER_ITEM"));
-		
-		Optional<Product> product = productRepository.findById(rs.getInt("ID_PRODUCT"));
-		Optional<Order> order = orderRepository.findById(rs.getLong("ID_ORDER"));
-		
-		if(product.isPresent())
-			orderItem.setProduct(product.get());
-		
-		if(order.isPresent())
-			orderItem.setOrder(order.get());
-		
-		return orderItem;
-		
-	};
 
 }
