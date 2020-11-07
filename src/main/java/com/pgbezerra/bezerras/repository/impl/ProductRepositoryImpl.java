@@ -206,6 +206,43 @@ public class ProductRepositoryImpl implements ProductRepository{
 			insert(product);
 		return list;
 	}
+
+	@Override
+	public List<Product> findByCategory(Category category) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(" SELECT ");
+		sql.append(" 	ID_PRODUCT, ");
+		sql.append(" 	NM_PRODUCT, ");
+		sql.append(" 	ID_CATEGORY, ");
+		sql.append(" 	VL_PRODUCT ");
+		sql.append(" FROM ");
+		sql.append(" 	TB_PRODUCT ");
+		sql.append(" WHERE ");
+		sql.append(" 	ID_CATEGORY = :category ");
+		
+		MapSqlParameterSource paramSource = new MapSqlParameterSource();
+		paramSource.addValue("category", category.getId());
+		
+		List<Product> products = null;
+
+		try {
+			products = namedJdbcTemplate.query(sql.toString(), paramSource, (rs, rownum) -> {
+				Product obj = new Product();
+				obj.setId(rs.getInt("ID_PRODUCT"));
+				obj.setName(rs.getString("NM_PRODUCT"));
+				obj.setValue(rs.getBigDecimal("VL_PRODUCT"));
+				
+				obj.setCategory(category);
+				return obj;
+			});
+			LOG.info(String.format("Products category id: %s", category.getId()));
+		} catch (EmptyResultDataAccessException e) {
+			LOG.warn(String.format("No product found with id: %s", category.getId()));
+			products = new ArrayList<>();
+		}
+
+		return products;
+	}
 	
 	
 }

@@ -190,5 +190,23 @@ public class ProductRepositoryTest {
 		Assert.assertTrue(productReturn.isPresent());
 	}
 	
+	@Test
+	public void findProductByCategoryExpectedSuccess() {
+		Category category = new Category(null, "Food");
+		categoryRepository.insert(category);
+		Product product = new Product(null, "Feijoada", BigDecimal.valueOf(25.0), category);
+		productRepository.insert(product);
+		List<Product> products = productRepository.findByCategory(category);
+		Assert.assertNotEquals(0, products.size());
+	}
+	
+	@Test
+	public void findProductByCategoryExpectedError() {
+		Category category = new Category(null, "Food");
+		categoryRepository.insert(category);
+		List<Product> products = productRepository.findByCategory(category);
+		Assert.assertEquals(0, products.size());
+	}
+	
 
 }
