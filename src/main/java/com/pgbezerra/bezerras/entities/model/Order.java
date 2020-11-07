@@ -13,11 +13,11 @@ public class Order implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	private Integer id;
+	private Long id;
 	private Date date;
 	private BigDecimal value;
 	private BigDecimal deliveryValue;
-	private List<OrderItem> items = new ArrayList<>();;
+	private List<OrderItem> items = new ArrayList<>();
 	private OrderStatus orderStatus;
 	private OrderType orderType;
 	private OrderAddress orderAddress;
@@ -25,23 +25,22 @@ public class Order implements Serializable{
 	public Order() {
 	}
 
-	public Order(Integer id, Date date, BigDecimal value, BigDecimal deliveryValue, List<OrderItem> items,
+	public Order(Long id, Date date, BigDecimal value, BigDecimal deliveryValue,
 			OrderStatus orderStatus, OrderType orderType, OrderAddress orderAddress) {
 		this.id = id;
 		this.date = date;
 		this.value = value;
 		this.deliveryValue = deliveryValue;
-		this.items = items;
 		this.orderStatus = orderStatus;
 		this.orderType = orderType;
 		this.orderAddress = orderAddress;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -61,9 +60,6 @@ public class Order implements Serializable{
 		this.value = value;
 	}
 
-	public OrderStatus getOrderStatus() {
-		return orderStatus;
-	}
 	
 	public BigDecimal getDeliveryValue() {
 		return deliveryValue;
@@ -76,17 +72,21 @@ public class Order implements Serializable{
 	public List<OrderItem> getItems() {
 		return items;
 	}
+	
+	public OrderStatus getOrderStatus() {
+		return orderStatus;
+	}
 
-	public void setOrderStatus(OrderStatus orderStatus) {
-		this.orderStatus = orderStatus;
+	public void setOrderStatus(Integer orderStatus) {
+		this.orderStatus = OrderStatus.getByStatusCode(orderStatus);
 	}
 	
 	public OrderType getOrderType() {
 		return orderType;
 	}
 
-	public void setOrderType(OrderType orderType) {
-		this.orderType = orderType;
+	public void setOrderType(Integer orderType) {
+		this.orderType = OrderType.getByOrderTypeCode(orderType);
 	}
 	
 	public OrderAddress getOrderAddress() {

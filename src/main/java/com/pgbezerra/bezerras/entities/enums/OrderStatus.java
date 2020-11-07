@@ -2,7 +2,7 @@ package com.pgbezerra.bezerras.entities.enums;
 
 public enum OrderStatus {
 
-	COMPLETE(1), DOING(2), CANCELED(3);
+	COMPLETE(1), DOING(2), CANCELED(3), DELIVERED(4);
 
 	private Integer statusCode;
 
