@@ -62,6 +62,7 @@ public class OrderRepositoryTest {
 		tableRepository.insert(t1);
 		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.DOING, OrderType.TABLE, null);
 		orderRepository.insert(order);
+		Assert.assertTrue(order.getId() > 0L);
 	}
 	
 	@Test(expected = DatabaseException.class)
@@ -85,6 +86,7 @@ public class OrderRepositoryTest {
 		orderAddressRepository.insert(orderAddress);
 		Order order = new Order(null, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.DOING, OrderType.TABLE, orderAddress);
 		orderRepository.insert(order);
+		Assert.assertTrue(order.getId() > 0L);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)

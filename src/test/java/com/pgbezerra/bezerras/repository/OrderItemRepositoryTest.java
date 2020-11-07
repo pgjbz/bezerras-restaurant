@@ -82,6 +82,7 @@ public class OrderItemRepositoryTest {
 		productRepository.insert(p1);
 		orderRepository.insert(o1);
 		orderItemRepository.insert(oi1);
+		Assert.assertTrue(oi1.getId() > 0L);
 	}
 	
 	@Test(expected = DatabaseException.class)
@@ -147,7 +148,7 @@ public class OrderItemRepositoryTest {
 		oi1.setValue(BigDecimal.valueOf(30d));
 		Assert.assertTrue(orderItemRepository.update(oi1));;
 		oi1 = orderItemRepository.findById(oi1.getId()).get();
-		Assert.assertTrue(!orderItem.getValue().equals(oi1.getValue()));
+		Assert.assertNotEquals(orderItem.getValue(), oi1.getValue());
 	}
 	
 	@Test(expected = DatabaseException.class)

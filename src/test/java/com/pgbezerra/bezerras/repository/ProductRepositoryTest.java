@@ -72,6 +72,7 @@ public class ProductRepositoryTest {
 		categoryRepository.insert(category);
 		Product product = new Product(null, "Feijoada", BigDecimal.valueOf(25.0), category);
 		productRepository.insert(product);
+		Assert.assertTrue(product.getId() > 0);
 	}
 	
 	@Test(expected = DatabaseException.class)
