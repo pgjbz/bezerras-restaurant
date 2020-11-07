@@ -11,7 +11,6 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -31,14 +30,11 @@ public class ProductRepositoryImpl implements ProductRepository{
 	
 	private NamedParameterJdbcTemplate namedJdbcTemplate;
 	private CategoryRepository categoryRepository;
-	private Map<Integer, Category> categories;
 	
 	public ProductRepositoryImpl(NamedParameterJdbcTemplate namedJdbcTemplate,
 			CategoryRepository categoryRepository) {
 		this.namedJdbcTemplate = namedJdbcTemplate;
 		this.categoryRepository = categoryRepository;
-		
-		categories = new HashMap<>();
 	}
 
 	@Override
@@ -129,10 +125,32 @@ public class ProductRepositoryImpl implements ProductRepository{
 		sql.append(" FROM ");
 		sql.append(" 	TB_PRODUCT ");
 		
+		final Map<Integer, Category> categories = new HashMap<>();;
+		
 		List<Product> products = null;
 		try {
-			products = namedJdbcTemplate.query(sql.toString(), rowMapper);
-			categories.clear();
+			products = namedJdbcTemplate.query(sql.toString(), (rs, rownum) -> {
+				Product product = new Product();
+				product.setId(rs.getInt("ID_PRODUCT"));
+				product.setName(rs.getString("NM_PRODUCT"));
+				product.setValue(rs.getBigDecimal("VL_PRODUCT"));
+				
+				Integer idCategory = rs.getInt("ID_CATEGORY");
+				
+				if(categories.containsKey(idCategory)) {
+					LOG.info(String.format("The category[%s] has already been found", idCategory));
+					product.setCategory(categories.get(idCategory));
+				}
+				else {
+					LOG.info(String.format("Finding category %s", idCategory));
+					Optional<Category>  category = categoryRepository.findById(idCategory);
+					if(category.isPresent()) {
+						categories.put(idCategory, category.get());
+						product.setCategory(category.get());
+					}
+				}
+				return product;
+			});
 			return products;
 		} catch (EmptyResultDataAccessException e) {
 			products = new ArrayList<>();
@@ -160,9 +178,20 @@ public class ProductRepositoryImpl implements ProductRepository{
 		Product product = null;
 
 		try {
-			product = namedJdbcTemplate.queryForObject(sql.toString(), paramSource, rowMapper);
+			product = namedJdbcTemplate.queryForObject(sql.toString(), paramSource, (rs, rownum) -> {
+				Product obj = new Product();
+				obj.setId(rs.getInt("ID_PRODUCT"));
+				obj.setName(rs.getString("NM_PRODUCT"));
+				obj.setValue(rs.getBigDecimal("VL_PRODUCT"));
+				
+				Optional<Category> category = categoryRepository.findById(rs.getInt("ID_CATEGORY"));
+				
+				if(category.isPresent())
+					obj.setCategory(category.get());
+				
+				return obj;
+			});
 			LOG.info(String.format("Product with id: %s found successfuly %s", id, product.toString()));
-			categories.clear();
 		} catch (EmptyResultDataAccessException e) {
 			LOG.warn(String.format("No product found with id: %s", id));
 		}
@@ -177,28 +206,5 @@ public class ProductRepositoryImpl implements ProductRepository{
 		return list;
 	}
 	
-	
-	private RowMapper<Product> rowMapper = (rs, rownum) -> {
-		Product product = new Product();
-		product.setId(rs.getInt("ID_PRODUCT"));
-		product.setName(rs.getString("NM_PRODUCT"));
-		product.setValue(rs.getBigDecimal("VL_PRODUCT"));
-		
-		Integer idCategory = rs.getInt("ID_CATEGORY");
-		
-		if(categories.containsKey(idCategory)) {
-			LOG.info(String.format("The category[%s] has already been found", idCategory));
-			product.setCategory(categories.get(idCategory));
-		}
-		else {
-			LOG.info(String.format("Finding category %s", idCategory));
-			Optional<Category>  category = categoryRepository.findById(idCategory);
-			if(category.isPresent()) {
-				categories.put(idCategory, category.get());
-				product.setCategory(category.get());
-			}
-		}
-		return product;
-	};
 	
 }
