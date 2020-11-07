@@ -147,7 +147,8 @@ public class ProductRepositoryImpl implements ProductRepository{
 					if(category.isPresent()) {
 						categories.put(idCategory, category.get());
 						product.setCategory(category.get());
-					}
+					} else
+						categories.put(idCategory, null);
 				}
 				return product;
 			});

@@ -154,7 +154,8 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 					if(product.isPresent()) {
 						oi.setProduct(product.get());
 						products.put(idProduct, product.get());
-					}
+					} else
+						products.put(idProduct, null);
 				}
 				
 				Long idOrder = rs.getLong("ID_ORDER");
@@ -167,7 +168,8 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 					if(order.isPresent()) {
 						oi.setOrder(order.get());
 						orders.put(idOrder, order.get());
-					}
+					} else
+						orders.put(idOrder, null);
 				}
 				
 				return oi;
