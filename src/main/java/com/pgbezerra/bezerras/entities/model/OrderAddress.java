@@ -9,6 +9,7 @@ public class OrderAddress implements Serializable {
 	private Long id;
 	private String street;
 	private String number;
+	private String complement;
 	private String district;
 	private String city;
 	private String state;
@@ -47,6 +48,14 @@ public class OrderAddress implements Serializable {
 
 	public void setNumber(String number) {
 		this.number = number;
+	}
+	
+	public String getComplement() {
+		return complement;
+	}
+
+	public void setComplement(String complement) {
+		this.complement = complement;
 	}
 
 	public String getDistrict() {
