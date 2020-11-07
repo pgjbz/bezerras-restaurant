@@ -20,6 +20,7 @@ import com.pgbezerra.bezerras.entities.model.Order;
 import com.pgbezerra.bezerras.entities.model.OrderAddress;
 import com.pgbezerra.bezerras.entities.model.Table;
 import com.pgbezerra.bezerras.repository.OrderAddressRepository;
+import com.pgbezerra.bezerras.repository.OrderItemRepository;
 import com.pgbezerra.bezerras.repository.OrderRepository;
 import com.pgbezerra.bezerras.repository.TableRepository;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
@@ -32,12 +33,15 @@ public class OrderRepositoryImpl implements OrderRepository {
 	private NamedParameterJdbcTemplate namedJdbcTemplate;
 	private OrderAddressRepository orderAddressRepository;
 	private TableRepository tableRepository;
+	private OrderItemRepository orderItemRepository;
 
 	public OrderRepositoryImpl(NamedParameterJdbcTemplate namedJdbcTemplate,
-			OrderAddressRepository orderAddressRepository, TableRepository tableRepository) {
+			OrderAddressRepository orderAddressRepository, TableRepository tableRepository,
+			OrderItemRepository orderItemRepository) {
 		this.namedJdbcTemplate = namedJdbcTemplate;
 		this.orderAddressRepository = orderAddressRepository;
 		this.tableRepository = tableRepository;
+		this.orderItemRepository = orderItemRepository;
 	}
 
 	@Override
@@ -197,6 +201,9 @@ public class OrderRepositoryImpl implements OrderRepository {
 					} else
 						orderAddresses.put(idOrderAddress, null);
 				}
+				
+				order.getItems().addAll(orderItemRepository.findByOrder(order));
+				
 				return order;
 			});
 		} catch (EmptyResultDataAccessException e) {
@@ -248,6 +255,8 @@ public class OrderRepositoryImpl implements OrderRepository {
 				Optional<OrderAddress> orderAddress = orderAddressRepository.findById(idOrderAddress);
 				if (orderAddress.isPresent())
 					o.setOrderAddress(orderAddress.get());
+				
+				o.getItems().addAll(orderItemRepository.findByOrder(o));
 
 				return o;
 			});
