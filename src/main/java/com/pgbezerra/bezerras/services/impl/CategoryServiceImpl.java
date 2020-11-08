@@ -3,14 +3,19 @@ package com.pgbezerra.bezerras.services.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.pgbezerra.bezerras.entities.model.Category;
 import com.pgbezerra.bezerras.repository.CategoryRepository;
 import com.pgbezerra.bezerras.services.CategoryService;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
 
+@Service
 public class CategoryServiceImpl implements CategoryService {
+	
+	private static final Logger LOG = Logger.getLogger(CategoryServiceImpl.class);
 
 	@Autowired
 	private CategoryRepository categoryRepository;
@@ -29,7 +34,9 @@ public class CategoryServiceImpl implements CategoryService {
 	public Boolean update(Category obj) {
 		Category oldObj = findById(obj.getId());
 		updateDate(oldObj, obj);
-		return categoryRepository.update(oldObj);
+		Boolean updated = categoryRepository.update(oldObj);
+		LOG.info(String.format("Category %s updated: %s", obj, updated));
+		return updated;
 	}
 
 	private void updateDate(Category oldObj, Category obj) {
@@ -39,7 +46,8 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public List<Category> findAll() {
 		List<Category> categories = categoryRepository.findAll();
-		if(categories.size() > 0)
+		LOG.info(String.format("%s categories found", categories.size()));
+		if(!categories.isEmpty()) 
 			return categories;
 		throw new ResourceNotFoundException("No categories found");
 	}
@@ -47,6 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public Category findById(Integer id) {
 		Optional<Category> category = categoryRepository.findById(id);
+		LOG.info(String.format("Category with id %s found: ", category.isPresent()));
 		if(category.isPresent())
 			return category.get();
 		throw new ResourceNotFoundException(String.format("No categories found with id: %s", id));
@@ -55,7 +64,9 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public Boolean deleteById(Integer id) {
 		findById(id);
-		return categoryRepository.deleteById(id);
+		Boolean deleted = categoryRepository.deleteById(id);
+		LOG.info(String.format("Category %s deleted: %s", id, deleted));
+		return deleted;
 	}
 
 }
