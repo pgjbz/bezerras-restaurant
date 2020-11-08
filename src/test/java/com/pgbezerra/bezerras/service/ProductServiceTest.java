@@ -69,6 +69,7 @@ public class ProductServiceTest {
 		Mockito.when(productRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(p1));
 		Product product = productService.findById(1);
 		Assert.notNull(product, "Product not be null");
+		Mockito.verify(productRepository).findById(Mockito.anyInt());
 	}
 	
 	@Test(expected =  ResourceNotFoundException.class)
@@ -85,6 +86,9 @@ public class ProductServiceTest {
 		Boolean success = productService.update(p1);
 		
 		Assert.isTrue(success, "Expected true");
+		
+		Mockito.verify(productRepository).findById(Mockito.anyInt());
+		Mockito.verify(productRepository).update(p1);
 	}
 	
 	@Test
@@ -95,6 +99,8 @@ public class ProductServiceTest {
 		p1 = productService.insert(p1);
 		
 		Assert.isTrue(!p1.getId().equals(0), "Id not be 0");
+		
+		Mockito.verify(productRepository).insert(Mockito.any());
 	}
 	
 	@Test(expected = RuntimeException.class)
@@ -120,6 +126,8 @@ public class ProductServiceTest {
 		Mockito.when(productRepository.findAll()).thenReturn(products);
 		products = productService.findAll();
 		Assert.notEmpty(products, "Return not be empty");
+		
+		Mockito.verify(productRepository).findAll();
 	}
 	
 	@Test(expected = ResourceNotFoundException.class)
@@ -133,6 +141,8 @@ public class ProductServiceTest {
 		Mockito.when(productRepository.deleteById(1)).thenReturn(Boolean.TRUE);
 		Boolean deleted = productService.deleteById(1);
 		Assert.isTrue(deleted, "Expected no delete");
+		Mockito.verify(productRepository).findById(Mockito.anyInt());
+		Mockito.verify(productRepository).deleteById(1);
 	}
 	
 

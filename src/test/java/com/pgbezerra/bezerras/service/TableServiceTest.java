@@ -59,6 +59,7 @@ public class TableServiceTest {
 		Mockito.when(tableRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(t1));
 		Table table = tableService.findById(1);
 		Assert.notNull(table, "Table not be null");
+		Mockito.verify(tableRepository).findById(Mockito.anyInt());
 	}
 	
 	@Test(expected =  ResourceNotFoundException.class)
@@ -75,16 +76,21 @@ public class TableServiceTest {
 		Boolean success = tableService.update(t1);
 		
 		Assert.isTrue(success, "Expected true");
+		Mockito.verify(tableRepository).findById(Mockito.anyInt());
+		Mockito.verify(tableRepository).update(t1);
 	}
 	
 	@Test
 	public void insertTableExpectedSuccess() {
 		
-		Mockito.when(tableRepository.insert(t1)).thenReturn(t2);
+		t1.setId(null);
+		
+		Mockito.when(tableRepository.insert(Mockito.any())).thenReturn(t2);
 		
 		t1 = tableService.insert(t1);
 		
 		Assert.isTrue(!t1.getId().equals(0), "Id not be 0");
+		Mockito.verify(tableRepository).insert(Mockito.any());
 	}
 	
 	@Test(expected = DatabaseException.class)
@@ -110,6 +116,7 @@ public class TableServiceTest {
 		Mockito.when(tableRepository.findAll()).thenReturn(tables);
 		tables = tableService.findAll();
 		Assert.notEmpty(tables, "Return not be empty");
+		Mockito.verify(tableRepository).findAll();
 	}
 	
 	@Test(expected = ResourceNotFoundException.class)
@@ -123,6 +130,8 @@ public class TableServiceTest {
 		Mockito.when(tableRepository.deleteById(1)).thenReturn(Boolean.TRUE);
 		Boolean deleted = tableService.deleteById(1);
 		Assert.isTrue(deleted, "Expected no delete");
+		Mockito.verify(tableRepository).findById(Mockito.anyInt());
+		Mockito.verify(tableRepository).deleteById(Mockito.anyInt());
 	}
 	
 

@@ -59,6 +59,7 @@ public class CategoryServiceTest {
 		Mockito.when(categoryRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(c1));
 		Category category = categoryService.findById(1);
 		Assert.notNull(category, "Product not be null");
+		Mockito.verify(categoryRepository).findById(Mockito.anyInt());
 	}
 	
 	@Test(expected =  ResourceNotFoundException.class)
@@ -75,6 +76,8 @@ public class CategoryServiceTest {
 		Boolean success = categoryService.update(c1);
 		
 		Assert.isTrue(success, "Expected true");
+		Mockito.verify(categoryRepository).findById(Mockito.anyInt());
+		Mockito.verify(categoryRepository).update(c1);
 	}
 	
 	@Test
@@ -85,6 +88,8 @@ public class CategoryServiceTest {
 		c1 = categoryService.insert(c1);
 		
 		Assert.isTrue(!c1.getId().equals(0), "Id not be 0");
+		
+		Mockito.verify(categoryRepository).insert(Mockito.any());
 	}
 	
 	@Test(expected = DatabaseException.class)
@@ -110,6 +115,7 @@ public class CategoryServiceTest {
 		Mockito.when(categoryRepository.findAll()).thenReturn(categories);
 		categories = categoryService.findAll();
 		Assert.notEmpty(categories, "Return not be empty");
+		Mockito.verify(categoryRepository).findAll();
 	}
 	
 	@Test(expected = ResourceNotFoundException.class)
@@ -123,6 +129,8 @@ public class CategoryServiceTest {
 		Mockito.when(categoryRepository.deleteById(1)).thenReturn(Boolean.TRUE);
 		Boolean deleted = categoryService.deleteById(1);
 		Assert.isTrue(deleted, "Expected no delete");
+		Mockito.verify(categoryRepository).findById(Mockito.anyInt());
+		Mockito.verify(categoryRepository).deleteById(1);
 	}
 	
 
