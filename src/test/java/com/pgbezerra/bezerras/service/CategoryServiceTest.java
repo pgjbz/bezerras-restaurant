@@ -57,7 +57,8 @@ public class CategoryServiceTest {
 	@Test
 	public void findCategoryExpectedSuccess() {
 		Mockito.when(categoryRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(c1));
-		categoryService.findById(1);
+		Category category = categoryService.findById(1);
+		Assert.notNull(category, "Product not be null");
 	}
 	
 	@Test(expected =  ResourceNotFoundException.class)
@@ -107,7 +108,8 @@ public class CategoryServiceTest {
 		categories.add(c1);
 		categories.add(c2);
 		Mockito.when(categoryRepository.findAll()).thenReturn(categories);
-		categoryService.findAll();
+		categories = categoryService.findAll();
+		Assert.notEmpty(categories, "Return not be empty");
 	}
 	
 	@Test(expected = ResourceNotFoundException.class)
