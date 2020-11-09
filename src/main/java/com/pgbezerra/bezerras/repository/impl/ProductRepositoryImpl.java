@@ -16,6 +16,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pgbezerra.bezerras.entities.model.Category;
 import com.pgbezerra.bezerras.entities.model.Product;
@@ -38,6 +40,7 @@ public class ProductRepositoryImpl implements ProductRepository{
 	}
 
 	@Override
+	@Transactional
 	public Product insert(Product obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO ");
@@ -73,6 +76,7 @@ public class ProductRepositoryImpl implements ProductRepository{
 	}
 
 	@Override
+	@Transactional
 	public Boolean update(Product obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
@@ -101,6 +105,7 @@ public class ProductRepositoryImpl implements ProductRepository{
 	}
 
 	@Override
+	@Transactional
 	public Boolean deleteById(Integer id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" DELETE FROM ");
@@ -115,6 +120,7 @@ public class ProductRepositoryImpl implements ProductRepository{
 	}
 
 	@Override
+	@Transactional(readOnly = true, propagation = Propagation.NESTED)
 	public List<Product> findAll() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
@@ -161,6 +167,7 @@ public class ProductRepositoryImpl implements ProductRepository{
 	}
 
 	@Override
+	@Transactional(readOnly = true, propagation = Propagation.NESTED)
 	public Optional<Product> findById(Integer id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
@@ -201,6 +208,7 @@ public class ProductRepositoryImpl implements ProductRepository{
 	}
 
 	@Override
+	@Transactional
 	public List<Product> insertAll(List<Product> list) {
 		for(Product product: list)
 			insert(product);
@@ -208,6 +216,7 @@ public class ProductRepositoryImpl implements ProductRepository{
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Product> findByCategory(Category category) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");

@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pgbezerra.bezerras.entities.model.OrderAddress;
 import com.pgbezerra.bezerras.repository.OrderAddressRepository;
@@ -32,6 +33,7 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 	}
 
 	@Override
+	@Transactional
 	public OrderAddress insert(OrderAddress obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO ");
@@ -81,6 +83,7 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 	}
 
 	@Override
+	@Transactional
 	public Boolean update(OrderAddress obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
@@ -113,6 +116,7 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 	}
 
 	@Override
+	@Transactional
 	public Boolean deleteById(Long id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" DELETE FROM ");
@@ -126,6 +130,7 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<OrderAddress> findAll() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
@@ -151,6 +156,7 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<OrderAddress> findById(Long id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
@@ -183,6 +189,7 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 	}
 
 	@Override
+	@Transactional
 	public List<OrderAddress> insertAll(List<OrderAddress> list) {
 		for (OrderAddress orderAddress : list)
 			insert(orderAddress);

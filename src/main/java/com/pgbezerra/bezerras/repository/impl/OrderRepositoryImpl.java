@@ -15,6 +15,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pgbezerra.bezerras.entities.model.Order;
 import com.pgbezerra.bezerras.entities.model.OrderAddress;
@@ -45,6 +47,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 	}
 
 	@Override
+	@Transactional
 	public Order insert(Order obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO ");
@@ -96,6 +99,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 	}
 
 	@Override
+	@Transactional
 	public Boolean update(Order obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
@@ -133,6 +137,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 	}
 
 	@Override
+	@Transactional
 	public Boolean deleteById(Long id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" DELETE FROM ");
@@ -147,6 +152,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 	}
 
 	@Override
+	@Transactional(readOnly = true, propagation = Propagation.NESTED)
 	public List<Order> findAll() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
@@ -214,6 +220,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 	}
 
 	@Override
+	@Transactional(readOnly = true, propagation = Propagation.NESTED)
 	public Optional<Order> findById(Long id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
@@ -269,6 +276,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 	}
 
 	@Override
+	@Transactional
 	public List<Order> insertAll(List<Order> list) {
 		for (Order order : list)
 			insert(order);

@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pgbezerra.bezerras.entities.model.Table;
 import com.pgbezerra.bezerras.repository.TableRepository;
@@ -32,6 +33,7 @@ public class TableRepositoryImpl implements TableRepository {
 	}
 
 	@Override
+	@Transactional
 	public Table insert(Table obj) {
 		
 		StringBuilder sql = new StringBuilder();
@@ -63,6 +65,7 @@ public class TableRepositoryImpl implements TableRepository {
 	}
 
 	@Override
+	@Transactional
 	public Boolean update(Table obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
@@ -85,6 +88,7 @@ public class TableRepositoryImpl implements TableRepository {
 	}
 
 	@Override
+	@Transactional
 	public Boolean deleteById(Integer id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" DELETE FROM ");
@@ -99,6 +103,7 @@ public class TableRepositoryImpl implements TableRepository {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Table> findAll() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
@@ -117,6 +122,7 @@ public class TableRepositoryImpl implements TableRepository {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<Table> findById(Integer id) {
 		
 		StringBuilder sql = new StringBuilder();
@@ -145,6 +151,7 @@ public class TableRepositoryImpl implements TableRepository {
 	}
 
 	@Override
+	@Transactional
 	public List<Table> insertAll(List<Table> list) {
 		for(Table obj: list)
 			insert(obj);
