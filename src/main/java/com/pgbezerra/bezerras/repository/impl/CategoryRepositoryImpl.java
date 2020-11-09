@@ -37,13 +37,17 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 	public Category insert(Category obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO  ");
-		sql.append(" 	TB_CATEGORY(NM_CATEGORY) ");
-		sql.append(" VALUES ");
-		sql.append(" 	(:name) ");
+		sql.append(" 	TB_CATEGORY( ");
+		sql.append(" 	NM_CATEGORY, ");
+		sql.append(" 	FL_MENU) ");
+		sql.append(" VALUES( ");
+		sql.append(" 	:name, ");
+		sql.append(" 	:menu) ");
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("name", obj.getName());
+		paramSource.addValue("menu", obj.getIsMenu());
 		int rowsAffected = 0;
 
 		try {
@@ -63,6 +67,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 	}
 
 	@Override
+	@Transactional
 	public Boolean update(Category obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
@@ -85,6 +90,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 	}
 
 	@Override
+	@Transactional
 	public Boolean deleteById(Integer id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" DELETE FROM ");
@@ -99,11 +105,13 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Category> findAll() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
 		sql.append(" 	ID_CATEGORY, ");
-		sql.append(" 	NM_CATEGORY ");
+		sql.append(" 	NM_CATEGORY, ");
+		sql.append(" 	FL_MENU ");
 		sql.append(" FROM ");
 		sql.append(" 	TB_CATEGORY ");
 		List<Category> categories = null;
@@ -118,11 +126,13 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<Category> findById(Integer id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
 		sql.append(" 	ID_CATEGORY, ");
-		sql.append(" 	NM_CATEGORY ");
+		sql.append(" 	NM_CATEGORY, ");
+		sql.append(" 	FL_MENU ");
 		sql.append(" FROM ");
 		sql.append(" 	TB_CATEGORY ");
 		sql.append(" WHERE ");
@@ -144,6 +154,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 	}
 
 	@Override
+	@Transactional
 	public List<Category> insertAll(List<Category> list) {
 		for(Category category: list)
 			insert(category);
@@ -154,6 +165,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 		Category category = new Category();
 		category.setId(rs.getInt("ID_CATEGORY"));
 		category.setName(rs.getString("NM_CATEGORY"));
+		category.setIsMenu(rs.getBoolean("FL_MENU"));
 		return category;
 	};
 

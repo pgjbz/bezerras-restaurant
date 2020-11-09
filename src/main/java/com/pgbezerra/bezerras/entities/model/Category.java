@@ -8,6 +8,7 @@ public class Category implements Serializable {
 	
 	private Integer id;
 	private String name;
+	private Boolean isMenu;
 	
 	public Category() {
 	}
@@ -31,6 +32,14 @@ public class Category implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public Boolean getIsMenu() {
+		return isMenu;
+	}
+
+	public void setIsMenu(Boolean isMenu) {
+		this.isMenu = isMenu;
 	}
 
 	@Override
@@ -60,8 +69,8 @@ public class Category implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Category [id=" + id + ", name=" + name + "]";
+		return "Category [id=" + id + ", name=" + name + ", isMenu=" + isMenu + "]";
 	}
-	
+
 
 }

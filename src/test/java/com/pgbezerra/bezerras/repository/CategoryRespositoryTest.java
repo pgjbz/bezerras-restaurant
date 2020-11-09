@@ -43,6 +43,25 @@ public class CategoryRespositoryTest {
 		Assert.assertNotEquals(null, category.getId());
 	}
 	
+	@Test
+	public void insertNewCategoryWithoutisMenuValueExpectedSuccessAndReturnNewPK() {
+		Category category = new Category(null, "Food");
+		categoryRepository.insert(category);
+		category = categoryRepository.findById(category.getId()).get();
+		
+		Assert.assertNotEquals(null, category.getId());
+	}
+	
+	@Test
+	public void insertNewCategoryWithisMenuValueTrueExpectedSuccessAndReturnNewPK() {
+		Category category = new Category(null, "Food");
+		category.setIsMenu(true);
+		categoryRepository.insert(category);
+		category = categoryRepository.findById(category.getId()).get();
+		
+		Assert.assertNotEquals(null, category.getId());
+	}
+	
 	@Test(expected = DatabaseException.class)
 	public void insertNewCategoryWithOutNameExpectedException() {
 		Category category = new Category(null, null);

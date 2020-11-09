@@ -92,6 +92,18 @@ public class CategoryServiceTest {
 		Mockito.verify(categoryRepository).insert(Mockito.any());
 	}
 	
+	@Test
+	public void insertCategoryWithMenuValueTrueExpectedSuccess() {
+		
+		Mockito.when(categoryRepository.insert(c1)).thenReturn(c2);
+		
+		c1.setIsMenu(true);
+		c1 = categoryService.insert(c1);
+		Assert.isTrue(!c1.getId().equals(0), "Id not be 0");
+		
+		Mockito.verify(categoryRepository).insert(Mockito.any());
+	}
+	
 	@Test(expected = DatabaseException.class)
 	public void insertCategoryExpectedException() {
 		Category obj = new Category(null, null);
