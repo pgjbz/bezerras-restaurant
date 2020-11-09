@@ -31,9 +31,9 @@ import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 public class OrderRepositoryTest {
 
-	private static final List<OrderAddress> orderAddresses = new ArrayList<>();
-	private static final List<Order> orders = new ArrayList<>();
-	private static final List<Table> tables = new ArrayList<>();
+	private List<OrderAddress> orderAddresses = new ArrayList<>();
+	private List<Order> orders = new ArrayList<>();
+	private List<Table> tables = new ArrayList<>();
 	
 	@Autowired
 	private OrderRepository orderRepository;
@@ -173,9 +173,9 @@ public class OrderRepositoryTest {
 	
 	@Test
 	public void findAllExpectReturn() {
-		tableRepository.insertAll(OrderRepositoryTest.tables);
-		orderAddressRepository.insertAll(OrderRepositoryTest.orderAddresses);
-		orderRepository.insertAll(OrderRepositoryTest.orders);
+		tableRepository.insertAll(tables);
+		orderAddressRepository.insertAll(orderAddresses);
+		orderRepository.insertAll(orders);
 		List<Order> orders = orderRepository.findAll();
 		Assert.assertNotEquals(0, orders.size());
 	}

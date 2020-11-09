@@ -27,7 +27,7 @@ public class TableRespositoryTest {
 	@Autowired
 	private TableRepository tableRepository;
 
-	private static final List<Table> tables = new ArrayList<>();
+	private List<Table> tables = new ArrayList<>();
 
 	{
 		Table c1 = new Table(null, "Food");
@@ -51,7 +51,7 @@ public class TableRespositoryTest {
 
 	@Test
 	public void findAllTablesExpectedSuccess() {
-		tableRepository.insertAll(TableRespositoryTest.tables);
+		tableRepository.insertAll(tables);
 		List<Table> tables = tableRepository.findAll();
 		Assert.assertTrue("Expected more than 1 item", tables.size() > 0);
 	}
@@ -69,14 +69,14 @@ public class TableRespositoryTest {
 
 	@Test
 	public void findByIdExpectedReturn() {
-		tableRepository.insertAll(TableRespositoryTest.tables);
+		tableRepository.insertAll(tables);
 		Assert.assertTrue(tableRepository.findById(1).isPresent());
 	}
 
 	@Test(expected = DatabaseException.class)
 	public void updateTableWithoutNameExpectedError() {
 
-		tableRepository.insertAll(TableRespositoryTest.tables);
+		tableRepository.insertAll(tables);
 		Table table = tableRepository.findById(1).get();
 		table.setName(null);
 		tableRepository.update(table);
@@ -85,7 +85,7 @@ public class TableRespositoryTest {
 	@Test
 	public void updateTableExpectedSuccess() {
 
-		tableRepository.insertAll(TableRespositoryTest.tables);
+		tableRepository.insertAll(tables);
 		Table table = tableRepository.findById(1).get();
 		table.setName("Fashion");
 		Assert.assertTrue(tableRepository.update(table));
@@ -104,7 +104,7 @@ public class TableRespositoryTest {
 
 	@Test
 	public void deleteByIdExpectedDeleteSuccess() {
-		tableRepository.insertAll(TableRespositoryTest.tables);
+		tableRepository.insertAll(tables);
 		Assert.assertTrue(tableRepository.deleteById(1));
 	}
 

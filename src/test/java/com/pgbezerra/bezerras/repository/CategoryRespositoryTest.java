@@ -27,7 +27,7 @@ public class CategoryRespositoryTest {
 	@Autowired
 	private CategoryRepository categoryRepository;
 	
-	private static final List<Category> categories = new ArrayList<>();
+	private List<Category> categories = new ArrayList<>();
 	
 	{
 		Category c1 = new Category(null, "Food");
@@ -70,7 +70,7 @@ public class CategoryRespositoryTest {
 	
 	@Test
 	public void findAllCategoriesExpectedSuccess() {
-		categoryRepository.insertAll(CategoryRespositoryTest.categories);
+		categoryRepository.insertAll(categories);
 		List<Category> categories = categoryRepository.findAll();
 		Assert.assertTrue("Expected more than 1 item", categories.size() > 0);
 	}
@@ -88,14 +88,14 @@ public class CategoryRespositoryTest {
 	
 	@Test
 	public void findByIdExpectedReturn() {
-		categoryRepository.insertAll(CategoryRespositoryTest.categories);
+		categoryRepository.insertAll(categories);
 		Assert.assertTrue(categoryRepository.findById(1).isPresent());
 	}
 	
 	@Test(expected = DatabaseException.class)
 	public void updateCategoryWithoutNameExpectedError() {
 		
-		categoryRepository.insertAll(CategoryRespositoryTest.categories);
+		categoryRepository.insertAll(categories);
 		Category category = categoryRepository.findById(1).get();
 		category.setName(null);
 		categoryRepository.update(category);
@@ -104,7 +104,7 @@ public class CategoryRespositoryTest {
 	@Test
 	public void updateCategoryExpectedSuccess() {
 		
-		categoryRepository.insertAll(CategoryRespositoryTest.categories);
+		categoryRepository.insertAll(categories);
 		Category category = categoryRepository.findById(1).get();
 		category.setName("Fashion");
 		Assert.assertTrue(categoryRepository.update(category));
@@ -123,7 +123,7 @@ public class CategoryRespositoryTest {
 	
 	@Test
 	public void deleteByIdExpectedDeleteSuccess() {
-		categoryRepository.insertAll(CategoryRespositoryTest.categories);
+		categoryRepository.insertAll(categories);
 		Assert.assertTrue(categoryRepository.deleteById(1));
 	}
 	

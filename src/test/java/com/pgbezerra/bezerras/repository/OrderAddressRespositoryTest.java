@@ -27,7 +27,7 @@ public class OrderAddressRespositoryTest {
 	@Autowired
 	private OrderAddressRepository orderAddressRepository;
 	
-	private static final List<OrderAddress> orderAddresses = new ArrayList<>();
+	private List<OrderAddress> orderAddresses = new ArrayList<>();
 	
 	{
 		OrderAddress oa1 = new OrderAddress(null, "Client A", "Rua A", "123", "Centro", "Sao Paulo", "Sao Paulo");
@@ -51,7 +51,7 @@ public class OrderAddressRespositoryTest {
 	
 	@Test
 	public void findAllCategoriesExpectedSuccess() {
-		orderAddressRepository.insertAll(OrderAddressRespositoryTest.orderAddresses);
+		orderAddressRepository.insertAll(orderAddresses);
 		List<OrderAddress> orderAddresses = orderAddressRepository.findAll();
 		Assert.assertTrue("Expected more than 1 item", orderAddresses.size() > 0);
 	}
@@ -69,14 +69,14 @@ public class OrderAddressRespositoryTest {
 	
 	@Test
 	public void findByIdExpectedReturn() {
-		orderAddressRepository.insertAll(OrderAddressRespositoryTest.orderAddresses);
+		orderAddressRepository.insertAll(orderAddresses);
 		Assert.assertTrue(orderAddressRepository.findById(1L).isPresent());
 	}
 	
 	@Test(expected = DatabaseException.class)
 	public void updateOrderAddressWithoutStreetExpectedError() {
 		
-		orderAddressRepository.insertAll(OrderAddressRespositoryTest.orderAddresses);
+		orderAddressRepository.insertAll(orderAddresses);
 		OrderAddress orderAddress = orderAddressRepository.findById(1L).get();
 		orderAddress.setStreet(null);
 		orderAddressRepository.update(orderAddress);
@@ -85,7 +85,7 @@ public class OrderAddressRespositoryTest {
 	@Test
 	public void updateOrderAddressExpectedSuccess() {
 		
-		orderAddressRepository.insertAll(OrderAddressRespositoryTest.orderAddresses);
+		orderAddressRepository.insertAll(orderAddresses);
 		OrderAddress orderAddress = orderAddressRepository.findById(1L).get();
 		orderAddress.setStreet("Fashion");
 		Assert.assertTrue(orderAddressRepository.update(orderAddress));
@@ -104,7 +104,7 @@ public class OrderAddressRespositoryTest {
 	
 	@Test
 	public void deleteByIdExpectedDeleteSuccess() {
-		orderAddressRepository.insertAll(OrderAddressRespositoryTest.orderAddresses);
+		orderAddressRepository.insertAll(orderAddresses);
 		Assert.assertTrue(orderAddressRepository.deleteById(1L));
 	}
 	

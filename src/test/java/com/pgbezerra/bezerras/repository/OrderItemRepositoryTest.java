@@ -32,11 +32,11 @@ import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 public class OrderItemRepositoryTest {
 
-	private static final List<Category> categories = new ArrayList<>();
-	private static final List<Product> products = new ArrayList<>();
-	private static final List<Order> orders = new ArrayList<>();
-	private static final List<OrderItem> orderItems = new ArrayList<>();
-	private static final List<Table> tables = new ArrayList<>();
+	private List<Category> categories = new ArrayList<>();
+	private List<Product> products = new ArrayList<>();
+	private List<Order> orders = new ArrayList<>();
+	private List<OrderItem> orderItems = new ArrayList<>();
+	private List<Table> tables = new ArrayList<>();
 	
 	@Autowired
 	private ProductRepository productRepository;
@@ -101,7 +101,7 @@ public class OrderItemRepositoryTest {
 		categoryRepository.insertAll(categories);
 		productRepository.insertAll(products);
 		orderRepository.insertAll(orders);
-		orderItemRepository.insertAll(OrderItemRepositoryTest.orderItems);
+		orderItemRepository.insertAll(orderItems);
 		List<OrderItem> orderItems = orderItemRepository.findAll();
 		Assert.assertTrue(orderItems.size() > 0);
 	}
@@ -191,7 +191,7 @@ public class OrderItemRepositoryTest {
 		categoryRepository.insertAll(categories);
 		productRepository.insertAll(products);
 		orderRepository.insertAll(orders);
-		orderItemRepository.insertAll(OrderItemRepositoryTest.orderItems);
+		orderItemRepository.insertAll(orderItems);
 		List<OrderItem> orderItems = orderItemRepository.findByOrder(orders.get(0));
 		Assert.assertTrue(orderItems.size() > 0);
 	}

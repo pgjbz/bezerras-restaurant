@@ -27,8 +27,8 @@ import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 public class ProductRepositoryTest {
 
-	private static final List<Category> categories = new ArrayList<>();
-	private static final List<Product> products = new ArrayList<>();
+	private List<Category> categories = new ArrayList<>();
+	private List<Product> products = new ArrayList<>();
 	
 	@Autowired
 	private ProductRepository productRepository;
@@ -166,8 +166,8 @@ public class ProductRepositoryTest {
 	
 	@Test
 	public void findAllExpectReturn() {
-		categoryRepository.insertAll(ProductRepositoryTest.categories);
-		productRepository.insertAll(ProductRepositoryTest.products);
+		categoryRepository.insertAll(categories);
+		productRepository.insertAll(products);
 		List<Product> products = productRepository.findAll();
 		for(Product p: products)
 			System.out.println(p.toString());
