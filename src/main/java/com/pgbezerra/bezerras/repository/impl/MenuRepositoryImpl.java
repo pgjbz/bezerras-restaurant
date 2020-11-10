@@ -17,6 +17,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pgbezerra.bezerras.entities.enums.DayOfWeek;
 import com.pgbezerra.bezerras.entities.model.Menu;
 import com.pgbezerra.bezerras.repository.MenuItemRepository;
 import com.pgbezerra.bezerras.repository.MenuRepository;
@@ -180,5 +181,40 @@ public class MenuRepositoryImpl implements MenuRepository {
 			insert(menu);
 		return list;
 	}
+
+	@Override
+	public Optional<Menu> findByDayOfWeek(DayOfWeek dayOfWeek) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(" SELECT ");
+		sql.append(" 	ID_MENU, ");
+		sql.append(" 	NM_MENU, ");
+		sql.append(" 	DAY_OF_WEEK ");
+		sql.append(" FROM ");
+		sql.append(" 	TB_MENU ");
+		sql.append(" WHERE ");
+		sql.append(" 	DAY_OF_WEEK = :dayOfWeek ");
+
+		MapSqlParameterSource paramSource = new MapSqlParameterSource();
+		paramSource.addValue("dayOfWeek", dayOfWeek.getDayCode());
+
+		Menu menu = null;
+
+		try {
+			menu = namedJdbcTemplate.queryForObject(sql.toString(), paramSource, (rs, rownum) -> {
+				Menu m = new Menu();
+				m.setId(rs.getLong("ID_MENU"));
+				m.setName(rs.getString("NM_MENU"));
+				m.setDayOfWeek(rs.getInt("DAY_OF_WEEK"));
+				m.getItems().addAll(menuItemRepository.findByMenu(m));
+				return m;
+			});
+			LOG.info(String.format("Menu with day of week: %s found successfuly %s", dayOfWeek, menu.toString()));
+		} catch (EmptyResultDataAccessException e) {
+			LOG.warn(String.format("No menu found with id: %s", dayOfWeek));
+		}
+
+		return Optional.ofNullable(menu);
+	}
+
 
 }

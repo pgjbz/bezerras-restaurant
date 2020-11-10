@@ -127,5 +127,17 @@ public class MenuRepositoryTest {
 		Assert.assertTrue(m1.getId() > 0L);
 	}
 	
+	@Test
+	public void findByDayOfWeekExpectedSuccess() {
+		Menu m1 = new Menu(null, "Segundou", DayOfWeek.SUNDAY);
+		menuRepository.insert(m1);
+		Assert.assertTrue(menuRepository.findByDayOfWeek(DayOfWeek.SUNDAY).isPresent());
+	}
+	
+	@Test
+	public void findByDayOfWeekExpectedError() {
+		Assert.assertFalse(menuRepository.findByDayOfWeek(DayOfWeek.SUNDAY).isPresent());
+	}
+	
 
 }
