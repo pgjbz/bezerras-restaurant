@@ -89,7 +89,7 @@ public class OrderAddressServiceTest {
 		
 		oa1 = orderAddressService.insert(oa1);
 		
-		Assert.isTrue(!oa1.getId().equals(0), "Id not be 0");
+		Assert.isTrue(!oa1.getId().equals(0L), "Id not be 0");
 		Mockito.verify(orderAddressRepository).insert(Mockito.any());
 	}
 	

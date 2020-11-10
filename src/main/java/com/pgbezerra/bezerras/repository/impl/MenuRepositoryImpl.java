@@ -56,17 +56,19 @@ public class MenuRepositoryImpl implements MenuRepository {
 
 		try {
 			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+			if (rowsAffected > 0) {
+				obj.setId(keyHolder.getKey().longValue());
+				LOG.info(String.format("New row %s inserted successfuly", obj.toString()));
+			}  else {
+				LOG.error(String.format("Can't insert a new row %s", obj.toString()));
+				throw new DatabaseException("Can't insert a new row");
+			}
 		} catch (DataIntegrityViolationException e) {
-			LOG.error(e.getMessage());
+			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), obj.toString());
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
-
-		if (rowsAffected > 0) {
-			obj.setId(keyHolder.getKey().longValue());
-			LOG.info(String.format("New row %s inserted successfuly", obj.toString()));
-		} else {
-			LOG.error(String.format("Can't insert a new row %s", obj.toString()));
-			throw new DatabaseException("Can't insert a new row");
-		}
+		
 		return obj;
 	}
 
