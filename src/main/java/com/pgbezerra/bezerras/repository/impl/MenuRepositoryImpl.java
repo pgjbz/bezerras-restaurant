@@ -41,12 +41,12 @@ public class MenuRepositoryImpl implements MenuRepository {
 	public Menu insert(Menu obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO  ");
-		sql.append(" 	TB_MENU( ");
-		sql.append(" 		NM_MENU, ");
-		sql.append(" 		DAY_OF_WEEK) ");
+		sql.append("   TB_MENU( ");
+		sql.append("     NM_MENU, ");
+		sql.append("     DAY_OF_WEEK) ");
 		sql.append(" VALUES( ");
-		sql.append(" 	:name, ");
-		sql.append(" 	:dayOfWeek) ");
+		sql.append("   :name, ");
+		sql.append("   :dayOfWeek) ");
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
@@ -59,7 +59,7 @@ public class MenuRepositoryImpl implements MenuRepository {
 			if (rowsAffected > 0) {
 				obj.setId(keyHolder.getKey().longValue());
 				LOG.info(String.format("New row %s inserted successfuly", obj.toString()));
-			}  else {
+			} else {
 				LOG.error(String.format("Can't insert a new row %s", obj.toString()));
 				throw new DatabaseException("Can't insert a new row");
 			}
@@ -68,7 +68,7 @@ public class MenuRepositoryImpl implements MenuRepository {
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
-		
+
 		return obj;
 	}
 
@@ -77,12 +77,12 @@ public class MenuRepositoryImpl implements MenuRepository {
 	public Boolean update(Menu obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
-		sql.append(" 	TB_MENU ");
+		sql.append("   TB_MENU ");
 		sql.append(" SET ");
-		sql.append(" 	NM_MENU = :name, ");
-		sql.append(" 	DAY_OF_WEEK = :dayOfWeek ");
+		sql.append("   NM_MENU = :name, ");
+		sql.append("   DAY_OF_WEEK = :dayOfWeek ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_MENU = :id ");
+		sql.append("   ID_MENU = :id ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("name", obj.getName());
@@ -102,9 +102,9 @@ public class MenuRepositoryImpl implements MenuRepository {
 	public Boolean deleteById(Long id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" DELETE FROM ");
-		sql.append(" 	TB_MENU ");
+		sql.append("   TB_MENU ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_MENU = :id ");
+		sql.append("   ID_MENU = :id ");
 
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", id);
@@ -117,13 +117,13 @@ public class MenuRepositoryImpl implements MenuRepository {
 	public List<Menu> findAll() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	ID_MENU, ");
-		sql.append(" 	NM_MENU, ");
-		sql.append(" 	DAY_OF_WEEK ");
+		sql.append("   ID_MENU, ");
+		sql.append("   NM_MENU, ");
+		sql.append("   DAY_OF_WEEK ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_MENU ");
+		sql.append("   TB_MENU ");
 		List<Menu> menus = null;
-		
+
 		try {
 			return namedJdbcTemplate.query(sql.toString(), (rs, rownum) -> {
 				Menu menu = new Menu();
@@ -146,13 +146,13 @@ public class MenuRepositoryImpl implements MenuRepository {
 	public Optional<Menu> findById(Long id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	ID_MENU, ");
-		sql.append(" 	NM_MENU, ");
-		sql.append(" 	DAY_OF_WEEK ");
+		sql.append("   ID_MENU, ");
+		sql.append("   NM_MENU, ");
+		sql.append("   DAY_OF_WEEK ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_MENU ");
+		sql.append("   TB_MENU ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_MENU = :id ");
+		sql.append("   ID_MENU = :id ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("id", id);
@@ -179,7 +179,7 @@ public class MenuRepositoryImpl implements MenuRepository {
 	@Override
 	@Transactional
 	public List<Menu> insertAll(List<Menu> list) {
-		for(Menu menu: list)
+		for (Menu menu : list)
 			insert(menu);
 		return list;
 	}
@@ -188,13 +188,13 @@ public class MenuRepositoryImpl implements MenuRepository {
 	public Optional<Menu> findByDayOfWeek(DayOfWeek dayOfWeek) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	ID_MENU, ");
-		sql.append(" 	NM_MENU, ");
-		sql.append(" 	DAY_OF_WEEK ");
+		sql.append("   ID_MENU, ");
+		sql.append("   NM_MENU, ");
+		sql.append("   DAY_OF_WEEK ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_MENU ");
+		sql.append("   TB_MENU ");
 		sql.append(" WHERE ");
-		sql.append(" 	DAY_OF_WEEK = :dayOfWeek ");
+		sql.append("   DAY_OF_WEEK = :dayOfWeek ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("dayOfWeek", dayOfWeek.getDayCode());
@@ -217,6 +217,5 @@ public class MenuRepositoryImpl implements MenuRepository {
 
 		return Optional.ofNullable(menu);
 	}
-
 
 }

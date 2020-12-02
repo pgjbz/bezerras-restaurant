@@ -44,16 +44,16 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 	public OrderItem insert(OrderItem obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO ");
-		sql.append(" 	TB_ORDER_ITEM( ");
-		sql.append(" 		ID_PRODUCT, ");
-		sql.append(" 		ID_ORDER, ");
-		sql.append(" 		QT_ORDER_ITEM, ");
-		sql.append(" 		VL_ORDER_ITEM) ");
+		sql.append("   TB_ORDER_ITEM( ");
+		sql.append("     ID_PRODUCT, ");
+		sql.append("     ID_ORDER, ");
+		sql.append("     QT_ORDER_ITEM, ");
+		sql.append("     VL_ORDER_ITEM) ");
 		sql.append(" VALUES( ");
-		sql.append(" 	:product, ");
-		sql.append(" 	:order, ");
-		sql.append(" 	:quantity, ");
-		sql.append(" 	:value) ");
+		sql.append("   :product, ");
+		sql.append("   :order, ");
+		sql.append("   :quantity, ");
+		sql.append("   :value) ");
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
@@ -68,7 +68,7 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 			if (rowsAffected > 0) {
 				obj.setId(keyHolder.getKey().longValue());
 				LOG.info(String.format("New row %s inserted successfuly", obj.toString()));
-			}  else {
+			} else {
 				LOG.error(String.format("Can't insert a new row %s", obj.toString()));
 				throw new DatabaseException("Can't insert a new row");
 			}
@@ -85,14 +85,14 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 	public Boolean update(OrderItem obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
-		sql.append(" 	TB_ORDER_ITEM ");
+		sql.append("   TB_ORDER_ITEM ");
 		sql.append(" SET ");
-		sql.append(" 	ID_PRODUCT = :product, ");
-		sql.append(" 	ID_ORDER = :order, ");
-		sql.append(" 	QT_ORDER_ITEM = :quantity, ");
-		sql.append(" 	VL_ORDER_ITEM = :value ");
+		sql.append("   ID_PRODUCT = :product, ");
+		sql.append("   ID_ORDER = :order, ");
+		sql.append("   QT_ORDER_ITEM = :quantity, ");
+		sql.append("   VL_ORDER_ITEM = :value ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_ORDER_ITEM = :id ");
+		sql.append("   ID_ORDER_ITEM = :id ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("product", Objects.nonNull(obj.getProduct()) ? obj.getProduct().getId() : null);
@@ -115,9 +115,9 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 
 		StringBuilder sql = new StringBuilder();
 		sql.append(" DELETE FROM ");
-		sql.append(" 	TB_ORDER_ITEM ");
+		sql.append("   TB_ORDER_ITEM ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_ORDER_ITEM = :id ");
+		sql.append("   ID_ORDER_ITEM = :id ");
 
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", id);
@@ -130,21 +130,21 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 	public List<OrderItem> findAll() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	OI.ID_ORDER_ITEM, ");
-		sql.append(" 	OI.ID_PRODUCT, ");
-		sql.append(" 	OI.ID_ORDER, ");
-		sql.append(" 	OI.QT_ORDER_ITEM, ");
-		sql.append(" 	OI.VL_ORDER_ITEM, ");
-		sql.append(" 	O.ID_ORDER, ");
-		sql.append(" 	O.DT_ORDER, ");
-		sql.append(" 	O.VL_ORDER, ");
-		sql.append(" 	O.ID_ORDER_TYPE, ");
-		sql.append(" 	O.VL_DELIVERY, ");
+		sql.append("   OI.ID_ORDER_ITEM, ");
+		sql.append("   OI.ID_PRODUCT, ");
+		sql.append("   OI.ID_ORDER, ");
+		sql.append("   OI.QT_ORDER_ITEM, ");
+		sql.append("   OI.VL_ORDER_ITEM, ");
+		sql.append("   O.ID_ORDER, ");
+		sql.append("   O.DT_ORDER, ");
+		sql.append("   O.VL_ORDER, ");
+		sql.append("   O.ID_ORDER_TYPE, ");
+		sql.append("   O.VL_DELIVERY, ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_ORDER_ITEM OI ");
-		sql.append(" 	LEFT JOIN ");
-		sql.append(" 		TB_ORDER O ");
-		sql.append(" 	ON O.ID_ORDER = OI.ID_ORDER ");
+		sql.append("   TB_ORDER_ITEM OI ");
+		sql.append("   LEFT JOIN ");
+		sql.append("     TB_ORDER O ");
+		sql.append("   ON O.ID_ORDER = OI.ID_ORDER ");
 
 		final Map<Integer, Product> products = new HashMap<>();
 		final Map<Long, Order> orders = new HashMap<>();
@@ -198,23 +198,23 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 	public Optional<OrderItem> findById(Long id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	OI.ID_ORDER_ITEM, ");
-		sql.append(" 	OI.ID_PRODUCT, ");
-		sql.append(" 	OI.ID_ORDER, ");
-		sql.append(" 	OI.QT_ORDER_ITEM, ");
-		sql.append(" 	OI.VL_ORDER_ITEM, ");
-		sql.append(" 	O.ID_ORDER, ");
-		sql.append(" 	O.DT_ORDER, ");
-		sql.append(" 	O.VL_ORDER, ");
-		sql.append(" 	O.ID_ORDER_TYPE, ");
-		sql.append(" 	O.VL_DELIVERY ");
+		sql.append("   OI.ID_ORDER_ITEM, ");
+		sql.append("   OI.ID_PRODUCT, ");
+		sql.append("   OI.ID_ORDER, ");
+		sql.append("   OI.QT_ORDER_ITEM, ");
+		sql.append("   OI.VL_ORDER_ITEM, ");
+		sql.append("   O.ID_ORDER, ");
+		sql.append("   O.DT_ORDER, ");
+		sql.append("   O.VL_ORDER, ");
+		sql.append("   O.ID_ORDER_TYPE, ");
+		sql.append("   O.VL_DELIVERY ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_ORDER_ITEM OI ");
-		sql.append(" 	LEFT JOIN ");
-		sql.append(" 		TB_ORDER O ");
-		sql.append(" 	ON O.ID_ORDER = OI.ID_ORDER ");
+		sql.append("   TB_ORDER_ITEM OI ");
+		sql.append("   LEFT JOIN ");
+		sql.append("     TB_ORDER O ");
+		sql.append("   ON O.ID_ORDER = OI.ID_ORDER ");
 		sql.append(" WHERE ");
-		sql.append(" 	OI.ID_ORDER_ITEM = :id ");
+		sql.append("   OI.ID_ORDER_ITEM = :id ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("id", id);
@@ -271,25 +271,25 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 	public List<OrderItem> findByOrder(Order order) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	OI.ID_ORDER_ITEM, ");
-		sql.append(" 	OI.ID_PRODUCT, ");
-		sql.append(" 	OI.QT_ORDER_ITEM, ");
-		sql.append(" 	OI.VL_ORDER_ITEM, ");
-		sql.append("	P.ID_PRODUCT, ");
-		sql.append(" 	P.NM_PRODUCT, ");
-		sql.append("	P.VL_PRODUCT, ");
-		sql.append(" 	C.ID_CATEGORY, ");
-		sql.append(" 	C.NM_CATEGORY ");
+		sql.append("   OI.ID_ORDER_ITEM, ");
+		sql.append("   OI.ID_PRODUCT, ");
+		sql.append("   OI.QT_ORDER_ITEM, ");
+		sql.append("   OI.VL_ORDER_ITEM, ");
+		sql.append("  P.ID_PRODUCT, ");
+		sql.append("   P.NM_PRODUCT, ");
+		sql.append("  P.VL_PRODUCT, ");
+		sql.append("   C.ID_CATEGORY, ");
+		sql.append("   C.NM_CATEGORY ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_ORDER_ITEM OI ");
-		sql.append(" 	LEFT JOIN ");
-		sql.append(" 		TB_PRODUCT P ");
-		sql.append(" 	ON OI.ID_PRODUCT = P.ID_PRODUCT ");
-		sql.append(" 	LEFT JOIN ");
-		sql.append(" 		TB_CATEGORY C ");
-		sql.append(" 		ON C.ID_CATEGORY = P.ID_CATEGORY");
+		sql.append("   TB_ORDER_ITEM OI ");
+		sql.append("   LEFT JOIN ");
+		sql.append("     TB_PRODUCT P ");
+		sql.append("   ON OI.ID_PRODUCT = P.ID_PRODUCT ");
+		sql.append("   LEFT JOIN ");
+		sql.append("     TB_CATEGORY C ");
+		sql.append("     ON C.ID_CATEGORY = P.ID_CATEGORY");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_ORDER = :order ");
+		sql.append("   ID_ORDER = :order ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("order", order.getId());

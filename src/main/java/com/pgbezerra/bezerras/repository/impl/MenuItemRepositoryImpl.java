@@ -38,12 +38,12 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
 	public MenuItem insert(MenuItem obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO  ");
-		sql.append(" 	TB_MENU_ITEM( ");
-		sql.append(" 	ID_MENU, ");
-		sql.append(" 	ID_PRODUCT) ");
+		sql.append("   TB_MENU_ITEM( ");
+		sql.append("   ID_MENU, ");
+		sql.append("   ID_PRODUCT) ");
 		sql.append(" VALUES( ");
-		sql.append(" 	:menu, ");
-		sql.append(" 	:product) ");
+		sql.append("   :menu, ");
+		sql.append("   :product) ");
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
@@ -78,10 +78,10 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
 	public Boolean deleteById(Map<Menu, Product> id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" DELETE FROM ");
-		sql.append(" 	TB_MENU_ITEM ");
+		sql.append("   TB_MENU_ITEM ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_PRODUCT = :product ");
-		sql.append(" 	AND ID_MENU = :menu ");
+		sql.append("   ID_PRODUCT = :product ");
+		sql.append("   AND ID_MENU = :menu ");
 
 		Map<String, Object> parameters = new HashMap<>();
 		Menu menu = id.keySet().stream().findFirst().orElse(new Menu());
@@ -97,15 +97,15 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
 	public List<MenuItem> findAll() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	P.ID_PRODUCT, ");
-		sql.append(" 	P.NM_PRODUCT, ");
-		sql.append(" 	P.VL_PRODUCT ");
+		sql.append("   P.ID_PRODUCT, ");
+		sql.append("   P.NM_PRODUCT, ");
+		sql.append("   P.VL_PRODUCT ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_MENU_ITEM MI ");
-		sql.append(" 	JOIN TB_MENU M ");
-		sql.append(" 		ON M.ID_MENU = MI.ID_MENU ");
-		sql.append(" 	JOIN TB_PRODUCT P ");
-		sql.append(" 		ON P.ID_PRODUCT = MI.ID_PRODUCT ");
+		sql.append("   TB_MENU_ITEM MI ");
+		sql.append("   JOIN TB_MENU M ");
+		sql.append("     ON M.ID_MENU = MI.ID_MENU ");
+		sql.append("   JOIN TB_PRODUCT P ");
+		sql.append("     ON P.ID_PRODUCT = MI.ID_PRODUCT ");
 
 		final Map<Integer, Product> products = new HashMap<>();
 
@@ -142,18 +142,18 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
 	public Optional<MenuItem> findById(Map<Menu, Product> id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	P.ID_PRODUCT, ");
-		sql.append(" 	P.NM_PRODUCT, ");
-		sql.append(" 	P.VL_PRODUCT ");
+		sql.append("   P.ID_PRODUCT, ");
+		sql.append("   P.NM_PRODUCT, ");
+		sql.append("   P.VL_PRODUCT ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_MENU_ITEM MI ");
-		sql.append(" 	JOIN TB_MENU M ");
-		sql.append(" 		ON M.ID_MENU = MI.ID_MENU ");
-		sql.append(" 	JOIN TB_PRODUCT P ");
-		sql.append(" 		ON P.ID_PRODUCT = MI.ID_PRODUCT ");
+		sql.append("   TB_MENU_ITEM MI ");
+		sql.append("   JOIN TB_MENU M ");
+		sql.append("     ON M.ID_MENU = MI.ID_MENU ");
+		sql.append("   JOIN TB_PRODUCT P ");
+		sql.append("     ON P.ID_PRODUCT = MI.ID_PRODUCT ");
 		sql.append(" WHERE ");
-		sql.append(" 	P.ID_PRODUCT = :product ");
-		sql.append(" 	AND MI.ID_MENU = :menu ");
+		sql.append("   P.ID_PRODUCT = :product ");
+		sql.append("   AND MI.ID_MENU = :menu ");
 
 		Map<String, Object> parameters = new HashMap<>();
 		Menu menu = id.keySet().stream().findFirst().orElse(new Menu());
@@ -201,20 +201,20 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
 	public List<MenuItem> findByMenu(Menu menu) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	P.ID_PRODUCT, ");
-		sql.append(" 	P.NM_PRODUCT, ");
-		sql.append(" 	P.VL_PRODUCT ");
+		sql.append("   P.ID_PRODUCT, ");
+		sql.append("   P.NM_PRODUCT, ");
+		sql.append("   P.VL_PRODUCT ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_MENU_ITEM MI ");
-		sql.append(" 	JOIN TB_MENU M ");
-		sql.append(" 		ON M.ID_MENU = MI.ID_MENU ");
-		sql.append(" 	JOIN TB_PRODUCT P ");
-		sql.append(" 		ON P.ID_PRODUCT = MI.ID_PRODUCT ");
+		sql.append("   TB_MENU_ITEM MI ");
+		sql.append("   JOIN TB_MENU M ");
+		sql.append("     ON M.ID_MENU = MI.ID_MENU ");
+		sql.append("   JOIN TB_PRODUCT P ");
+		sql.append("     ON P.ID_PRODUCT = MI.ID_PRODUCT ");
 		sql.append(" WHERE ");
-		sql.append(" 	MI.ID_MENU = :menu ");
+		sql.append("   MI.ID_MENU = :menu ");
 
 		final Map<Integer, Product> products = new HashMap<>();
-		
+
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("menu", menu.getId());
 

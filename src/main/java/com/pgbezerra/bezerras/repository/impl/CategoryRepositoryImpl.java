@@ -37,12 +37,12 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 	public Category insert(Category obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO  ");
-		sql.append(" 	TB_CATEGORY( ");
-		sql.append(" 	NM_CATEGORY, ");
-		sql.append(" 	FL_MENU) ");
+		sql.append("   TB_CATEGORY( ");
+		sql.append("   NM_CATEGORY, ");
+		sql.append("   FL_MENU) ");
 		sql.append(" VALUES( ");
-		sql.append(" 	:name, ");
-		sql.append(" 	:menu) ");
+		sql.append("   :name, ");
+		sql.append("   :menu) ");
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
@@ -55,7 +55,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 			if (rowsAffected > 0) {
 				obj.setId(keyHolder.getKey().intValue());
 				LOG.info(String.format("New row %s inserted successfuly", obj.toString()));
-			}  else {
+			} else {
 				LOG.error(String.format("Can't insert a new row %s", obj.toString()));
 				throw new DatabaseException("Can't insert a new row");
 			}
@@ -64,7 +64,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
-		
+
 		return obj;
 	}
 
@@ -73,11 +73,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 	public Boolean update(Category obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
-		sql.append(" 	TB_CATEGORY ");
+		sql.append("   TB_CATEGORY ");
 		sql.append(" SET ");
-		sql.append(" 	NM_CATEGORY = :name ");
+		sql.append("   NM_CATEGORY = :name ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_CATEGORY = :id ");
+		sql.append("   ID_CATEGORY = :id ");
 
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("name", obj.getName());
@@ -96,9 +96,9 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 	public Boolean deleteById(Integer id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" DELETE FROM ");
-		sql.append(" 	TB_CATEGORY ");
+		sql.append("   TB_CATEGORY ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_CATEGORY = :id ");
+		sql.append("   ID_CATEGORY = :id ");
 
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", id);
@@ -111,11 +111,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 	public List<Category> findAll() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	ID_CATEGORY, ");
-		sql.append(" 	NM_CATEGORY, ");
-		sql.append(" 	FL_MENU ");
+		sql.append("   ID_CATEGORY, ");
+		sql.append("   NM_CATEGORY, ");
+		sql.append("   FL_MENU ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_CATEGORY ");
+		sql.append("   TB_CATEGORY ");
 		List<Category> categories = null;
 		try {
 			return namedJdbcTemplate.query(sql.toString(), rowMapper);
@@ -132,13 +132,13 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 	public Optional<Category> findById(Integer id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	ID_CATEGORY, ");
-		sql.append(" 	NM_CATEGORY, ");
-		sql.append(" 	FL_MENU ");
+		sql.append("   ID_CATEGORY, ");
+		sql.append("   NM_CATEGORY, ");
+		sql.append("   FL_MENU ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_CATEGORY ");
+		sql.append("   TB_CATEGORY ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_CATEGORY = :id ");
+		sql.append("   ID_CATEGORY = :id ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("id", id);
@@ -158,7 +158,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 	@Override
 	@Transactional
 	public List<Category> insertAll(List<Category> list) {
-		for(Category category: list)
+		for (Category category : list)
 			insert(category);
 		return list;
 	}

@@ -51,22 +51,22 @@ public class OrderRepositoryImpl implements OrderRepository {
 	public Order insert(Order obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO ");
-		sql.append(" 	TB_ORDER( ");
-		sql.append(" 		DT_ORDER, ");
-		sql.append(" 		VL_ORDER, ");
-		sql.append(" 		ID_TABLE, ");
-		sql.append(" 		VL_DELIVERY, ");
-		sql.append(" 		ID_ORDER_STATUS, ");
-		sql.append(" 		ID_ORDER_TYPE, ");
-		sql.append(" 		ID_ORDER_ADDRESS) ");
+		sql.append("   TB_ORDER( ");
+		sql.append("     DT_ORDER, ");
+		sql.append("     VL_ORDER, ");
+		sql.append("     ID_TABLE, ");
+		sql.append("     VL_DELIVERY, ");
+		sql.append("     ID_ORDER_STATUS, ");
+		sql.append("     ID_ORDER_TYPE, ");
+		sql.append("     ID_ORDER_ADDRESS) ");
 		sql.append(" VALUES ");
-		sql.append(" 	(:date, ");
-		sql.append(" 	:value, ");
-		sql.append(" 	:table, ");
-		sql.append(" 	:valueDelivery, ");
-		sql.append(" 	:status, ");
-		sql.append(" 	:type, ");
-		sql.append(" 	:orderAddress) ");
+		sql.append("   (:date, ");
+		sql.append("   :value, ");
+		sql.append("   :table, ");
+		sql.append("   :valueDelivery, ");
+		sql.append("   :status, ");
+		sql.append("   :type, ");
+		sql.append("   :orderAddress) ");
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
@@ -87,7 +87,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 			if (rowsAffected > 0) {
 				obj.setId(keyHolder.getKey().longValue());
 				LOG.info(String.format("New row %s inserted successfuly", obj.toString()));
-			}  else {
+			} else {
 				LOG.error(String.format("Can't insert a new row %s", obj.toString()));
 				throw new DatabaseException("Can't insert a new row");
 			}
@@ -104,17 +104,17 @@ public class OrderRepositoryImpl implements OrderRepository {
 	public Boolean update(Order obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
-		sql.append(" 	TB_ORDER ");
+		sql.append("   TB_ORDER ");
 		sql.append(" SET ");
-		sql.append(" 	DT_ORDER = :date, ");
-		sql.append(" 	VL_ORDER = :value, ");
-		sql.append(" 	ID_TABLE = :table, ");
-		sql.append(" 	VL_DELIVERY = :valueDelivery, ");
-		sql.append(" 	ID_ORDER_STATUS = :status, ");
-		sql.append(" 	ID_ORDER_TYPE = :type, ");
-		sql.append(" 	ID_ORDER_ADDRESS = :orderAddress ");
+		sql.append("   DT_ORDER = :date, ");
+		sql.append("   VL_ORDER = :value, ");
+		sql.append("   ID_TABLE = :table, ");
+		sql.append("   VL_DELIVERY = :valueDelivery, ");
+		sql.append("   ID_ORDER_STATUS = :status, ");
+		sql.append("   ID_ORDER_TYPE = :type, ");
+		sql.append("   ID_ORDER_ADDRESS = :orderAddress ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_ORDER = :id ");
+		sql.append("   ID_ORDER = :id ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("date", obj.getDate());
@@ -142,9 +142,9 @@ public class OrderRepositoryImpl implements OrderRepository {
 	public Boolean deleteById(Long id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" DELETE FROM ");
-		sql.append(" 	TB_ORDER ");
+		sql.append("   TB_ORDER ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_ORDER = :id ");
+		sql.append("   ID_ORDER = :id ");
 
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", id);
@@ -157,16 +157,16 @@ public class OrderRepositoryImpl implements OrderRepository {
 	public List<Order> findAll() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	ID_ORDER, ");
-		sql.append(" 	DT_ORDER, ");
-		sql.append(" 	VL_ORDER, ");
-		sql.append(" 	ID_TABLE, ");
-		sql.append(" 	VL_DELIVERY, ");
-		sql.append(" 	ID_ORDER_STATUS, ");
-		sql.append(" 	ID_ORDER_TYPE, ");
-		sql.append(" 	ID_ORDER_ADDRESS ");
+		sql.append("   ID_ORDER, ");
+		sql.append("   DT_ORDER, ");
+		sql.append("   VL_ORDER, ");
+		sql.append("   ID_TABLE, ");
+		sql.append("   VL_DELIVERY, ");
+		sql.append("   ID_ORDER_STATUS, ");
+		sql.append("   ID_ORDER_TYPE, ");
+		sql.append("   ID_ORDER_ADDRESS ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_ORDER ");
+		sql.append("   TB_ORDER ");
 		List<Order> orders = null;
 
 		final HashMap<Long, OrderAddress> orderAddresses = new HashMap<>();
@@ -195,7 +195,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 						tables.put(idTable, table.get());
 					} else
 						tables.put(idTable, null);
-					
+
 				}
 
 				if (orderAddresses.containsKey(idOrderAddress))
@@ -208,9 +208,9 @@ public class OrderRepositoryImpl implements OrderRepository {
 					} else
 						orderAddresses.put(idOrderAddress, null);
 				}
-				
+
 				order.getItems().addAll(orderItemRepository.findByOrder(order));
-				
+
 				return order;
 			});
 		} catch (EmptyResultDataAccessException e) {
@@ -225,18 +225,18 @@ public class OrderRepositoryImpl implements OrderRepository {
 	public Optional<Order> findById(Long id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	ID_ORDER, ");
-		sql.append(" 	DT_ORDER, ");
-		sql.append(" 	VL_ORDER, ");
-		sql.append(" 	ID_TABLE, ");
-		sql.append(" 	VL_DELIVERY, ");
-		sql.append(" 	ID_ORDER_STATUS, ");
-		sql.append(" 	ID_ORDER_TYPE, ");
-		sql.append(" 	ID_ORDER_ADDRESS ");
+		sql.append("   ID_ORDER, ");
+		sql.append("   DT_ORDER, ");
+		sql.append("   VL_ORDER, ");
+		sql.append("   ID_TABLE, ");
+		sql.append("   VL_DELIVERY, ");
+		sql.append("   ID_ORDER_STATUS, ");
+		sql.append("   ID_ORDER_TYPE, ");
+		sql.append("   ID_ORDER_ADDRESS ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_ORDER ");
+		sql.append("   TB_ORDER ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_ORDER = :id ");
+		sql.append("   ID_ORDER = :id ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("id", id);
@@ -263,7 +263,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 				Optional<OrderAddress> orderAddress = orderAddressRepository.findById(idOrderAddress);
 				if (orderAddress.isPresent())
 					o.setOrderAddress(orderAddress.get());
-				
+
 				o.getItems().addAll(orderItemRepository.findByOrder(o));
 
 				return o;

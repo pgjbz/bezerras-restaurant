@@ -37,22 +37,22 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 	public OrderAddress insert(OrderAddress obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO ");
-		sql.append(" 	TB_ORDER_ADDRESS( ");
-		sql.append(" 		NM_CLIENT, ");
-		sql.append(" 		NM_STREET, ");
-		sql.append(" 		NR_NUMBER, ");
-		sql.append(" 		DS_COMPLEMENT, ");
-		sql.append(" 		NM_DISTRICT, ");
-		sql.append(" 		NM_CITY, ");
-		sql.append(" 		NM_STATE) ");
+		sql.append("   TB_ORDER_ADDRESS( ");
+		sql.append("     NM_CLIENT, ");
+		sql.append("     NM_STREET, ");
+		sql.append("     NR_NUMBER, ");
+		sql.append("     DS_COMPLEMENT, ");
+		sql.append("     NM_DISTRICT, ");
+		sql.append("     NM_CITY, ");
+		sql.append("     NM_STATE) ");
 		sql.append(" VALUES ");
-		sql.append(" 	(:street, ");
-		sql.append(" 	:client, ");
-		sql.append(" 	:complement, ");
-		sql.append(" 	:number, ");
-		sql.append(" 	:district, ");
-		sql.append(" 	:city, ");
-		sql.append(" 	:state) ");
+		sql.append("   (:street, ");
+		sql.append("   :client, ");
+		sql.append("   :complement, ");
+		sql.append("   :number, ");
+		sql.append("   :district, ");
+		sql.append("   :city, ");
+		sql.append("   :state) ");
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
@@ -71,7 +71,7 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 			if (rowsAffected > 0) {
 				obj.setId(keyHolder.getKey().longValue());
 				LOG.info(String.format("New row %s inserted successfuly", obj.toString()));
-			}  else {
+			} else {
 				LOG.error(String.format("Can't insert a new row %s", obj.toString()));
 				throw new DatabaseException("Can't insert a new row");
 			}
@@ -80,7 +80,7 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
-		
+
 		return obj;
 	}
 
@@ -89,16 +89,16 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 	public Boolean update(OrderAddress obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
-		sql.append(" 	TB_ORDER_ADDRESS ");
+		sql.append("   TB_ORDER_ADDRESS ");
 		sql.append(" SET ");
-		sql.append(" 	NM_STREET = :street, ");
-		sql.append(" 	NR_NUMBER = :number, ");
-		sql.append(" 	DS_COMPLEMENT = :complement, ");
-		sql.append(" 	NM_DISTRICT = :district, ");
-		sql.append(" 	NM_CITY = :city, ");
-		sql.append(" 	NM_STATE =  :state");
+		sql.append("   NM_STREET = :street, ");
+		sql.append("   NR_NUMBER = :number, ");
+		sql.append("   DS_COMPLEMENT = :complement, ");
+		sql.append("   NM_DISTRICT = :district, ");
+		sql.append("   NM_CITY = :city, ");
+		sql.append("   NM_STATE =  :state");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_ORDER_ADDRESS = :id ");
+		sql.append("   ID_ORDER_ADDRESS = :id ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("street", obj.getStreet());
@@ -122,7 +122,7 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 	public Boolean deleteById(Long id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" DELETE FROM ");
-		sql.append(" 	TB_ORDER_ADDRESS ");
+		sql.append("   TB_ORDER_ADDRESS ");
 		sql.append(" WHERE ");
 		sql.append("  ID_ORDER_ADDRESS = :id ");
 		Map<String, Object> parameters = new HashMap<>();
@@ -136,16 +136,16 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 	public List<OrderAddress> findAll() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	ID_ORDER_ADDRESS, ");
-		sql.append(" 	NM_CLIENT, ");
-		sql.append(" 	NM_STREET, ");
-		sql.append(" 	NR_NUMBER, ");
-		sql.append(" 	DS_COMPLEMENT, ");
-		sql.append(" 	NM_DISTRICT, ");
-		sql.append(" 	NM_CITY, ");
-		sql.append(" 	NM_STATE ");
+		sql.append("   ID_ORDER_ADDRESS, ");
+		sql.append("   NM_CLIENT, ");
+		sql.append("   NM_STREET, ");
+		sql.append("   NR_NUMBER, ");
+		sql.append("   DS_COMPLEMENT, ");
+		sql.append("   NM_DISTRICT, ");
+		sql.append("   NM_CITY, ");
+		sql.append("   NM_STATE ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_ORDER_ADDRESS ");
+		sql.append("   TB_ORDER_ADDRESS ");
 
 		List<OrderAddress> orderAddresses = null;
 		try {
@@ -162,18 +162,18 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 	public Optional<OrderAddress> findById(Long id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	ID_ORDER_ADDRESS, ");
-		sql.append(" 	NM_CLIENT, ");
-		sql.append(" 	NM_STREET, ");
-		sql.append(" 	NR_NUMBER, ");
-		sql.append(" 	DS_COMPLEMENT, ");
-		sql.append(" 	NM_DISTRICT, ");
-		sql.append(" 	NM_CITY, ");
-		sql.append(" 	NM_STATE ");
+		sql.append("   ID_ORDER_ADDRESS, ");
+		sql.append("   NM_CLIENT, ");
+		sql.append("   NM_STREET, ");
+		sql.append("   NR_NUMBER, ");
+		sql.append("   DS_COMPLEMENT, ");
+		sql.append("   NM_DISTRICT, ");
+		sql.append("   NM_CITY, ");
+		sql.append("   NM_STATE ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_ORDER_ADDRESS ");
+		sql.append("   TB_ORDER_ADDRESS ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_ORDER_ADDRESS = :id ");
+		sql.append("   ID_ORDER_ADDRESS = :id ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("id", id);

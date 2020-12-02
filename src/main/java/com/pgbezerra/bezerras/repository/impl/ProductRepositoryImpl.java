@@ -26,15 +26,14 @@ import com.pgbezerra.bezerras.repository.ProductRepository;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 
 @Repository
-public class ProductRepositoryImpl implements ProductRepository{
-	
+public class ProductRepositoryImpl implements ProductRepository {
+
 	private static final Logger LOG = Logger.getLogger(ProductRepositoryImpl.class);
-	
+
 	private NamedParameterJdbcTemplate namedJdbcTemplate;
 	private CategoryRepository categoryRepository;
-	
-	public ProductRepositoryImpl(NamedParameterJdbcTemplate namedJdbcTemplate,
-			CategoryRepository categoryRepository) {
+
+	public ProductRepositoryImpl(NamedParameterJdbcTemplate namedJdbcTemplate, CategoryRepository categoryRepository) {
 		this.namedJdbcTemplate = namedJdbcTemplate;
 		this.categoryRepository = categoryRepository;
 	}
@@ -44,26 +43,26 @@ public class ProductRepositoryImpl implements ProductRepository{
 	public Product insert(Product obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO ");
-		sql.append(" 	TB_PRODUCT(NM_PRODUCT, VL_PRODUCT, ID_CATEGORY) ");
+		sql.append("   TB_PRODUCT(NM_PRODUCT, VL_PRODUCT, ID_CATEGORY) ");
 		sql.append(" VALUES ");
-		sql.append(" 	(:name, :value, :category) ");
-		
+		sql.append("   (:name, :value, :category) ");
+
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("name", obj.getName());
 		paramSource.addValue("value", obj.getValue());
-		
+
 		Category category = obj.getCategory();
-		
+
 		paramSource.addValue("category", nonNull(category) ? category.getId() : null);
-		
+
 		int rowsAffected = 0;
 		try {
 			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
 			if (rowsAffected > 0) {
 				obj.setId(keyHolder.getKey().intValue());
 				LOG.info(String.format("New row %s inserted successfuly", obj.toString()));
-			}  else {
+			} else {
 				LOG.error(String.format("Can't insert a new row %s", obj.toString()));
 				throw new DatabaseException("Can't insert a new row");
 			}
@@ -72,7 +71,7 @@ public class ProductRepositoryImpl implements ProductRepository{
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
-		
+
 		return obj;
 	}
 
@@ -81,22 +80,22 @@ public class ProductRepositoryImpl implements ProductRepository{
 	public Boolean update(Product obj) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
-		sql.append(" 	TB_PRODUCT ");
+		sql.append("   TB_PRODUCT ");
 		sql.append(" SET ");
-		sql.append(" 	NM_PRODUCT = :name, ");
-		sql.append(" 	ID_CATEGORY = :category, ");
-		sql.append(" 	VL_PRODUCT = :value ");
+		sql.append("   NM_PRODUCT = :name, ");
+		sql.append("   ID_CATEGORY = :category, ");
+		sql.append("   VL_PRODUCT = :value ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_PRODUCT = :id ");
-		
+		sql.append("   ID_PRODUCT = :id ");
+
 		Category category = obj.getCategory();
-		
+
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("name", obj.getName());
 		parameters.put("category", nonNull(category) ? category.getId() : null);
 		parameters.put("value", obj.getValue());
 		parameters.put("id", obj.getId());
-		
+
 		try {
 			return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
 		} catch (DataIntegrityViolationException e) {
@@ -110,13 +109,13 @@ public class ProductRepositoryImpl implements ProductRepository{
 	public Boolean deleteById(Integer id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" DELETE FROM ");
-		sql.append(" 	TB_PRODUCT ");
+		sql.append("   TB_PRODUCT ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_CATEGORY = :id ");
-		
+		sql.append("   ID_CATEGORY = :id ");
+
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", id);
-		
+
 		return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
 	}
 
@@ -125,15 +124,15 @@ public class ProductRepositoryImpl implements ProductRepository{
 	public List<Product> findAll() {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	ID_PRODUCT, ");
-		sql.append(" 	NM_PRODUCT, ");
-		sql.append(" 	ID_CATEGORY, ");
-		sql.append(" 	VL_PRODUCT ");
+		sql.append("   ID_PRODUCT, ");
+		sql.append("   NM_PRODUCT, ");
+		sql.append("   ID_CATEGORY, ");
+		sql.append("   VL_PRODUCT ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_PRODUCT ");
-		
+		sql.append("   TB_PRODUCT ");
+
 		final Map<Integer, Category> categories = new HashMap<>();
-		
+
 		List<Product> products = null;
 		try {
 			products = namedJdbcTemplate.query(sql.toString(), (rs, rownum) -> {
@@ -141,17 +140,16 @@ public class ProductRepositoryImpl implements ProductRepository{
 				product.setId(rs.getInt("ID_PRODUCT"));
 				product.setName(rs.getString("NM_PRODUCT"));
 				product.setValue(rs.getBigDecimal("VL_PRODUCT"));
-				
+
 				Integer idCategory = rs.getInt("ID_CATEGORY");
-				
-				if(categories.containsKey(idCategory)) {
+
+				if (categories.containsKey(idCategory)) {
 					LOG.info(String.format("The category[%s] has already been found", idCategory));
 					product.setCategory(categories.get(idCategory));
-				}
-				else {
+				} else {
 					LOG.info(String.format("Finding category %s", idCategory));
-					Optional<Category>  category = categoryRepository.findById(idCategory);
-					if(category.isPresent()) {
+					Optional<Category> category = categoryRepository.findById(idCategory);
+					if (category.isPresent()) {
 						categories.put(idCategory, category.get());
 						product.setCategory(category.get());
 					} else
@@ -172,18 +170,18 @@ public class ProductRepositoryImpl implements ProductRepository{
 	public Optional<Product> findById(Integer id) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	ID_PRODUCT, ");
-		sql.append(" 	NM_PRODUCT, ");
-		sql.append(" 	ID_CATEGORY, ");
-		sql.append(" 	VL_PRODUCT ");
+		sql.append("   ID_PRODUCT, ");
+		sql.append("   NM_PRODUCT, ");
+		sql.append("   ID_CATEGORY, ");
+		sql.append("   VL_PRODUCT ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_PRODUCT ");
+		sql.append("   TB_PRODUCT ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_PRODUCT = :id ");
-		
+		sql.append("   ID_PRODUCT = :id ");
+
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("id", id);
-		
+
 		Product product = null;
 
 		try {
@@ -192,12 +190,12 @@ public class ProductRepositoryImpl implements ProductRepository{
 				obj.setId(rs.getInt("ID_PRODUCT"));
 				obj.setName(rs.getString("NM_PRODUCT"));
 				obj.setValue(rs.getBigDecimal("VL_PRODUCT"));
-				
+
 				Optional<Category> category = categoryRepository.findById(rs.getInt("ID_CATEGORY"));
-				
-				if(category.isPresent())
+
+				if (category.isPresent())
 					obj.setCategory(category.get());
-				
+
 				return obj;
 			});
 			LOG.info(String.format("Product with id: %s found successfuly %s", id, product.toString()));
@@ -211,7 +209,7 @@ public class ProductRepositoryImpl implements ProductRepository{
 	@Override
 	@Transactional
 	public List<Product> insertAll(List<Product> list) {
-		for(Product product: list)
+		for (Product product : list)
 			insert(product);
 		return list;
 	}
@@ -221,18 +219,18 @@ public class ProductRepositoryImpl implements ProductRepository{
 	public List<Product> findByCategory(Category category) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append(" 	ID_PRODUCT, ");
-		sql.append(" 	NM_PRODUCT, ");
-		sql.append(" 	ID_CATEGORY, ");
-		sql.append(" 	VL_PRODUCT ");
+		sql.append("   ID_PRODUCT, ");
+		sql.append("   NM_PRODUCT, ");
+		sql.append("   ID_CATEGORY, ");
+		sql.append("   VL_PRODUCT ");
 		sql.append(" FROM ");
-		sql.append(" 	TB_PRODUCT ");
+		sql.append("   TB_PRODUCT ");
 		sql.append(" WHERE ");
-		sql.append(" 	ID_CATEGORY = :category ");
-		
+		sql.append("   ID_CATEGORY = :category ");
+
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("category", category.getId());
-		
+
 		List<Product> products = null;
 
 		try {
@@ -241,7 +239,7 @@ public class ProductRepositoryImpl implements ProductRepository{
 				obj.setId(rs.getInt("ID_PRODUCT"));
 				obj.setName(rs.getString("NM_PRODUCT"));
 				obj.setValue(rs.getBigDecimal("VL_PRODUCT"));
-				
+
 				obj.setCategory(category);
 				return obj;
 			});
@@ -253,6 +251,5 @@ public class ProductRepositoryImpl implements ProductRepository{
 
 		return products;
 	}
-	
-	
+
 }
