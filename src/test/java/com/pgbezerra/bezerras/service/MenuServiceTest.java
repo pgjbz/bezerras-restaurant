@@ -121,12 +121,12 @@ public class MenuServiceTest {
 	
 	@Test
 	public void findAllExpectedSuccess() {
-		List<Menu> categories = new ArrayList<>();
-		categories.add(m1);
-		categories.add(m2);
-		Mockito.when(menuRepository.findAll()).thenReturn(categories);
-		categories = menuService.findAll();
-		Assert.notEmpty(categories, "Return not be empty");
+		List<Menu> menus = new ArrayList<>();
+		menus.add(m1);
+		menus.add(m2);
+		Mockito.when(menuRepository.findAll()).thenReturn(menus);
+		menus = menuService.findAll();
+		Assert.notEmpty(menus, "Return not be empty");
 		Mockito.verify(menuRepository).findAll();
 	}
 	

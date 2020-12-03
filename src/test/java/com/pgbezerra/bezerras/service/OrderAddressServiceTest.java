@@ -110,12 +110,12 @@ public class OrderAddressServiceTest {
 	
 	@Test
 	public void findAllExpectedSuccess() {
-		List<OrderAddress> tables = new ArrayList<>();
-		tables.add(oa1);
-		tables.add(oa2);
-		Mockito.when(orderAddressRepository.findAll()).thenReturn(tables);
-		tables = orderAddressService.findAll();
-		Assert.notEmpty(tables, "Return not be empty");
+		List<OrderAddress> orderAddresses = new ArrayList<>();
+		orderAddresses.add(oa1);
+		orderAddresses.add(oa2);
+		Mockito.when(orderAddressRepository.findAll()).thenReturn(orderAddresses);
+		orderAddresses = orderAddressService.findAll();
+		Assert.notEmpty(orderAddresses, "Return not be empty");
 		Mockito.verify(orderAddressRepository).findAll();
 	}
 	
