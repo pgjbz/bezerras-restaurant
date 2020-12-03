@@ -60,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Product findById(Integer id) {
 		Optional<Product> product = productRepository.findById(id);
-		LOG.info(String.format("Product with id %s found: ", product.isPresent()));	
+		LOG.info(String.format("Product with id %s found: %s", id, product.isPresent()));	
 		if(product.isPresent()) 
 			return product.get();
 		throw new ResourceNotFoundException(String.format("No products found with id: %s", id));

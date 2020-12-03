@@ -55,7 +55,7 @@ public class TableServiceImpl implements TableService {
 	@Override
 	public Table findById(Integer id) {
 		Optional<Table> table = tableRepository.findById(id);
-		LOG.info(String.format("Table with id %s found: ", table.isPresent()));
+		LOG.info(String.format("Table with id %s found: %s", id, table.isPresent()));
 		if(table.isPresent())
 			return table.get();
 		throw new ResourceNotFoundException(String.format("No tables found with id: %s", id));

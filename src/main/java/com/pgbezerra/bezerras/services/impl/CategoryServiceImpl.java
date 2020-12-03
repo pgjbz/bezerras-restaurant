@@ -55,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public Category findById(Integer id) {
 		Optional<Category> category = categoryRepository.findById(id);
-		LOG.info(String.format("Category with id %s found: ", category.isPresent()));
+		LOG.info(String.format("Category with id %s found: %s", id, category.isPresent()));
 		if(category.isPresent())
 			return category.get();
 		throw new ResourceNotFoundException(String.format("No categories found with id: %s", id));

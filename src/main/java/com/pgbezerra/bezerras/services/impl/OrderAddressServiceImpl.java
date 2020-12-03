@@ -61,7 +61,7 @@ public class OrderAddressServiceImpl implements OrderAddressService {
 	@Override
 	public OrderAddress findById(Long id) {
 		Optional<OrderAddress> orderAddresses = orderAddressesRepository.findById(id);
-		LOG.info(String.format("OrderAddress with id %s found: ", orderAddresses.isPresent()));
+		LOG.info(String.format("OrderAddress with id %s found: %s", id, orderAddresses.isPresent()));
 		if(orderAddresses.isPresent())
 			return orderAddresses.get();
 		throw new ResourceNotFoundException(String.format("No orderAddressess found with id: %s", id));
