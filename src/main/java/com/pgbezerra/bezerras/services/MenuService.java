@@ -1,8 +1,8 @@
 package com.pgbezerra.bezerras.services;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
-import com.pgbezerra.bezerras.entities.enums.DayOfWeek;
 import com.pgbezerra.bezerras.entities.model.Menu;
 
 public interface MenuService {

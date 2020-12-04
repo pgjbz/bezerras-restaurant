@@ -1,6 +1,7 @@
 package com.pgbezerra.bezerras.service;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +17,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import com.pgbezerra.bezerras.entities.enums.DayOfWeek;
 import com.pgbezerra.bezerras.entities.model.Menu;
 import com.pgbezerra.bezerras.entities.model.MenuItem;
 import com.pgbezerra.bezerras.entities.model.Product;

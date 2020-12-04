@@ -1,5 +1,6 @@
 package com.pgbezerra.bezerras.repository.impl;
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.pgbezerra.bezerras.entities.enums.DayOfWeek;
 import com.pgbezerra.bezerras.entities.model.Menu;
 import com.pgbezerra.bezerras.repository.MenuItemRepository;
 import com.pgbezerra.bezerras.repository.MenuRepository;
@@ -51,7 +51,7 @@ public class MenuRepositoryImpl implements MenuRepository {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("name", obj.getName());
-		paramSource.addValue("dayOfWeek", Objects.nonNull(obj.getDayOfWeek()) ? obj.getDayOfWeek().getDayCode() : null);
+		paramSource.addValue("dayOfWeek", Objects.nonNull(obj.getDayOfWeek()) ? obj.getDayOfWeek().getValue() : null);
 		int rowsAffected = 0;
 
 		try {
@@ -86,7 +86,7 @@ public class MenuRepositoryImpl implements MenuRepository {
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("name", obj.getName());
-		paramSource.addValue("dayOfWeek", Objects.nonNull(obj.getDayOfWeek()) ? obj.getDayOfWeek().getDayCode() : null);
+		paramSource.addValue("dayOfWeek", Objects.nonNull(obj.getDayOfWeek()) ? obj.getDayOfWeek().getValue() : null);
 		paramSource.addValue("id", obj.getId());
 
 		try {
@@ -197,7 +197,7 @@ public class MenuRepositoryImpl implements MenuRepository {
 		sql.append("   DAY_OF_WEEK = :dayOfWeek ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
-		paramSource.addValue("dayOfWeek", dayOfWeek.getDayCode());
+		paramSource.addValue("dayOfWeek", dayOfWeek.getValue());
 
 		Menu menu = null;
 

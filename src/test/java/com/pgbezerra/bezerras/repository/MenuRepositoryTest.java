@@ -1,5 +1,7 @@
 package com.pgbezerra.bezerras.repository;
 
+import java.time.DateTimeException;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +17,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.pgbezerra.bezerras.entities.enums.DayOfWeek;
 import com.pgbezerra.bezerras.entities.model.Menu;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 
@@ -62,7 +63,7 @@ public class MenuRepositoryTest {
 		Assert.assertTrue(m1.getId() > 0L);
 	}
 	
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = DateTimeException.class)
 	public void updateMenuWithInvalidDayOfWeekValueExpectedError() {
 		Menu m1 = new Menu(null, "Segundou", DayOfWeek.SUNDAY);
 		menuRepository.insert(m1);
@@ -77,7 +78,7 @@ public class MenuRepositoryTest {
 		menuRepository.insert(m1);
 		m1 = menuRepository.findById(m1.getId()).get();
 		m1.setName("SEXTOU");
-		m1.setDayOfWeek(DayOfWeek.FRIDAY.getDayCode());
+		m1.setDayOfWeek(DayOfWeek.FRIDAY.getValue());
 		Assert.assertTrue(menuRepository.update(m1));
 	}
 	
@@ -85,7 +86,7 @@ public class MenuRepositoryTest {
 	public void updateInexistentMenuExpectedNoUpdates() {
 		Menu m1 = new Menu(null, "Segundou", DayOfWeek.SUNDAY);
 		m1.setName("SEXTOU");
-		m1.setDayOfWeek(DayOfWeek.FRIDAY.getDayCode());
+		m1.setDayOfWeek(DayOfWeek.FRIDAY.getValue());
 		Assert.assertFalse(menuRepository.update(m1));
 	}
 	

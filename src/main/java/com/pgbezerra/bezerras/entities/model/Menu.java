@@ -1,10 +1,9 @@
 package com.pgbezerra.bezerras.entities.model;
 
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.pgbezerra.bezerras.entities.enums.DayOfWeek;
 
 public class Menu implements Serializable {
 	
@@ -45,7 +44,7 @@ public class Menu implements Serializable {
 	}
 
 	public void setDayOfWeek(Integer dayOfWeek) {
-		this.dayOfWeek = DayOfWeek.getByDayCode(dayOfWeek);
+		this.dayOfWeek = DayOfWeek.of(dayOfWeek);
 	}
 
 	public Set<MenuItem> getItems() {

@@ -1,12 +1,12 @@
 package com.pgbezerra.bezerras.services.impl;
 
+import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import com.pgbezerra.bezerras.entities.enums.DayOfWeek;
 import com.pgbezerra.bezerras.entities.model.Menu;
 import com.pgbezerra.bezerras.repository.MenuRepository;
 import com.pgbezerra.bezerras.services.MenuService;
@@ -46,7 +46,7 @@ public class MenuServiceImpl implements MenuService {
 	}
 
 	private void updateData(Menu oldObj, Menu obj) {
-		oldObj.setDayOfWeek(obj.getDayOfWeek().getDayCode());
+		oldObj.setDayOfWeek(obj.getDayOfWeek().getValue());
 		oldObj.setName(obj.getName());
 	}
 
