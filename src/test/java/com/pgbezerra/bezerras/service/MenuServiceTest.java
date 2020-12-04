@@ -89,7 +89,7 @@ public class MenuServiceTest {
 		
 		m1 = menuService.insert(m1);
 		
-		Assert.isTrue(!m1.getId().equals(0), "Id not be 0");
+		Assert.isTrue(!m1.getId().equals(0L), "Id not be 0");
 		
 		Mockito.verify(menuRepository).insert(Mockito.any());
 	}
@@ -100,7 +100,7 @@ public class MenuServiceTest {
 		Mockito.when(menuRepository.insert(m1)).thenReturn(m2);
 		
 		m1 = menuService.insert(m1);
-		Assert.isTrue(!m1.getId().equals(0), "Id not be 0");
+		Assert.isTrue(!m1.getId().equals(0L), "Id not be 0");
 		
 		Mockito.verify(menuRepository).insert(Mockito.any());
 	}

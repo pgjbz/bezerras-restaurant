@@ -51,7 +51,7 @@ public class MenuItemServiceTest {
 		p1 = new Product(1, "Feijoada", BigDecimal.valueOf(25.0), null);
 		p1 = new Product(2, "Baiao de Dois", BigDecimal.valueOf(25.0), null);
 		m1 = new Menu(1L,"Food", DayOfWeek.FRIDAY);
-		m1 = new Menu(2L,"Food", DayOfWeek.SATURDAY);
+		m2 = new Menu(2L,"Food", DayOfWeek.SATURDAY);
 		mi1 = new MenuItem(m1, p1);
 		mi2 = new MenuItem(m2, p2);
 
@@ -86,8 +86,9 @@ public class MenuItemServiceTest {
 	@Test
 	public void insertMenuItemExpectedSuccess() {
 		
-		Mockito.when(menuItemRepository.insert(mi1)).thenReturn(mi2);
-		
+		Mockito.when(menuItemRepository.insert(mi1)).thenReturn(mi1);
+		Mockito.when(menuService.findById(Mockito.anyLong())).thenReturn(m1);
+		Mockito.when(productService.findById(Mockito.anyInt())).thenReturn(p1);
 		mi1 = menuItemService.insert(mi1);
 		
 		Mockito.verify(menuItemRepository).insert(mi1);

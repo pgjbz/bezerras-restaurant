@@ -2,27 +2,36 @@ package com.pgbezerra.bezerras.services.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.pgbezerra.bezerras.entities.model.Category;
+import com.pgbezerra.bezerras.entities.model.Menu;
+import com.pgbezerra.bezerras.entities.model.MenuItem;
 import com.pgbezerra.bezerras.entities.model.Product;
 import com.pgbezerra.bezerras.repository.ProductRepository;
 import com.pgbezerra.bezerras.services.CategoryService;
+import com.pgbezerra.bezerras.services.MenuService;
 import com.pgbezerra.bezerras.services.ProductService;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
+import com.pgbezerra.bezerras.utils.DateUtil;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-	
+
 	private static final Logger LOG = Logger.getLogger(ProductServiceImpl.class);
 
 	private ProductRepository productRepository;
 	private CategoryService categoryService;
+	private MenuService menuService;
 
-	public ProductServiceImpl(ProductRepository productRepository, CategoryService categoryService) {
+	public ProductServiceImpl(ProductRepository productRepository, CategoryService categoryService,
+			MenuService menuService) {
 		this.productRepository = productRepository;
 		this.categoryService = categoryService;
+		this.menuService = menuService;
 	}
 
 	@Override
@@ -52,16 +61,33 @@ public class ProductServiceImpl implements ProductService {
 	public List<Product> findAll() {
 		List<Product> products = productRepository.findAll();
 		LOG.info(String.format("%s products found", products.size()));
-		if(!products.isEmpty()) 
+		if (!products.isEmpty())
 			return products;
 		throw new ResourceNotFoundException("No categories found");
 	}
 
 	@Override
+	public List<Product> findByCategory(Category obj) {
+		Category category = categoryService.findById(obj.getId());
+		List<Product> products;
+		if (category.getIsMenu()) {
+			Menu menu = menuService.findByDayOfWeek(DateUtil.currentDayOfWeek());
+			products = menu.getItems().stream().map(MenuItem::getProduct).collect(Collectors.toList());
+		} else
+			products = productRepository.findByCategory(obj);
+		
+		if(!products.isEmpty())
+			return products;
+		String msg = String.format("No products found for the category %s", obj.getId());
+		LOG.info(msg);
+		throw new ResourceNotFoundException(msg);
+	}
+
+	@Override
 	public Product findById(Integer id) {
 		Optional<Product> product = productRepository.findById(id);
-		LOG.info(String.format("Product with id %s found: %s", id, product.isPresent()));	
-		if(product.isPresent()) 
+		LOG.info(String.format("Product with id %s found: %s", id, product.isPresent()));
+		if (product.isPresent())
 			return product.get();
 		throw new ResourceNotFoundException(String.format("No products found with id: %s", id));
 	}
