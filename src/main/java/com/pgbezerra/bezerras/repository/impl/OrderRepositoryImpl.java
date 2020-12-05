@@ -1,12 +1,13 @@
 package com.pgbezerra.bezerras.repository.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
+import com.pgbezerra.bezerras.entities.model.Order;
+import com.pgbezerra.bezerras.entities.model.OrderAddress;
+import com.pgbezerra.bezerras.entities.model.Table;
+import com.pgbezerra.bezerras.repository.OrderAddressRepository;
+import com.pgbezerra.bezerras.repository.OrderItemRepository;
+import com.pgbezerra.bezerras.repository.OrderRepository;
+import com.pgbezerra.bezerras.repository.TableRepository;
+import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -18,28 +19,22 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.pgbezerra.bezerras.entities.model.Order;
-import com.pgbezerra.bezerras.entities.model.OrderAddress;
-import com.pgbezerra.bezerras.entities.model.Table;
-import com.pgbezerra.bezerras.repository.OrderAddressRepository;
-import com.pgbezerra.bezerras.repository.OrderItemRepository;
-import com.pgbezerra.bezerras.repository.OrderRepository;
-import com.pgbezerra.bezerras.repository.TableRepository;
-import com.pgbezerra.bezerras.repository.exception.DatabaseException;
+import java.util.*;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
 
 	private static final Logger LOG = Logger.getLogger(OrderRepositoryImpl.class);
 
-	private NamedParameterJdbcTemplate namedJdbcTemplate;
-	private OrderAddressRepository orderAddressRepository;
-	private TableRepository tableRepository;
-	private OrderItemRepository orderItemRepository;
+	private final NamedParameterJdbcTemplate namedJdbcTemplate;
+	private final OrderAddressRepository orderAddressRepository;
+	private final TableRepository tableRepository;
+	private final OrderItemRepository orderItemRepository;
 
-	public OrderRepositoryImpl(NamedParameterJdbcTemplate namedJdbcTemplate,
-			OrderAddressRepository orderAddressRepository, TableRepository tableRepository,
-			OrderItemRepository orderItemRepository) {
+	public OrderRepositoryImpl(
+			final NamedParameterJdbcTemplate namedJdbcTemplate,
+			final OrderAddressRepository orderAddressRepository, TableRepository tableRepository,
+			final OrderItemRepository orderItemRepository) {
 		this.namedJdbcTemplate = namedJdbcTemplate;
 		this.orderAddressRepository = orderAddressRepository;
 		this.tableRepository = tableRepository;

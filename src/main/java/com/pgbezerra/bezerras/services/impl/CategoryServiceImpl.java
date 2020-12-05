@@ -1,16 +1,15 @@
 package com.pgbezerra.bezerras.services.impl;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.pgbezerra.bezerras.entities.model.Category;
 import com.pgbezerra.bezerras.repository.CategoryRepository;
 import com.pgbezerra.bezerras.services.CategoryService;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -18,9 +17,9 @@ public class CategoryServiceImpl implements CategoryService {
 	private static final Logger LOG = Logger.getLogger(CategoryServiceImpl.class);
 
 	@Autowired
-	private CategoryRepository categoryRepository;
+	private final  CategoryRepository categoryRepository;
 	
-	public CategoryServiceImpl(CategoryRepository categoryRepository) {
+	public CategoryServiceImpl(final CategoryRepository categoryRepository) {
 		this.categoryRepository = categoryRepository;
 	}
 

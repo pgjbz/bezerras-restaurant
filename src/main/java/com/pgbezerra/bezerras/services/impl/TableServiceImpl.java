@@ -1,16 +1,15 @@
 package com.pgbezerra.bezerras.services.impl;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.pgbezerra.bezerras.entities.model.Table;
 import com.pgbezerra.bezerras.repository.TableRepository;
 import com.pgbezerra.bezerras.services.TableService;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TableServiceImpl implements TableService {
@@ -18,9 +17,9 @@ public class TableServiceImpl implements TableService {
 	private static final Logger LOG = Logger.getLogger(TableServiceImpl.class);
 
 	@Autowired
-	private TableRepository tableRepository;
+	private final TableRepository tableRepository;
 	
-	public TableServiceImpl(TableRepository tableRepository) {
+	public TableServiceImpl(final TableRepository tableRepository) {
 		this.tableRepository = tableRepository;
 	}
 

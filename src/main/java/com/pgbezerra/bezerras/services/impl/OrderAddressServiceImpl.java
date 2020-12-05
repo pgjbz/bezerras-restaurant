@@ -1,16 +1,15 @@
 package com.pgbezerra.bezerras.services.impl;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.pgbezerra.bezerras.entities.model.OrderAddress;
 import com.pgbezerra.bezerras.repository.OrderAddressRepository;
 import com.pgbezerra.bezerras.services.OrderAddressService;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderAddressServiceImpl implements OrderAddressService {
@@ -18,9 +17,9 @@ public class OrderAddressServiceImpl implements OrderAddressService {
 	private static final Logger LOG = Logger.getLogger(OrderAddressServiceImpl.class);
 
 	@Autowired
-	private OrderAddressRepository orderAddressesRepository;
+	private final OrderAddressRepository orderAddressesRepository;
 	
-	public OrderAddressServiceImpl(OrderAddressRepository orderAddressesRepository) {
+	public OrderAddressServiceImpl(final OrderAddressRepository orderAddressesRepository) {
 		this.orderAddressesRepository = orderAddressesRepository;
 	}
 

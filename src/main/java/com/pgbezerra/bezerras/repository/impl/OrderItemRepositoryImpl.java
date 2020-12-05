@@ -1,12 +1,12 @@
 package com.pgbezerra.bezerras.repository.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
+import com.pgbezerra.bezerras.entities.model.Category;
+import com.pgbezerra.bezerras.entities.model.Order;
+import com.pgbezerra.bezerras.entities.model.OrderItem;
+import com.pgbezerra.bezerras.entities.model.Product;
+import com.pgbezerra.bezerras.repository.OrderItemRepository;
+import com.pgbezerra.bezerras.repository.ProductRepository;
+import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -18,23 +18,19 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.pgbezerra.bezerras.entities.model.Category;
-import com.pgbezerra.bezerras.entities.model.Order;
-import com.pgbezerra.bezerras.entities.model.OrderItem;
-import com.pgbezerra.bezerras.entities.model.Product;
-import com.pgbezerra.bezerras.repository.OrderItemRepository;
-import com.pgbezerra.bezerras.repository.ProductRepository;
-import com.pgbezerra.bezerras.repository.exception.DatabaseException;
+import java.util.*;
 
 @Repository
 public class OrderItemRepositoryImpl implements OrderItemRepository {
 
 	private static final Logger LOG = Logger.getLogger(OrderItemRepositoryImpl.class);
 
-	private NamedParameterJdbcTemplate namedJdbcTemplate;
-	private ProductRepository productRepository;
+	private final NamedParameterJdbcTemplate namedJdbcTemplate;
+	private final ProductRepository productRepository;
 
-	public OrderItemRepositoryImpl(NamedParameterJdbcTemplate namedJdbcTemplate, ProductRepository productRepository) {
+	public OrderItemRepositoryImpl(
+			final NamedParameterJdbcTemplate namedJdbcTemplate,
+			final ProductRepository productRepository) {
 		this.namedJdbcTemplate = namedJdbcTemplate;
 		this.productRepository = productRepository;
 	}

@@ -1,13 +1,9 @@
 package com.pgbezerra.bezerras.repository.impl;
 
-import java.time.DayOfWeek;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
+import com.pgbezerra.bezerras.entities.model.Menu;
+import com.pgbezerra.bezerras.repository.MenuItemRepository;
+import com.pgbezerra.bezerras.repository.MenuRepository;
+import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -18,20 +14,20 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.pgbezerra.bezerras.entities.model.Menu;
-import com.pgbezerra.bezerras.repository.MenuItemRepository;
-import com.pgbezerra.bezerras.repository.MenuRepository;
-import com.pgbezerra.bezerras.repository.exception.DatabaseException;
+import java.time.DayOfWeek;
+import java.util.*;
 
 @Repository
 public class MenuRepositoryImpl implements MenuRepository {
 
 	private static final Logger LOG = Logger.getLogger(MenuRepositoryImpl.class);
 
-	private NamedParameterJdbcTemplate namedJdbcTemplate;
-	private MenuItemRepository menuItemRepository;
+	private final NamedParameterJdbcTemplate namedJdbcTemplate;
+	private final MenuItemRepository menuItemRepository;
 
-	public MenuRepositoryImpl(NamedParameterJdbcTemplate namedJdbcTemplate, MenuItemRepository menuItemRepository) {
+	public MenuRepositoryImpl(
+			final NamedParameterJdbcTemplate namedJdbcTemplate,
+			final MenuItemRepository menuItemRepository) {
 		this.namedJdbcTemplate = namedJdbcTemplate;
 		this.menuItemRepository = menuItemRepository;
 	}

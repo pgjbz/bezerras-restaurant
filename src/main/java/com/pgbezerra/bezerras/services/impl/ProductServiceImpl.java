@@ -1,12 +1,5 @@
 package com.pgbezerra.bezerras.services.impl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
-
 import com.pgbezerra.bezerras.entities.model.Category;
 import com.pgbezerra.bezerras.entities.model.Menu;
 import com.pgbezerra.bezerras.entities.model.MenuItem;
@@ -17,15 +10,21 @@ import com.pgbezerra.bezerras.services.MenuService;
 import com.pgbezerra.bezerras.services.ProductService;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
 import com.pgbezerra.bezerras.utils.DateUtil;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
 	private static final Logger LOG = Logger.getLogger(ProductServiceImpl.class);
 
-	private ProductRepository productRepository;
-	private CategoryService categoryService;
-	private MenuService menuService;
+	private final ProductRepository productRepository;
+	private final CategoryService categoryService;
+	private final MenuService menuService;
 
 	public ProductServiceImpl(ProductRepository productRepository, CategoryService categoryService,
 			MenuService menuService) {

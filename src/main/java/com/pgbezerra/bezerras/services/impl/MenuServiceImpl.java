@@ -1,26 +1,25 @@
 package com.pgbezerra.bezerras.services.impl;
 
-import java.time.DayOfWeek;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
-
 import com.pgbezerra.bezerras.entities.model.Menu;
 import com.pgbezerra.bezerras.repository.MenuRepository;
 import com.pgbezerra.bezerras.services.MenuService;
 import com.pgbezerra.bezerras.services.exception.BadRequestException;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
+
+import java.time.DayOfWeek;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MenuServiceImpl implements MenuService {
 
 	private static final Logger LOG = Logger.getLogger(MenuServiceImpl.class);
 
-	private MenuRepository menuRepository;
+	private final MenuRepository menuRepository;
 
-	public MenuServiceImpl(MenuRepository menuRepository) {
+	public MenuServiceImpl(final MenuRepository menuRepository) {
 		this.menuRepository = menuRepository;
 	}
 

@@ -1,13 +1,10 @@
 package com.pgbezerra.bezerras.repository.impl;
 
-import static java.util.Objects.nonNull;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.pgbezerra.bezerras.entities.model.Category;
+import com.pgbezerra.bezerras.entities.model.Product;
+import com.pgbezerra.bezerras.repository.CategoryRepository;
+import com.pgbezerra.bezerras.repository.ProductRepository;
+import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,21 +16,21 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.pgbezerra.bezerras.entities.model.Category;
-import com.pgbezerra.bezerras.entities.model.Product;
-import com.pgbezerra.bezerras.repository.CategoryRepository;
-import com.pgbezerra.bezerras.repository.ProductRepository;
-import com.pgbezerra.bezerras.repository.exception.DatabaseException;
+import java.util.*;
+
+import static java.util.Objects.nonNull;
 
 @Repository
 public class ProductRepositoryImpl implements ProductRepository {
 
 	private static final Logger LOG = Logger.getLogger(ProductRepositoryImpl.class);
 
-	private NamedParameterJdbcTemplate namedJdbcTemplate;
-	private CategoryRepository categoryRepository;
+	private final NamedParameterJdbcTemplate namedJdbcTemplate;
+	private final CategoryRepository categoryRepository;
 
-	public ProductRepositoryImpl(NamedParameterJdbcTemplate namedJdbcTemplate, CategoryRepository categoryRepository) {
+	public ProductRepositoryImpl(
+			final NamedParameterJdbcTemplate namedJdbcTemplate,
+			final CategoryRepository categoryRepository) {
 		this.namedJdbcTemplate = namedJdbcTemplate;
 		this.categoryRepository = categoryRepository;
 	}

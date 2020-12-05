@@ -1,12 +1,5 @@
 package com.pgbezerra.bezerras.services.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
-
 import com.pgbezerra.bezerras.entities.model.Menu;
 import com.pgbezerra.bezerras.entities.model.MenuItem;
 import com.pgbezerra.bezerras.entities.model.Product;
@@ -15,18 +8,26 @@ import com.pgbezerra.bezerras.services.MenuItemService;
 import com.pgbezerra.bezerras.services.MenuService;
 import com.pgbezerra.bezerras.services.ProductService;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MenuItemServiceImpl implements MenuItemService {
 	
 	private static final Logger LOG = Logger.getLogger(MenuItemServiceImpl.class);
 	
-	private MenuItemRepository menuItemRepository;
-	private MenuService menuService;
-	private ProductService productService;
+	private final MenuItemRepository menuItemRepository;
+	private final MenuService menuService;
+	private final ProductService productService;
 	
-	public MenuItemServiceImpl(MenuItemRepository menuItemRepository, MenuService menuService,
-			ProductService productService) {
+	public MenuItemServiceImpl(
+			final MenuItemRepository menuItemRepository,
+			final MenuService menuService,
+			final ProductService productService) {
 		this.menuItemRepository = menuItemRepository;
 		this.menuService = menuService;
 		this.productService = productService;

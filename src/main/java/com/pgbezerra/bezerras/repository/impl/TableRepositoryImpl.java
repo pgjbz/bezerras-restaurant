@@ -1,11 +1,8 @@
 package com.pgbezerra.bezerras.repository.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.pgbezerra.bezerras.entities.model.Table;
+import com.pgbezerra.bezerras.repository.TableRepository;
+import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,18 +14,16 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.pgbezerra.bezerras.entities.model.Table;
-import com.pgbezerra.bezerras.repository.TableRepository;
-import com.pgbezerra.bezerras.repository.exception.DatabaseException;
+import java.util.*;
 
 @Repository
 public class TableRepositoryImpl implements TableRepository {
 
 	private static final Logger LOG = Logger.getLogger(TableRepositoryImpl.class);
 
-	private NamedParameterJdbcTemplate namedJdbcTemplate;
+	private final  NamedParameterJdbcTemplate namedJdbcTemplate;
 
-	public TableRepositoryImpl(NamedParameterJdbcTemplate namedJdbcTemplate) {
+	public TableRepositoryImpl(final NamedParameterJdbcTemplate namedJdbcTemplate) {
 		this.namedJdbcTemplate = namedJdbcTemplate;
 	}
 

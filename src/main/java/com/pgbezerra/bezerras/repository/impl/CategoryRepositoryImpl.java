@@ -1,11 +1,8 @@
 package com.pgbezerra.bezerras.repository.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.pgbezerra.bezerras.entities.model.Category;
+import com.pgbezerra.bezerras.repository.CategoryRepository;
+import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,18 +14,16 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.pgbezerra.bezerras.entities.model.Category;
-import com.pgbezerra.bezerras.repository.CategoryRepository;
-import com.pgbezerra.bezerras.repository.exception.DatabaseException;
+import java.util.*;
 
 @Repository
 public class CategoryRepositoryImpl implements CategoryRepository {
 
 	private static final Logger LOG = Logger.getLogger(CategoryRepositoryImpl.class);
 
-	private NamedParameterJdbcTemplate namedJdbcTemplate;
+	private final NamedParameterJdbcTemplate namedJdbcTemplate;
 
-	public CategoryRepositoryImpl(NamedParameterJdbcTemplate namedJdbcTemplate) {
+	public CategoryRepositoryImpl(final NamedParameterJdbcTemplate namedJdbcTemplate) {
 		this.namedJdbcTemplate = namedJdbcTemplate;
 	}
 
