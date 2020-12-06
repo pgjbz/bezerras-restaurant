@@ -70,12 +70,14 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 		sql.append(" UPDATE ");
 		sql.append("   TB_CATEGORY ");
 		sql.append(" SET ");
-		sql.append("   NM_CATEGORY = :name ");
+		sql.append("   NM_CATEGORY = :name, ");
+		sql.append("   FL_MENU = :menu ");
 		sql.append(" WHERE ");
 		sql.append("   ID_CATEGORY = :id ");
 
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("name", obj.getName());
+		parameters.put("menu", obj.getIsMenu());
 		parameters.put("id", obj.getId());
 
 		try {

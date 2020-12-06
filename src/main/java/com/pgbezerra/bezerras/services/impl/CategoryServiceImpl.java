@@ -40,6 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 	private void updateDate(Category oldObj, Category obj) {
 		oldObj.setName(obj.getName());
+		oldObj.setIsMenu(obj.getIsMenu());
 	}
 
 	@Override
