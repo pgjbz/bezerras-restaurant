@@ -45,7 +45,7 @@ public class CategoryResource {
         Category obj = convertToEntity(objDTO);
         obj.setId(id);
         categoryService.update(obj);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}")

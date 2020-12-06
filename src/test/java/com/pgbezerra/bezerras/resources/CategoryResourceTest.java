@@ -132,13 +132,13 @@ public class CategoryResourceTest{
     }
 
     @Test
-    public void editCategoryExpectedNoContent() throws Exception {
+    public void editCategoryExpectedOk() throws Exception {
         CategoryDTO objDTO = new CategoryDTO("Category edited", true);
         Mockito.when(categoryService.update(Mockito.any(Category.class))).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders.put("/categories/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(objDTO)))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(MockMvcResultMatchers.status().isOk());
         Mockito.verify(categoryService).update(Mockito.any(Category.class));
     }
 
