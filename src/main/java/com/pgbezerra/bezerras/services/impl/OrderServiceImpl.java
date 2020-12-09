@@ -72,6 +72,7 @@ public class OrderServiceImpl implements OrderService {
     public Boolean update(Order obj) {
         Order oldObj = findById(obj.getId());
         getItems(obj);
+        updateItems(obj, oldObj);
         oldObj.getItems().removeAll(obj.getItems());
         deleteItems(oldObj);
         obj.setValue(calcOderValue(obj));
@@ -142,5 +143,14 @@ public class OrderServiceImpl implements OrderService {
         }
         LOG.info(String.format("Final value of order %s: %s", obj.toString(), value));
         return value;
+    }
+
+    private void updateItems(Order obj, Order oldObj){
+        for(OrderItem orderItem: obj.getItems()) {
+            LOG.info(String.format("Updating order item %s", orderItem.toString()));
+            OrderItem oldOrderItem = oldObj.getItems().stream().filter(oi -> oi.equals(orderItem)).findFirst().orElse(null);
+            if(Objects.nonNull(oldOrderItem) && oldOrderItem.getQuantity().compareTo(orderItem.getQuantity()) != 0)
+                orderItemService.update(orderItem);
+        }
     }
 }

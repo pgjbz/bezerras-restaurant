@@ -20,6 +20,11 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
+    public Boolean update(OrderItem obj) {
+        return orderItemRepository.update(obj);
+    }
+
+    @Override
     public Boolean deleteById(Long id) {
         return orderItemRepository.deleteById(id);
     }

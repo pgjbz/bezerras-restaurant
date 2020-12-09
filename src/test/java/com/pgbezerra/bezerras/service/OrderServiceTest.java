@@ -167,19 +167,23 @@ public class OrderServiceTest {
         o2.setOrderType(2);
         Product p2 = new Product(2, "Feijoada Grande", BigDecimal.valueOf(35.0), null);
         OrderItem oi2 = new OrderItem(1L, p2, null, Byte.valueOf("1"), null);
+        OrderItem oi3 = new OrderItem(1L, p2, null, Byte.valueOf("3"), null);
         o1.getItems().addAll(Arrays.asList(oi1, oi2)); //60.0
-        o2.getItems().add(oi2); //35
+        o2.getItems().add(oi3); //70
 
         Mockito.when(orderRepository.findById(o2.getId())).thenReturn(Optional.ofNullable(o1));
         Mockito.when(productService.findById(p1.getId())).thenReturn(p1);
         Mockito.when(productService.findById(p2.getId())).thenReturn(p2);
+        Mockito.when(orderItemService.update(Mockito.any())).thenReturn(Boolean.TRUE);
 
         orderService.update(o2);
 
-        Assert.isTrue(o2.getValue().doubleValue() == 35.0, "Order value need to be 35.0");
+
+        Assert.isTrue(o2.getValue().doubleValue() == 105.0, "Order value need to be 105.0");
         Mockito.verify(orderRepository).findById(o2.getId());
         Mockito.verify(productService).findById(p2.getId());
         Mockito.verify(productService, Mockito.times(1)).findById(Mockito.anyInt());
+        Mockito.verify(orderItemService).update(Mockito.any(OrderItem.class));
     }
 
 
