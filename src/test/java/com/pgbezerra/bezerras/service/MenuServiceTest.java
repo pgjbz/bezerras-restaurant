@@ -20,7 +20,7 @@ import com.pgbezerra.bezerras.entities.model.Menu;
 import com.pgbezerra.bezerras.repository.MenuRepository;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import com.pgbezerra.bezerras.services.MenuService;
-import com.pgbezerra.bezerras.services.exception.BadRequestException;
+import com.pgbezerra.bezerras.services.exception.ResourceBadRequestException;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
 import com.pgbezerra.bezerras.services.impl.MenuServiceImpl;
 
@@ -114,7 +114,7 @@ public class MenuServiceTest {
 		menuService.insert(obj);
 	}
 	
-	@Test(expected = BadRequestException.class)
+	@Test(expected = ResourceBadRequestException.class)
 	public void insertMenuWithAExistentMenuInDayOfWeekExpectedException() {
 		
 		Mockito.when(menuRepository.findByDayOfWeek(m1.getDayOfWeek())).thenReturn(Optional.ofNullable(m1));

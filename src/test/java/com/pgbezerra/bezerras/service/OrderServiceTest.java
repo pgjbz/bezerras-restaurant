@@ -3,7 +3,7 @@ package com.pgbezerra.bezerras.service;
 import com.pgbezerra.bezerras.entities.model.*;
 import com.pgbezerra.bezerras.repository.OrderRepository;
 import com.pgbezerra.bezerras.services.*;
-import com.pgbezerra.bezerras.services.exception.BadRequestException;
+import com.pgbezerra.bezerras.services.exception.ResourceBadRequestException;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
 import com.pgbezerra.bezerras.services.impl.OrderServiceImpl;
 import org.junit.Before;
@@ -110,7 +110,7 @@ public class OrderServiceTest {
         Assert.isTrue(o1.getValue().doubleValue() == 35.0, "Final value not match, value has to be 35.0");
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test(expected = ResourceBadRequestException.class)
     public void insertOrderDeliveryExpectedError(){
         o1.setOrderType(1);
         oi1.setProduct(p1);

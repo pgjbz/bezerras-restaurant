@@ -5,7 +5,7 @@ import com.pgbezerra.bezerras.entities.model.Order;
 import com.pgbezerra.bezerras.entities.model.OrderItem;
 import com.pgbezerra.bezerras.repository.OrderRepository;
 import com.pgbezerra.bezerras.services.*;
-import com.pgbezerra.bezerras.services.exception.BadRequestException;
+import com.pgbezerra.bezerras.services.exception.ResourceBadRequestException;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -60,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
             if (Objects.nonNull(obj.getOrderAddress()))
                 orderAddressService.insert(obj.getOrderAddress());
             else
-                throw new BadRequestException("Order address in order type DELIVERY not be empty");
+                throw new ResourceBadRequestException("Order address in order type DELIVERY not be empty");
         }
 
         saveItems(obj);

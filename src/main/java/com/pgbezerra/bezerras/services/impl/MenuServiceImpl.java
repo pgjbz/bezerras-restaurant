@@ -3,7 +3,7 @@ package com.pgbezerra.bezerras.services.impl;
 import com.pgbezerra.bezerras.entities.model.Menu;
 import com.pgbezerra.bezerras.repository.MenuRepository;
 import com.pgbezerra.bezerras.services.MenuService;
-import com.pgbezerra.bezerras.services.exception.BadRequestException;
+import com.pgbezerra.bezerras.services.exception.ResourceBadRequestException;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class MenuServiceImpl implements MenuService {
 		}
 		String msg = String.format("Alredy exists menu in this day of week: %s", obj.getDayOfWeek());
 		LOG.info(msg);
-		throw new BadRequestException(msg);
+		throw new ResourceBadRequestException(msg);
 	}
 
 	@Override

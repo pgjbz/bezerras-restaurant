@@ -1,10 +1,10 @@
 package com.pgbezerra.bezerras.services.exception;
 
-public class BadRequestException extends RuntimeException {
+public class ResourceBadRequestException extends RuntimeException {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public BadRequestException(String msg) {
+	public ResourceBadRequestException(String msg) {
 		super(msg);
 	}
 
