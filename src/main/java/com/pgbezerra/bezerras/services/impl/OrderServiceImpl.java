@@ -10,7 +10,6 @@ import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -42,7 +41,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order insert(Order order) {
-
+        if(order.getItems().isEmpty())
+            throw new ResourceBadRequestException("Order items not be empty");
         order.setId(null);
         order.setDate(new Date());
         if(Objects.nonNull(order.getTable())) {
@@ -53,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
         LOG.info(String.format("Finding products of order %s", order.toString()));
         getItems(order);
         LOG.info(String.format("Calculating value of order %s", order.toString()));
-        order.setValue(calcOderValue(order));
+        order.calcOrderValue();
         LOG.info(String.format("Inserting order %s", order.toString()));
         orderRepository.insert(order);
 
@@ -76,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
         updateItems(order, oldOrder);
         oldOrder.getItems().removeAll(order.getItems());
         deleteItems(oldOrder);
-        order.setValue(calcOderValue(order));
+        order.calcOrderValue();
         return orderRepository.update(order);
     }
 
@@ -124,26 +124,6 @@ public class OrderServiceImpl implements OrderService {
             LOG.info(String.format("Deleting order item %s", orderItem.toString()));
             orderItemService.deleteById(orderItem.getId());
         }
-    }
-
-    private BigDecimal calcOderValue(Order order) {
-        BigDecimal value = BigDecimal.ZERO;
-        for (OrderItem orderItem : order.getItems())
-            value = value.add(orderItem.getValue().multiply(BigDecimal.valueOf(orderItem.getQuantity().longValue())));
-        if (order.getOrderType() == OrderType.DELIVERY) {
-            LOG.info(String.format("Delivery order %s", order.toString()));
-            if(Objects.nonNull(order.getDeliveryValue()) && order.getDeliveryValue().intValue() > 0) {
-                LOG.info(String.format("Delivery value %s", order.getDeliveryValue()));
-                value = value.add(order.getDeliveryValue());
-            } else {
-                LOG.info("Default delivery value 5.0");
-                BigDecimal defaultValue = BigDecimal.valueOf(5.0);
-                order.setDeliveryValue(defaultValue);
-                value = value.add(defaultValue);
-            }
-        }
-        LOG.info(String.format("Final value of order %s: %s", order.toString(), value));
-        return value;
     }
 
     private void updateItems(Order order, Order oldOrder){

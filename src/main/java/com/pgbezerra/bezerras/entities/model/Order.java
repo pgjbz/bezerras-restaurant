@@ -1,15 +1,19 @@
 package com.pgbezerra.bezerras.entities.model;
 
+import com.pgbezerra.bezerras.entities.enums.OrderStatus;
+import com.pgbezerra.bezerras.entities.enums.OrderType;
+import org.apache.log4j.Logger;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.pgbezerra.bezerras.entities.enums.OrderStatus;
-import com.pgbezerra.bezerras.entities.enums.OrderType;
+import java.util.Objects;
 
 public class Order implements Serializable{
+
+	private static final Logger LOG = Logger.getLogger(Order.class);
 
 	private static final long serialVersionUID = 1L;
 	
@@ -106,6 +110,26 @@ public class Order implements Serializable{
 
 	public void setOrderAddress(OrderAddress orderAddress) {
 		this.orderAddress = orderAddress;
+	}
+
+	public void calcOrderValue(){
+		BigDecimal finalValue = BigDecimal.ZERO;
+		for (OrderItem orderItem : items)
+			finalValue = finalValue.add(orderItem.getValue().multiply(BigDecimal.valueOf(orderItem.getQuantity().longValue())));
+		if (this.getOrderType() == OrderType.DELIVERY) {
+			LOG.info(String.format("Delivery order %s", this.toString()));
+			if(Objects.nonNull(this.getDeliveryValue()) && this.getDeliveryValue().intValue() > 0) {
+				LOG.info(String.format("Delivery value %s", this.getDeliveryValue()));
+				finalValue = finalValue.add(this.getDeliveryValue());
+			} else {
+				LOG.info("Default delivery value 5.0");
+				BigDecimal defaultValue = BigDecimal.valueOf(5.0);
+				this.setDeliveryValue(defaultValue);
+				finalValue = finalValue.add(defaultValue);
+			}
+		}
+		setValue(finalValue);
+		LOG.info(String.format("Final value of order %s: %s", this.toString(), finalValue));
 	}
 
 	@Override
