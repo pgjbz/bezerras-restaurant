@@ -5,6 +5,8 @@ import com.pgbezerra.bezerras.repository.OrderItemRepository;
 import com.pgbezerra.bezerras.services.OrderItemService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
 
@@ -22,6 +24,16 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public Boolean update(OrderItem orderItem) {
         return orderItemRepository.update(orderItem);
+    }
+
+    @Override
+    public List<OrderItem> findAll() {
+        throw new UnsupportedOperationException("Method Unsupported");
+    }
+
+    @Override
+    public OrderItem findById(Long id) {
+        throw new UnsupportedOperationException("Method Unsupported");
     }
 
     @Override
