@@ -96,7 +96,7 @@ public class TableResourceTest {
     }
 
     @Test
-    public void findAllCategoriesExpectedNotFound() throws Exception {
+    public void findAllTablesExpectedNotFound() throws Exception {
         Mockito.when(tableService.findAll()).thenThrow(ResourceNotFoundException.class);
         mockMvc.perform(MockMvcRequestBuilders.get("/tables"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -104,7 +104,7 @@ public class TableResourceTest {
     }
 
     @Test
-    public void findAllCategoriesExpectedOk() throws Exception {
+    public void findAllTablesExpectedOk() throws Exception {
         Mockito.when(tableService.findAll()).thenReturn(tables);
         mockMvc.perform(MockMvcRequestBuilders.get("/tables"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
