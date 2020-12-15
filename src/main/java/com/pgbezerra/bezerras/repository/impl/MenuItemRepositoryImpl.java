@@ -30,7 +30,7 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
 
 	@Override
 	@Transactional
-	public MenuItem insert(MenuItem obj) {
+	public MenuItem insert(MenuItem menuItem) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO  ");
 		sql.append("   TB_MENU_ITEM( ");
@@ -42,29 +42,29 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
-		paramSource.addValue("menu", obj.getMenu().getId());
-		paramSource.addValue("product", obj.getProduct().getId());
+		paramSource.addValue("menu", menuItem.getMenu().getId());
+		paramSource.addValue("product", menuItem.getProduct().getId());
 		int rowsAffected = 0;
 
 		try {
 			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
 			if (rowsAffected > 0)
-				LOG.info(String.format("New row %s inserted successfuly", obj.toString()));
+				LOG.info(String.format("New row %s inserted successfuly", menuItem.toString()));
 			else {
-				LOG.error(String.format("Can't insert a new row %s", obj.toString()));
+				LOG.error(String.format("Can't insert a new row %s", menuItem.toString()));
 				throw new DatabaseException("Can't insert a new row");
 			}
 		} catch (DataIntegrityViolationException e) {
-			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), obj.toString());
+			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), menuItem.toString());
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
 
-		return obj;
+		return menuItem;
 	}
 
 	@Override
-	public Boolean update(MenuItem obj) {
+	public Boolean update(MenuItem menuItem) {
 		return Boolean.FALSE;
 	}
 

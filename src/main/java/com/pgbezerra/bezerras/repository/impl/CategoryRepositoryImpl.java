@@ -29,7 +29,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
 	@Override
 	@Transactional
-	public Category insert(Category obj) {
+	public Category insert(Category category) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO  ");
 		sql.append("   TB_CATEGORY( ");
@@ -41,31 +41,31 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
-		paramSource.addValue("name", obj.getName());
-		paramSource.addValue("menu", obj.getIsMenu());
+		paramSource.addValue("name", category.getName());
+		paramSource.addValue("menu", category.getIsMenu());
 		int rowsAffected = 0;
 
 		try {
 			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
 			if (rowsAffected > 0) {
-				obj.setId(keyHolder.getKey().intValue());
-				LOG.info(String.format("New row %s inserted successfuly", obj.toString()));
+				category.setId(keyHolder.getKey().intValue());
+				LOG.info(String.format("New row %s inserted successfuly", category.toString()));
 			} else {
-				LOG.error(String.format("Can't insert a new row %s", obj.toString()));
+				LOG.error(String.format("Can't insert a new row %s", category.toString()));
 				throw new DatabaseException("Can't insert a new row");
 			}
 		} catch (DataIntegrityViolationException e) {
-			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), obj.toString());
+			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), category.toString());
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
 
-		return obj;
+		return category;
 	}
 
 	@Override
 	@Transactional
-	public Boolean update(Category obj) {
+	public Boolean update(Category category) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
 		sql.append("   TB_CATEGORY ");
@@ -76,14 +76,14 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 		sql.append("   ID_CATEGORY = :id ");
 
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("name", obj.getName());
-		parameters.put("menu", obj.getIsMenu());
-		parameters.put("id", obj.getId());
+		parameters.put("name", category.getName());
+		parameters.put("menu", category.getIsMenu());
+		parameters.put("id", category.getId());
 
 		try {
 			return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
 		} catch (DataIntegrityViolationException e) {
-			LOG.error(String.format("Error update register with id %s %s", obj.getId(), obj.toString()));
+			LOG.error(String.format("Error update register with id %s %s", category.getId(), category.toString()));
 			throw new DatabaseException(e.getMessage());
 		}
 	}

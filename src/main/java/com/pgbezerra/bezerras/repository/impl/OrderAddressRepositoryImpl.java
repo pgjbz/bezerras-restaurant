@@ -29,7 +29,7 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 
 	@Override
 	@Transactional
-	public OrderAddress insert(OrderAddress obj) {
+	public OrderAddress insert(OrderAddress orderAddress) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO ");
 		sql.append("   TB_ORDER_ADDRESS( ");
@@ -51,37 +51,37 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
-		paramSource.addValue("client", obj.getClientName());
-		paramSource.addValue("street", obj.getStreet());
-		paramSource.addValue("complement", obj.getComplement());
-		paramSource.addValue("number", obj.getNumber());
-		paramSource.addValue("district", obj.getDistrict());
-		paramSource.addValue("city", obj.getCity());
-		paramSource.addValue("state", obj.getState());
+		paramSource.addValue("client", orderAddress.getClientName());
+		paramSource.addValue("street", orderAddress.getStreet());
+		paramSource.addValue("complement", orderAddress.getComplement());
+		paramSource.addValue("number", orderAddress.getNumber());
+		paramSource.addValue("district", orderAddress.getDistrict());
+		paramSource.addValue("city", orderAddress.getCity());
+		paramSource.addValue("state", orderAddress.getState());
 
 		int rowsAffected = 0;
 
 		try {
 			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
 			if (rowsAffected > 0) {
-				obj.setId(keyHolder.getKey().longValue());
-				LOG.info(String.format("New row %s inserted successfuly", obj.toString()));
+				orderAddress.setId(keyHolder.getKey().longValue());
+				LOG.info(String.format("New row %s inserted successfuly", orderAddress.toString()));
 			} else {
-				LOG.error(String.format("Can't insert a new row %s", obj.toString()));
+				LOG.error(String.format("Can't insert a new row %s", orderAddress.toString()));
 				throw new DatabaseException("Can't insert a new row");
 			}
 		} catch (DataIntegrityViolationException e) {
-			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), obj.toString());
+			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), orderAddress.toString());
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
 
-		return obj;
+		return orderAddress;
 	}
 
 	@Override
 	@Transactional
-	public Boolean update(OrderAddress obj) {
+	public Boolean update(OrderAddress orderAddress) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
 		sql.append("   TB_ORDER_ADDRESS ");
@@ -96,18 +96,18 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 		sql.append("   ID_ORDER_ADDRESS = :id ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
-		paramSource.addValue("street", obj.getStreet());
-		paramSource.addValue("complement", obj.getComplement());
-		paramSource.addValue("number", obj.getNumber());
-		paramSource.addValue("district", obj.getDistrict());
-		paramSource.addValue("city", obj.getCity());
-		paramSource.addValue("state", obj.getState());
-		paramSource.addValue("id", obj.getId());
+		paramSource.addValue("street", orderAddress.getStreet());
+		paramSource.addValue("complement", orderAddress.getComplement());
+		paramSource.addValue("number", orderAddress.getNumber());
+		paramSource.addValue("district", orderAddress.getDistrict());
+		paramSource.addValue("city", orderAddress.getCity());
+		paramSource.addValue("state", orderAddress.getState());
+		paramSource.addValue("id", orderAddress.getId());
 
 		try {
 			return namedJdbcTemplate.update(sql.toString(), paramSource) > 0;
 		} catch (DataIntegrityViolationException e) {
-			LOG.error(String.format("Error update register with id %s %s", obj.getId(), obj.toString()));
+			LOG.error(String.format("Error update register with id %s %s", orderAddress.getId(), orderAddress.toString()));
 			throw new DatabaseException(e.getMessage());
 		}
 	}

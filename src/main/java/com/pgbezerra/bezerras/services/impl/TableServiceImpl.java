@@ -24,22 +24,22 @@ public class TableServiceImpl implements TableService {
 	}
 
 	@Override
-	public Table insert(Table obj) {
-		obj.setId(null);
-		return tableRepository.insert(obj);
+	public Table insert(Table table) {
+		table.setId(null);
+		return tableRepository.insert(table);
 	}
 
 	@Override
-	public Boolean update(Table obj) {
-		Table oldObj = findById(obj.getId());
-		updateDate(oldObj, obj);
+	public Boolean update(Table table) {
+		Table oldObj = findById(table.getId());
+		updateDate(oldObj, table);
 		Boolean updated = tableRepository.update(oldObj);
-		LOG.info(String.format("Table %s updated: %s", obj, updated));
+		LOG.info(String.format("Table %s updated: %s", table, updated));
 		return updated;
 	}
 
-	private void updateDate(Table oldObj, Table obj) {
-		oldObj.setName(obj.getName());
+	private void updateDate(Table oldObj, Table table) {
+		oldObj.setName(table.getName());
 	}
 
 	@Override

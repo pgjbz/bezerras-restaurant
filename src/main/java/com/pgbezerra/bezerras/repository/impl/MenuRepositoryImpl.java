@@ -34,7 +34,7 @@ public class MenuRepositoryImpl implements MenuRepository {
 
 	@Override
 	@Transactional
-	public Menu insert(Menu obj) {
+	public Menu insert(Menu menu) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO  ");
 		sql.append("   TB_MENU( ");
@@ -46,31 +46,31 @@ public class MenuRepositoryImpl implements MenuRepository {
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
-		paramSource.addValue("name", obj.getName());
-		paramSource.addValue("dayOfWeek", Objects.nonNull(obj.getDayOfWeek()) ? obj.getDayOfWeek().getValue() : null);
+		paramSource.addValue("name", menu.getName());
+		paramSource.addValue("dayOfWeek", Objects.nonNull(menu.getDayOfWeek()) ? menu.getDayOfWeek().getValue() : null);
 		int rowsAffected = 0;
 
 		try {
 			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
 			if (rowsAffected > 0) {
-				obj.setId(keyHolder.getKey().longValue());
-				LOG.info(String.format("New row %s inserted successfuly", obj.toString()));
+				menu.setId(keyHolder.getKey().longValue());
+				LOG.info(String.format("New row %s inserted successfuly", menu.toString()));
 			} else {
-				LOG.error(String.format("Can't insert a new row %s", obj.toString()));
+				LOG.error(String.format("Can't insert a new row %s", menu.toString()));
 				throw new DatabaseException("Can't insert a new row");
 			}
 		} catch (DataIntegrityViolationException e) {
-			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), obj.toString());
+			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), menu.toString());
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
 
-		return obj;
+		return menu;
 	}
 
 	@Override
 	@Transactional
-	public Boolean update(Menu obj) {
+	public Boolean update(Menu menu) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
 		sql.append("   TB_MENU ");
@@ -81,14 +81,14 @@ public class MenuRepositoryImpl implements MenuRepository {
 		sql.append("   ID_MENU = :id ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
-		paramSource.addValue("name", obj.getName());
-		paramSource.addValue("dayOfWeek", Objects.nonNull(obj.getDayOfWeek()) ? obj.getDayOfWeek().getValue() : null);
-		paramSource.addValue("id", obj.getId());
+		paramSource.addValue("name", menu.getName());
+		paramSource.addValue("dayOfWeek", Objects.nonNull(menu.getDayOfWeek()) ? menu.getDayOfWeek().getValue() : null);
+		paramSource.addValue("id", menu.getId());
 
 		try {
 			return namedJdbcTemplate.update(sql.toString(), paramSource) > 0;
 		} catch (DataIntegrityViolationException e) {
-			LOG.error(String.format("Error update register with id %s %s", obj.getId(), obj.toString()));
+			LOG.error(String.format("Error update register with id %s %s", menu.getId(), menu.toString()));
 			throw new DatabaseException(e.getMessage());
 		}
 	}

@@ -34,10 +34,10 @@ public class MenuItemServiceImpl implements MenuItemService {
 	}
 
 	@Override
-	public MenuItem insert(MenuItem obj) {
-		obj.setMenu(menuService.findById(obj.getMenu().getId()));
-		obj.setProduct(productService.findById(obj.getProduct().getId()));
-		return menuItemRepository.insert(obj);
+	public MenuItem insert(MenuItem menuItem) {
+		menuItem.setMenu(menuService.findById(menuItem.getMenu().getId()));
+		menuItem.setProduct(productService.findById(menuItem.getProduct().getId()));
+		return menuItemRepository.insert(menuItem);
 	}
 
 	@Override

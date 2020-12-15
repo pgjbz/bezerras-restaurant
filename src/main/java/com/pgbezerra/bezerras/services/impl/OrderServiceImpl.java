@@ -19,6 +19,7 @@ import java.util.Objects;
 public class OrderServiceImpl implements OrderService {
 
     private static final Logger LOG = Logger.getLogger(OrderServiceImpl.class);
+    private static final Integer DOING = 2;
 
     private final OrderRepository orderRepository;
     private final OrderItemService orderItemService;
@@ -40,43 +41,43 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order insert(Order obj) {
+    public Order insert(Order order) {
 
-        obj.setId(null);
-        obj.setDate(new Date());
-        if(Objects.nonNull(obj.getTable())) {
-            LOG.info(String.format("Finding table with id %s", obj.getTable().getId()));
-            obj.setTable(tableService.findById(obj.getTable().getId()));
+        order.setId(null);
+        order.setDate(new Date());
+        if(Objects.nonNull(order.getTable())) {
+            LOG.info(String.format("Finding table with id %s", order.getTable().getId()));
+            order.setTable(tableService.findById(order.getTable().getId()));
         }
-        obj.setOrderStatus(2);
-        LOG.info(String.format("Finding products of order %s", obj.toString()));
-        getItems(obj);
-        LOG.info(String.format("Calculating value of order %s", obj.toString()));
-        obj.setValue(calcOderValue(obj));
-        LOG.info(String.format("Inserting order %s", obj.toString()));
-        orderRepository.insert(obj);
+        order.setOrderStatus(DOING);
+        LOG.info(String.format("Finding products of order %s", order.toString()));
+        getItems(order);
+        LOG.info(String.format("Calculating value of order %s", order.toString()));
+        order.setValue(calcOderValue(order));
+        LOG.info(String.format("Inserting order %s", order.toString()));
+        orderRepository.insert(order);
 
-        if(obj.getOrderType() == OrderType.DELIVERY) {
-            if (Objects.nonNull(obj.getOrderAddress()))
-                orderAddressService.insert(obj.getOrderAddress());
+        if(order.getOrderType() == OrderType.DELIVERY) {
+            if (Objects.nonNull(order.getOrderAddress()))
+                orderAddressService.insert(order.getOrderAddress());
             else
                 throw new ResourceBadRequestException("Order address in order type DELIVERY not be empty");
         }
 
-        saveItems(obj);
+        saveItems(order);
 
-        return obj;
+        return order;
     }
 
     @Override
-    public Boolean update(Order obj) {
-        Order oldObj = findById(obj.getId());
-        getItems(obj);
-        updateItems(obj, oldObj);
-        oldObj.getItems().removeAll(obj.getItems());
-        deleteItems(oldObj);
-        obj.setValue(calcOderValue(obj));
-        return orderRepository.update(obj);
+    public Boolean update(Order order) {
+        Order oldOrder = findById(order.getId());
+        getItems(order);
+        updateItems(order, oldOrder);
+        oldOrder.getItems().removeAll(order.getItems());
+        deleteItems(oldOrder);
+        order.setValue(calcOderValue(order));
+        return orderRepository.update(order);
     }
 
     @Override
@@ -104,51 +105,51 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.deleteById(id);
     }
 
-    private void saveItems(Order obj){
-        for (OrderItem orderItem : obj.getItems()) {
-            LOG.info(String.format("Inserting order item %s of order %s", orderItem.toString(), obj.getId()));
+    private void saveItems(Order order){
+        for (OrderItem orderItem : order.getItems()) {
+            LOG.info(String.format("Inserting order item %s of order %s", orderItem.toString(), order.getId()));
             orderItemService.insert(orderItem);
         }
     }
 
-    private void getItems(Order obj) {
-        for (OrderItem orderItem : obj.getItems()) {
+    private void getItems(Order order) {
+        for (OrderItem orderItem : order.getItems()) {
             LOG.info(String.format("Finding product %s", orderItem.getProduct().getId()));
             orderItem.setValue(productService.findById(orderItem.getProduct().getId()).getValue());
         }
     }
 
-    private void deleteItems(Order obj){
-        for(OrderItem orderItem: obj.getItems()) {
+    private void deleteItems(Order order){
+        for(OrderItem orderItem: order.getItems()) {
             LOG.info(String.format("Deleting order item %s", orderItem.toString()));
             orderItemService.deleteById(orderItem.getId());
         }
     }
 
-    private BigDecimal calcOderValue(Order obj) {
+    private BigDecimal calcOderValue(Order order) {
         BigDecimal value = BigDecimal.ZERO;
-        for (OrderItem orderItem : obj.getItems())
+        for (OrderItem orderItem : order.getItems())
             value = value.add(orderItem.getValue().multiply(BigDecimal.valueOf(orderItem.getQuantity().longValue())));
-        if (obj.getOrderType() == OrderType.DELIVERY) {
-            LOG.info(String.format("Delivery order %s", obj.toString()));
-            if(Objects.nonNull(obj.getDeliveryValue()) && obj.getDeliveryValue().intValue() > 0) {
-                LOG.info(String.format("Delivery value %s", obj.getDeliveryValue()));
-                value = value.add(obj.getDeliveryValue());
+        if (order.getOrderType() == OrderType.DELIVERY) {
+            LOG.info(String.format("Delivery order %s", order.toString()));
+            if(Objects.nonNull(order.getDeliveryValue()) && order.getDeliveryValue().intValue() > 0) {
+                LOG.info(String.format("Delivery value %s", order.getDeliveryValue()));
+                value = value.add(order.getDeliveryValue());
             } else {
                 LOG.info("Default delivery value 5.0");
                 BigDecimal defaultValue = BigDecimal.valueOf(5.0);
-                obj.setDeliveryValue(defaultValue);
+                order.setDeliveryValue(defaultValue);
                 value = value.add(defaultValue);
             }
         }
-        LOG.info(String.format("Final value of order %s: %s", obj.toString(), value));
+        LOG.info(String.format("Final value of order %s: %s", order.toString(), value));
         return value;
     }
 
-    private void updateItems(Order obj, Order oldObj){
-        for(OrderItem orderItem: obj.getItems()) {
+    private void updateItems(Order order, Order oldOrder){
+        for(OrderItem orderItem: order.getItems()) {
             LOG.info(String.format("Updating order item %s", orderItem.toString()));
-            OrderItem oldOrderItem = oldObj.getItems().stream().filter(oi -> oi.equals(orderItem)).findFirst().orElse(null);
+            OrderItem oldOrderItem = oldOrder.getItems().stream().filter(oi -> oi.equals(orderItem)).findFirst().orElse(null);
             if(Objects.nonNull(oldOrderItem) && oldOrderItem.getQuantity().compareTo(orderItem.getQuantity()) != 0)
                 orderItemService.update(orderItem);
         }

@@ -29,7 +29,7 @@ public class TableRepositoryImpl implements TableRepository {
 
 	@Override
 	@Transactional
-	public Table insert(Table obj) {
+	public Table insert(Table table) {
 
 		StringBuilder sql = new StringBuilder();
 
@@ -40,30 +40,30 @@ public class TableRepositoryImpl implements TableRepository {
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
-		paramSource.addValue("name", obj.getName());
+		paramSource.addValue("name", table.getName());
 		int rowsAffected = 0;
 
 		try {
 			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
 			if (rowsAffected > 0) {
-				obj.setId(keyHolder.getKey().intValue());
-				LOG.info(String.format("New row %s inserted successfuly", obj.toString()));
+				table.setId(keyHolder.getKey().intValue());
+				LOG.info(String.format("New row %s inserted successfuly", table.toString()));
 			} else {
-				LOG.error(String.format("Can't insert a new row %s", obj.toString()));
+				LOG.error(String.format("Can't insert a new row %s", table.toString()));
 				throw new DatabaseException("Can't insert a new row");
 			}
 		} catch (DataIntegrityViolationException e) {
-			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), obj.toString());
+			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), table.toString());
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
 
-		return obj;
+		return table;
 	}
 
 	@Override
 	@Transactional
-	public Boolean update(Table obj) {
+	public Boolean update(Table table) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
 		sql.append("   TB_TABLE ");
@@ -73,13 +73,13 @@ public class TableRepositoryImpl implements TableRepository {
 		sql.append("   ID_TABLE = :id ");
 
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("name", obj.getName());
-		parameters.put("id", obj.getId());
+		parameters.put("name", table.getName());
+		parameters.put("id", table.getId());
 
 		try {
 			return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
 		} catch (DataIntegrityViolationException e) {
-			LOG.error(String.format("Error update register with id %s %s", obj.getId(), obj.toString()));
+			LOG.error(String.format("Error update register with id %s %s", table.getId(), table.toString()));
 			throw new DatabaseException(e.getMessage());
 		}
 	}
@@ -149,8 +149,8 @@ public class TableRepositoryImpl implements TableRepository {
 	@Override
 	@Transactional
 	public List<Table> insertAll(List<Table> list) {
-		for (Table obj : list)
-			insert(obj);
+		for (Table table : list)
+			insert(table);
 		return list;
 	}
 

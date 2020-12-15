@@ -37,7 +37,7 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 
 	@Override
 	@Transactional
-	public OrderItem insert(OrderItem obj) {
+	public OrderItem insert(OrderItem orderItem) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO ");
 		sql.append("   TB_ORDER_ITEM( ");
@@ -53,32 +53,32 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
-		paramSource.addValue("product", Objects.nonNull(obj.getProduct()) ? obj.getProduct().getId() : null);
-		paramSource.addValue("order", Objects.nonNull(obj.getOrder()) ? obj.getOrder().getId() : null);
-		paramSource.addValue("quantity", obj.getQuantity());
-		paramSource.addValue("value", obj.getValue());
+		paramSource.addValue("product", Objects.nonNull(orderItem.getProduct()) ? orderItem.getProduct().getId() : null);
+		paramSource.addValue("order", Objects.nonNull(orderItem.getOrder()) ? orderItem.getOrder().getId() : null);
+		paramSource.addValue("quantity", orderItem.getQuantity());
+		paramSource.addValue("value", orderItem.getValue());
 		int rowsAffected = 0;
 
 		try {
 			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
 			if (rowsAffected > 0) {
-				obj.setId(keyHolder.getKey().longValue());
-				LOG.info(String.format("New row %s inserted successfuly", obj.toString()));
+				orderItem.setId(keyHolder.getKey().longValue());
+				LOG.info(String.format("New row %s inserted successfuly", orderItem.toString()));
 			} else {
-				LOG.error(String.format("Can't insert a new row %s", obj.toString()));
+				LOG.error(String.format("Can't insert a new row %s", orderItem.toString()));
 				throw new DatabaseException("Can't insert a new row");
 			}
 		} catch (DataIntegrityViolationException e) {
-			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), obj.toString());
+			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), orderItem.toString());
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
-		return obj;
+		return orderItem;
 	}
 
 	@Override
 	@Transactional
-	public Boolean update(OrderItem obj) {
+	public Boolean update(OrderItem orderItem) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
 		sql.append("   TB_ORDER_ITEM ");
@@ -91,16 +91,16 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 		sql.append("   ID_ORDER_ITEM = :id ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
-		paramSource.addValue("product", Objects.nonNull(obj.getProduct()) ? obj.getProduct().getId() : null);
-		paramSource.addValue("order", Objects.nonNull(obj.getOrder()) ? obj.getOrder().getId() : null);
-		paramSource.addValue("quantity", obj.getQuantity());
-		paramSource.addValue("value", obj.getValue());
-		paramSource.addValue("id", obj.getId());
+		paramSource.addValue("product", Objects.nonNull(orderItem.getProduct()) ? orderItem.getProduct().getId() : null);
+		paramSource.addValue("order", Objects.nonNull(orderItem.getOrder()) ? orderItem.getOrder().getId() : null);
+		paramSource.addValue("quantity", orderItem.getQuantity());
+		paramSource.addValue("value", orderItem.getValue());
+		paramSource.addValue("id", orderItem.getId());
 
 		try {
 			return namedJdbcTemplate.update(sql.toString(), paramSource) > 0;
 		} catch (DataIntegrityViolationException e) {
-			LOG.error(String.format("Error update register with id %s %s", obj.getId(), obj.toString()));
+			LOG.error(String.format("Error update register with id %s %s", orderItem.getId(), orderItem.toString()));
 			throw new DatabaseException(e.getMessage());
 		}
 	}

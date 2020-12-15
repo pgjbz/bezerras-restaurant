@@ -34,26 +34,26 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Product insert(Product obj) {
-		obj.setId(null);
-		categoryService.findById(obj.getCategory().getId());
-		return productRepository.insert(obj);
+	public Product insert(Product product) {
+		product.setId(null);
+		categoryService.findById(product.getCategory().getId());
+		return productRepository.insert(product);
 	}
 
 	@Override
-	public Boolean update(Product obj) {
-		categoryService.findById(obj.getCategory().getId());
-		Product oldObj = findById(obj.getId());
-		updateData(oldObj, obj);
+	public Boolean update(Product product) {
+		categoryService.findById(product.getCategory().getId());
+		Product oldObj = findById(product.getId());
+		updateData(oldObj, product);
 		Boolean updated = productRepository.update(oldObj);
-		LOG.info(String.format("Product %s updated: %s", obj, updated));
+		LOG.info(String.format("Product %s updated: %s", product, updated));
 		return updated;
 	}
 
-	private void updateData(Product oldObj, Product obj) {
-		oldObj.setCategory(obj.getCategory());
-		oldObj.setName(obj.getName());
-		oldObj.setValue(obj.getValue());
+	private void updateData(Product oldObj, Product product) {
+		oldObj.setCategory(product.getCategory());
+		oldObj.setName(product.getName());
+		oldObj.setValue(product.getValue());
 	}
 
 	@Override
@@ -66,18 +66,18 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<Product> findByCategory(Category obj) {
-		Category category = categoryService.findById(obj.getId());
+	public List<Product> findByCategory(Category cat) {
+		Category category = categoryService.findById(cat.getId());
 		List<Product> products;
 		if (category.getIsMenu()) {
 			Menu menu = menuService.findByDayOfWeek(DateUtil.currentDayOfWeek());
 			products = menu.getItems().stream().map(MenuItem::getProduct).collect(Collectors.toList());
 		} else
-			products = productRepository.findByCategory(obj);
+			products = productRepository.findByCategory(category);
 		
 		if(!products.isEmpty())
 			return products;
-		String msg = String.format("No products found for the category %s", obj.getId());
+		String msg = String.format("No products found for the category %s", cat.getId());
 		LOG.info(msg);
 		throw new ResourceNotFoundException(msg);
 	}

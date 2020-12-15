@@ -43,7 +43,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
 	@Override
 	@Transactional
-	public Order insert(Order obj) {
+	public Order insert(Order order) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO ");
 		sql.append("   TB_ORDER( ");
@@ -65,38 +65,38 @@ public class OrderRepositoryImpl implements OrderRepository {
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
-		paramSource.addValue("date", obj.getDate());
-		paramSource.addValue("value", obj.getValue());
-		paramSource.addValue("table", Objects.nonNull(obj.getTable()) ? obj.getTable().getId() : null);
-		paramSource.addValue("valueDelivery", obj.getDeliveryValue());
+		paramSource.addValue("date", order.getDate());
+		paramSource.addValue("value", order.getValue());
+		paramSource.addValue("table", Objects.nonNull(order.getTable()) ? order.getTable().getId() : null);
+		paramSource.addValue("valueDelivery", order.getDeliveryValue());
 		paramSource.addValue("status",
-				Objects.nonNull(obj.getOrderStatus()) ? obj.getOrderStatus().getStatusCode() : null);
+				Objects.nonNull(order.getOrderStatus()) ? order.getOrderStatus().getStatusCode() : null);
 		paramSource.addValue("type",
-				Objects.nonNull(obj.getOrderType()) ? obj.getOrderType().getOrderTypeCode() : null);
+				Objects.nonNull(order.getOrderType()) ? order.getOrderType().getOrderTypeCode() : null);
 		paramSource.addValue("orderAddress",
-				Objects.nonNull(obj.getOrderAddress()) ? obj.getOrderAddress().getId() : null);
+				Objects.nonNull(order.getOrderAddress()) ? order.getOrderAddress().getId() : null);
 		int rowsAffected = 0;
 
 		try {
 			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
 			if (rowsAffected > 0) {
-				obj.setId(keyHolder.getKey().longValue());
-				LOG.info(String.format("New row %s inserted successfuly", obj.toString()));
+				order.setId(keyHolder.getKey().longValue());
+				LOG.info(String.format("New row %s inserted successfuly", order.toString()));
 			} else {
-				LOG.error(String.format("Can't insert a new row %s", obj.toString()));
+				LOG.error(String.format("Can't insert a new row %s", order.toString()));
 				throw new DatabaseException("Can't insert a new row");
 			}
 		} catch (DataIntegrityViolationException e) {
-			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), obj.toString());
+			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), order.toString());
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
-		return obj;
+		return order;
 	}
 
 	@Override
 	@Transactional
-	public Boolean update(Order obj) {
+	public Boolean update(Order order) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
 		sql.append("   TB_ORDER ");
@@ -112,22 +112,22 @@ public class OrderRepositoryImpl implements OrderRepository {
 		sql.append("   ID_ORDER = :id ");
 
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
-		paramSource.addValue("date", obj.getDate());
-		paramSource.addValue("value", obj.getValue());
-		paramSource.addValue("table", Objects.nonNull(obj.getTable()) ? obj.getTable().getId() : null);
-		paramSource.addValue("valueDelivery", obj.getDeliveryValue());
+		paramSource.addValue("date", order.getDate());
+		paramSource.addValue("value", order.getValue());
+		paramSource.addValue("table", Objects.nonNull(order.getTable()) ? order.getTable().getId() : null);
+		paramSource.addValue("valueDelivery", order.getDeliveryValue());
 		paramSource.addValue("status",
-				Objects.nonNull(obj.getOrderStatus()) ? obj.getOrderStatus().getStatusCode() : null);
+				Objects.nonNull(order.getOrderStatus()) ? order.getOrderStatus().getStatusCode() : null);
 		paramSource.addValue("type",
-				Objects.nonNull(obj.getOrderType()) ? obj.getOrderType().getOrderTypeCode() : null);
+				Objects.nonNull(order.getOrderType()) ? order.getOrderType().getOrderTypeCode() : null);
 		paramSource.addValue("orderAddress",
-				Objects.nonNull(obj.getOrderAddress()) ? obj.getOrderAddress().getId() : null);
-		paramSource.addValue("id", obj.getId());
+				Objects.nonNull(order.getOrderAddress()) ? order.getOrderAddress().getId() : null);
+		paramSource.addValue("id", order.getId());
 
 		try {
 			return namedJdbcTemplate.update(sql.toString(), paramSource) > 0;
 		} catch (DataIntegrityViolationException e) {
-			LOG.error(String.format("Error update register with id %s %s", obj.getId(), obj.toString()));
+			LOG.error(String.format("Error update register with id %s %s", order.getId(), order.toString()));
 			throw new DatabaseException(e.getMessage());
 		}
 	}

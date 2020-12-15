@@ -24,29 +24,29 @@ public class MenuServiceImpl implements MenuService {
 	}
 
 	@Override
-	public Menu insert(Menu obj) {
-		obj.setId(null);
+	public Menu insert(Menu menu) {
+		menu.setId(null);
 		try {
-			findByDayOfWeek(obj.getDayOfWeek());
+			findByDayOfWeek(menu.getDayOfWeek());
 		} catch (ResourceNotFoundException e) {
-			LOG.info(String.format("Insert a new menu in day of week: %s", obj.getDayOfWeek()));
-			return menuRepository.insert(obj);
+			LOG.info(String.format("Insert a new menu in day of week: %s", menu.getDayOfWeek()));
+			return menuRepository.insert(menu);
 		}
-		String msg = String.format("Alredy exists menu in this day of week: %s", obj.getDayOfWeek());
+		String msg = String.format("Alredy exists menu in this day of week: %s", menu.getDayOfWeek());
 		LOG.info(msg);
 		throw new ResourceBadRequestException(msg);
 	}
 
 	@Override
-	public Boolean update(Menu obj) {
-		Menu oldObj = findById(obj.getId());
-		updateData(oldObj, obj);
+	public Boolean update(Menu menu) {
+		Menu oldObj = findById(menu.getId());
+		updateData(oldObj, menu);
 		return menuRepository.update(oldObj);
 	}
 
-	private void updateData(Menu oldObj, Menu obj) {
-		oldObj.setDayOfWeek(obj.getDayOfWeek().getValue());
-		oldObj.setName(obj.getName());
+	private void updateData(Menu oldObj, Menu menu) {
+		oldObj.setDayOfWeek(menu.getDayOfWeek().getValue());
+		oldObj.setName(menu.getName());
 	}
 
 	@Override

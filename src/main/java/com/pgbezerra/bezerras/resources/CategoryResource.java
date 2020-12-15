@@ -33,18 +33,18 @@ public class CategoryResource {
     }
 
     @PostMapping
-    public ResponseEntity<Void> insert(@RequestBody @Valid CategoryDTO objDTO){
-        Category obj = convertToEntity(objDTO);
-        categoryService.insert(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+    public ResponseEntity<Void> insert(@RequestBody @Valid CategoryDTO categoryDTO){
+        Category category = convertToEntity(categoryDTO);
+        categoryService.insert(category);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(category.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") Integer id, @RequestBody @Valid CategoryDTO objDTO){
-        Category obj = convertToEntity(objDTO);
-        obj.setId(id);
-        categoryService.update(obj);
+    public ResponseEntity<Void> update(@PathVariable("id") Integer id, @RequestBody @Valid CategoryDTO categoryDTO){
+        Category category = convertToEntity(categoryDTO);
+        category.setId(id);
+        categoryService.update(category);
         return ResponseEntity.ok().build();
     }
 
@@ -54,10 +54,10 @@ public class CategoryResource {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    private Category convertToEntity(CategoryDTO objDTO){
-        Category obj = new Category(null, objDTO.getName());
-        obj.setIsMenu(objDTO.getIsMenu());
-        return obj;
+    private Category convertToEntity(CategoryDTO categoryDTO){
+        Category category = new Category(null, categoryDTO.getName());
+        category.setIsMenu(categoryDTO.getIsMenu());
+        return category;
     }
 
 }

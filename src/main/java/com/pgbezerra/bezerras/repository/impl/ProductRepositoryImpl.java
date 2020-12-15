@@ -37,7 +37,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
 	@Override
 	@Transactional
-	public Product insert(Product obj) {
+	public Product insert(Product product) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" INSERT INTO ");
 		sql.append("   TB_PRODUCT(NM_PRODUCT, VL_PRODUCT, ID_CATEGORY) ");
@@ -46,10 +46,10 @@ public class ProductRepositoryImpl implements ProductRepository {
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
-		paramSource.addValue("name", obj.getName());
-		paramSource.addValue("value", obj.getValue());
+		paramSource.addValue("name", product.getName());
+		paramSource.addValue("value", product.getValue());
 
-		Category category = obj.getCategory();
+		Category category = product.getCategory();
 
 		paramSource.addValue("category", nonNull(category) ? category.getId() : null);
 
@@ -57,24 +57,24 @@ public class ProductRepositoryImpl implements ProductRepository {
 		try {
 			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
 			if (rowsAffected > 0) {
-				obj.setId(keyHolder.getKey().intValue());
-				LOG.info(String.format("New row %s inserted successfuly", obj.toString()));
+				product.setId(keyHolder.getKey().intValue());
+				LOG.info(String.format("New row %s inserted successfuly", product.toString()));
 			} else {
-				LOG.error(String.format("Can't insert a new row %s", obj.toString()));
+				LOG.error(String.format("Can't insert a new row %s", product.toString()));
 				throw new DatabaseException("Can't insert a new row");
 			}
 		} catch (DataIntegrityViolationException e) {
-			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), obj.toString());
+			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), product.toString());
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
 
-		return obj;
+		return product;
 	}
 
 	@Override
 	@Transactional
-	public Boolean update(Product obj) {
+	public Boolean update(Product product) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" UPDATE ");
 		sql.append("   TB_PRODUCT ");
@@ -85,18 +85,18 @@ public class ProductRepositoryImpl implements ProductRepository {
 		sql.append(" WHERE ");
 		sql.append("   ID_PRODUCT = :id ");
 
-		Category category = obj.getCategory();
+		Category category = product.getCategory();
 
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("name", obj.getName());
+		parameters.put("name", product.getName());
 		parameters.put("category", nonNull(category) ? category.getId() : null);
-		parameters.put("value", obj.getValue());
-		parameters.put("id", obj.getId());
+		parameters.put("value", product.getValue());
+		parameters.put("id", product.getId());
 
 		try {
 			return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
 		} catch (DataIntegrityViolationException e) {
-			LOG.error(String.format("Error update register with id %s %s", obj.getId(), obj.toString()));
+			LOG.error(String.format("Error update register with id %s %s", product.getId(), product.toString()));
 			throw new DatabaseException(e.getMessage());
 		}
 	}
@@ -183,17 +183,17 @@ public class ProductRepositoryImpl implements ProductRepository {
 
 		try {
 			product = namedJdbcTemplate.queryForObject(sql.toString(), paramSource, (rs, rownum) -> {
-				Product obj = new Product();
-				obj.setId(rs.getInt("ID_PRODUCT"));
-				obj.setName(rs.getString("NM_PRODUCT"));
-				obj.setValue(rs.getBigDecimal("VL_PRODUCT"));
+				Product p = new Product();
+				p.setId(rs.getInt("ID_PRODUCT"));
+				p.setName(rs.getString("NM_PRODUCT"));
+				p.setValue(rs.getBigDecimal("VL_PRODUCT"));
 
 				Optional<Category> category = categoryRepository.findById(rs.getInt("ID_CATEGORY"));
 
 				if (category.isPresent())
-					obj.setCategory(category.get());
+					p.setCategory(category.get());
 
-				return obj;
+				return p;
 			});
 			LOG.info(String.format("Product with id: %s found successfuly %s", id, product.toString()));
 		} catch (EmptyResultDataAccessException e) {
@@ -232,13 +232,13 @@ public class ProductRepositoryImpl implements ProductRepository {
 
 		try {
 			products = namedJdbcTemplate.query(sql.toString(), paramSource, (rs, rownum) -> {
-				Product obj = new Product();
-				obj.setId(rs.getInt("ID_PRODUCT"));
-				obj.setName(rs.getString("NM_PRODUCT"));
-				obj.setValue(rs.getBigDecimal("VL_PRODUCT"));
+				Product product = new Product();
+				product.setId(rs.getInt("ID_PRODUCT"));
+				product.setName(rs.getString("NM_PRODUCT"));
+				product.setValue(rs.getBigDecimal("VL_PRODUCT"));
 
-				obj.setCategory(category);
-				return obj;
+				product.setCategory(category);
+				return product;
 			});
 			LOG.info(String.format("Products category id: %s", category.getId()));
 		} catch (EmptyResultDataAccessException e) {

@@ -24,28 +24,28 @@ public class OrderAddressServiceImpl implements OrderAddressService {
 	}
 
 	@Override
-	public OrderAddress insert(OrderAddress obj) {
-		obj.setId(null);
-		return orderAddressesRepository.insert(obj);
+	public OrderAddress insert(OrderAddress orderAddress) {
+		orderAddress.setId(null);
+		return orderAddressesRepository.insert(orderAddress);
 	}
 
 	@Override
-	public Boolean update(OrderAddress obj) {
-		OrderAddress oldObj = findById(obj.getId());
-		updateDate(oldObj, obj);
+	public Boolean update(OrderAddress orderAddress) {
+		OrderAddress oldObj = findById(orderAddress.getId());
+		updateDate(oldObj, orderAddress);
 		Boolean updated = orderAddressesRepository.update(oldObj);
-		LOG.info(String.format("OrderAddress %s updated: %s", obj, updated));
+		LOG.info(String.format("OrderAddress %s updated: %s", orderAddress, updated));
 		return updated;
 	}
 
-	private void updateDate(OrderAddress oldObj, OrderAddress obj) {
-		oldObj.setCity(obj.getCity());
-		oldObj.setStreet(obj.getStreet());
-		oldObj.setClientName(obj.getClientName());
-		oldObj.setDistrict(obj.getDistrict());
-		oldObj.setState(obj.getState());
-		oldObj.setNumber(obj.getNumber());
-		oldObj.setComplement(obj.getComplement());
+	private void updateDate(OrderAddress oldObj, OrderAddress orderAddress) {
+		oldObj.setCity(orderAddress.getCity());
+		oldObj.setStreet(orderAddress.getStreet());
+		oldObj.setClientName(orderAddress.getClientName());
+		oldObj.setDistrict(orderAddress.getDistrict());
+		oldObj.setState(orderAddress.getState());
+		oldObj.setNumber(orderAddress.getNumber());
+		oldObj.setComplement(orderAddress.getComplement());
 	}
 
 	@Override

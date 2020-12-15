@@ -24,23 +24,23 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public Category insert(Category obj) {
-		obj.setId(null);
-		return categoryRepository.insert(obj);
+	public Category insert(Category category) {
+		category.setId(null);
+		return categoryRepository.insert(category);
 	}
 
 	@Override
-	public Boolean update(Category obj) {
-		Category oldObj = findById(obj.getId());
-		updateDate(oldObj, obj);
+	public Boolean update(Category category) {
+		Category oldObj = findById(category.getId());
+		updateDate(oldObj, category);
 		Boolean updated = categoryRepository.update(oldObj);
-		LOG.info(String.format("Category %s updated: %s", obj, updated));
+		LOG.info(String.format("Category %s updated: %s", category, updated));
 		return updated;
 	}
 
-	private void updateDate(Category oldObj, Category obj) {
-		oldObj.setName(obj.getName());
-		oldObj.setIsMenu(obj.getIsMenu());
+	private void updateDate(Category oldObj, Category category) {
+		oldObj.setName(category.getName());
+		oldObj.setIsMenu(category.getIsMenu());
 	}
 
 	@Override

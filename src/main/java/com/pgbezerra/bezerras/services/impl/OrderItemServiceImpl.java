@@ -15,13 +15,13 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public OrderItem insert(OrderItem obj) {
-        return orderItemRepository.insert(obj);
+    public OrderItem insert(OrderItem orderItem) {
+        return orderItemRepository.insert(orderItem);
     }
 
     @Override
-    public Boolean update(OrderItem obj) {
-        return orderItemRepository.update(obj);
+    public Boolean update(OrderItem orderItem) {
+        return orderItemRepository.update(orderItem);
     }
 
     @Override
