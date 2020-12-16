@@ -108,7 +108,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 		sql.append(" DELETE FROM ");
 		sql.append("   TB_PRODUCT ");
 		sql.append(" WHERE ");
-		sql.append("   ID_CATEGORY = :id ");
+		sql.append("   ID_PRODUCT = :id ");
 
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", id);
