@@ -81,7 +81,7 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
 		Map<String, Object> parameters = new HashMap<>();
 		Menu menu = id.keySet().stream().findFirst().orElse(new Menu());
 		Product product = id.get(menu);
-		parameters.put("product", product);
+		parameters.put("product", product.getId());
 		parameters.put("menu", menu.getId());
 
 		return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
