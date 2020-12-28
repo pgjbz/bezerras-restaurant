@@ -12,7 +12,7 @@ public class Menu implements Serializable {
 	private Long id;
 	private String name;
 	private DayOfWeek dayOfWeek;
-	private Set<MenuItem> items = new HashSet<>();
+	private final Set<MenuItem> items = new HashSet<>();
 
 	public Menu() {
 	}
