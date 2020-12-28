@@ -7,6 +7,7 @@ import com.pgbezerra.bezerras.repository.MenuItemRepository;
 import com.pgbezerra.bezerras.services.MenuItemService;
 import com.pgbezerra.bezerras.services.MenuService;
 import com.pgbezerra.bezerras.services.ProductService;
+import com.pgbezerra.bezerras.services.exception.ResourceBadRequestException;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,10 @@ public class MenuItemServiceImpl implements MenuItemService {
 	@Override
 	public MenuItem insert(MenuItem menuItem) {
 		menuItem.setMenu(menuService.findById(menuItem.getMenu().getId()));
-		menuItem.setProduct(productService.findById(menuItem.getProduct().getId()));
+		Product product = productService.findById(menuItem.getProduct().getId());
+		if(!product.getCategory().getIsMenu())
+			throw new ResourceBadRequestException(String.format("Product %s category not is menu category", product.toString()));
+		menuItem.setProduct(product);
 		return menuItemRepository.insert(menuItem);
 	}
 
