@@ -13,12 +13,12 @@ import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-	
+
 	private static final Logger LOG = Logger.getLogger(CategoryServiceImpl.class);
 
 	@Autowired
 	private final  CategoryRepository categoryRepository;
-	
+
 	public CategoryServiceImpl(final CategoryRepository categoryRepository) {
 		this.categoryRepository = categoryRepository;
 	}
@@ -47,7 +47,7 @@ public class CategoryServiceImpl implements CategoryService {
 	public List<Category> findAll() {
 		List<Category> categories = categoryRepository.findAll();
 		LOG.info(String.format("%s categories found", categories.size()));
-		if(!categories.isEmpty()) 
+		if(!categories.isEmpty())
 			return categories;
 		throw new ResourceNotFoundException("No categories found");
 	}
@@ -56,9 +56,8 @@ public class CategoryServiceImpl implements CategoryService {
 	public Category findById(Integer id) {
 		Optional<Category> category = categoryRepository.findById(id);
 		LOG.info(String.format("Category with id %s found: %s", id, category.isPresent()));
-		if(category.isPresent())
-			return category.get();
-		throw new ResourceNotFoundException(String.format("No categories found with id: %s", id));
+			return category.orElseThrow(() ->
+		new ResourceNotFoundException(String.format("No categories found with id: %s", id)));
 	}
 
 	@Override
