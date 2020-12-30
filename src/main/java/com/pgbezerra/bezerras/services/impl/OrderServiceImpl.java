@@ -18,7 +18,7 @@ import java.util.Objects;
 public class OrderServiceImpl implements OrderService {
 
     private static final Logger LOG = Logger.getLogger(OrderServiceImpl.class);
-    private static final Integer DOING = 2;
+    private static final Integer DOING = 1;
 
     private final OrderRepository orderRepository;
     private final OrderItemService orderItemService;
