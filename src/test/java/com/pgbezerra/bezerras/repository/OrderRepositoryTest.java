@@ -1,12 +1,11 @@
 package com.pgbezerra.bezerras.repository;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
+import com.pgbezerra.bezerras.entities.enums.OrderStatus;
+import com.pgbezerra.bezerras.entities.enums.OrderType;
+import com.pgbezerra.bezerras.entities.model.Order;
+import com.pgbezerra.bezerras.entities.model.OrderAddress;
+import com.pgbezerra.bezerras.entities.model.Table;
+import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,12 +17,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.pgbezerra.bezerras.entities.enums.OrderStatus;
-import com.pgbezerra.bezerras.entities.enums.OrderType;
-import com.pgbezerra.bezerras.entities.model.Order;
-import com.pgbezerra.bezerras.entities.model.OrderAddress;
-import com.pgbezerra.bezerras.entities.model.Table;
-import com.pgbezerra.bezerras.repository.exception.DatabaseException;
+import java.math.BigDecimal;
+import java.util.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -179,9 +174,18 @@ public class OrderRepositoryTest {
 		List<Order> orders = orderRepository.findAll();
 		Assert.assertNotEquals(0, orders.size());
 	}
+
+	@Test
+	public void findPendingExpectReturn() {
+		tableRepository.insertAll(tables);
+		orderAddressRepository.insertAll(orderAddresses);
+		orderRepository.insertAll(orders);
+		List<Order> orders = orderRepository.findAll();
+		Assert.assertNotEquals(0, orders.size());
+	}
 	
 	@Test
-	public void findByIdInexsistentOrderExpectedError() {
+	public void findByIdNonexistentOrderExpectedError() {
 		Optional<Order> order = orderRepository.findById(999L);
 		Assert.assertFalse(order.isPresent());
 	}
@@ -192,8 +196,8 @@ public class OrderRepositoryTest {
 		tableRepository.insert(t1);
 		Order order = new Order(999L, new Date(), BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.DOING, OrderType.TABLE, null);
 		orderRepository.insert(order);
-		Optional<Order> orderReturn = orderRepository.findById(order.getId());
-		Assert.assertTrue(orderReturn.isPresent());
+		List<Order> orderReturn = orderRepository.findPendingOrders();
+		Assert.assertFalse(orderReturn.isEmpty());
 	}
 	
 

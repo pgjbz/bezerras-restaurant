@@ -279,4 +279,73 @@ public class OrderRepositoryImpl implements OrderRepository {
 		return list;
 	}
 
+	@Override
+	public List<Order> findPendingOrders() {
+		StringBuilder sql = new StringBuilder();
+		sql.append(" SELECT ");
+		sql.append("   ID_ORDER, ");
+		sql.append("   DT_ORDER, ");
+		sql.append("   VL_ORDER, ");
+		sql.append("   ID_TABLE, ");
+		sql.append("   VL_DELIVERY, ");
+		sql.append("   ID_ORDER_STATUS, ");
+		sql.append("   ID_ORDER_TYPE, ");
+		sql.append("   ID_ORDER_ADDRESS ");
+		sql.append(" FROM ");
+		sql.append("   TB_ORDER ");
+		sql.append(" WHERE ");
+		sql.append("   ID_ORDER_STATUS = 1 ");
+
+		List<Order> orders = null;
+
+		final HashMap<Long, OrderAddress> orderAddresses = new HashMap<>();
+		final HashMap<Integer, Table> tables = new HashMap<>();
+
+		try {
+			orders = namedJdbcTemplate.query(sql.toString(), (rs, rownum) -> {
+				Order order = new Order();
+				order.setId(rs.getLong("ID_ORDER"));
+				order.setDate(rs.getDate("DT_ORDER"));
+				order.setValue(rs.getBigDecimal("VL_ORDER"));
+				order.setDeliveryValue(rs.getBigDecimal("VL_DELIVERY"));
+				order.setOrderStatus(rs.getInt("ID_ORDER_STATUS"));
+				order.setOrderType(rs.getInt("ID_ORDER_TYPE"));
+
+				Integer idTable = rs.getInt("ID_TABLE");
+				Long idOrderAddress = rs.getLong("ID_ORDER_ADDRESS");
+
+				if (tables.containsKey(idTable))
+					order.setTable(tables.get(idTable));
+				else {
+
+					Optional<Table> table = tableRepository.findById(idTable);
+					if (table.isPresent()) {
+						order.setTable(table.get());
+						tables.put(idTable, table.get());
+					} else
+						tables.put(idTable, null);
+
+				}
+
+				if (orderAddresses.containsKey(idOrderAddress))
+					order.setOrderAddress(orderAddresses.get(idOrderAddress));
+				else {
+					Optional<OrderAddress> orderAddress = orderAddressRepository.findById(idOrderAddress);
+					if (orderAddress.isPresent()) {
+						order.setOrderAddress(orderAddress.get());
+						orderAddresses.put(idOrderAddress, orderAddress.get());
+					} else
+						orderAddresses.put(idOrderAddress, null);
+				}
+
+				order.getItems().addAll(orderItemRepository.findByOrder(order));
+
+				return order;
+			});
+		} catch (EmptyResultDataAccessException e) {
+			orders = new ArrayList<>();
+		}
+
+		return orders;
+	}
 }
