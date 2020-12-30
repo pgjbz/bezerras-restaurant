@@ -134,4 +134,15 @@ public class OrderServiceImpl implements OrderService {
                 orderItemService.update(orderItem);
         }
     }
+
+    @Override
+    public Boolean updateStatus(Order order) {
+        Order oldOrder = findById(order.getId());
+        updateStatus(oldOrder, order);
+        return orderRepository.update(order);
+    }
+
+    private void updateStatus(Order oldOrder, Order order) {
+        oldOrder.setOrderStatus(order.getOrderStatus().getStatusCode());
+    }
 }

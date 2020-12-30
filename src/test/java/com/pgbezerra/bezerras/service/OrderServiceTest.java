@@ -1,5 +1,6 @@
 package com.pgbezerra.bezerras.service;
 
+import com.pgbezerra.bezerras.entities.enums.OrderStatus;
 import com.pgbezerra.bezerras.entities.model.*;
 import com.pgbezerra.bezerras.repository.OrderRepository;
 import com.pgbezerra.bezerras.services.*;
@@ -160,7 +161,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void updateNonExistentOrderExpectedSuccess(){
+    public void updateExistentOrderExpectedSuccess(){
         o1.setId(1L);
         o1.setOrderType(2);
         o2.setTable(t1);
@@ -186,5 +187,23 @@ public class OrderServiceTest {
         Mockito.verify(orderItemService).update(Mockito.any(OrderItem.class));
     }
 
+    @Test
+    public void updateOrderStatusExistentOrderExpectedSuccess(){
+        o1.setId(1L);
+        o1.setOrderType(2);
+        o2.setTable(t1);
+        o2.setOrderType(2);
+        Product p2 = new Product(2, "Feijoada Grande", BigDecimal.valueOf(35.0), null);
+        OrderItem oi2 = new OrderItem(1L, p2, null, Byte.valueOf("1"), null);
+        o1.getItems().addAll(Arrays.asList(oi1, oi2));
+        o2.getItems().addAll(o1.getItems());
+        o2.setOrderStatus(OrderStatus.COMPLETE.getStatusCode());
+
+        Mockito.when(orderRepository.findById(o2.getId())).thenReturn(Optional.ofNullable(o1));
+
+        orderService.updateStatus(o2);
+
+        Mockito.verify(orderRepository).findById(o2.getId());
+    }
 
 }
