@@ -142,6 +142,14 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.update(order);
     }
 
+    @Override
+    public List<Order> findPendingOrders() {
+        List<Order> orders = orderRepository.findPendingOrders();
+        if(!orders.isEmpty())
+            return orders;
+        throw new ResourceNotFoundException("No orders found");
+    }
+
     private void updateStatus(Order oldOrder, Order order) {
         oldOrder.setOrderStatus(order.getOrderStatus().getStatusCode());
     }

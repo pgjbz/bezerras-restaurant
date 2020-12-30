@@ -19,7 +19,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
@@ -204,6 +206,33 @@ public class OrderServiceTest {
         orderService.updateStatus(o2);
 
         Mockito.verify(orderRepository).findById(o2.getId());
+    }
+
+    @Test
+    public void findPendingOrdersExpectedSuccess(){
+        o1.setId(1L);
+        o1.setOrderType(2);
+        o2.setTable(t1);
+        o2.setOrderType(2);
+        Product p2 = new Product(2, "Feijoada Grande", BigDecimal.valueOf(35.0), null);
+        OrderItem oi2 = new OrderItem(1L, p2, null, Byte.valueOf("1"), null);
+        o1.getItems().addAll(Arrays.asList(oi1, oi2));
+        o2.getItems().addAll(o1.getItems());
+
+        List<Order> orders = new ArrayList<>(Arrays.asList(o1, o2));
+
+        Mockito.when(orderRepository.findPendingOrders()).thenReturn(orders);
+
+        List<Order> ordersReturn = orderService.findPendingOrders();
+
+        Mockito.verify(orderRepository).findPendingOrders();
+        Assert.isTrue(!ordersReturn.isEmpty(), "Orders not be empty");
+
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void findPendingOrdersExpectedException(){
+        List<Order> ordersReturn = orderService.findPendingOrders();
     }
 
 }
