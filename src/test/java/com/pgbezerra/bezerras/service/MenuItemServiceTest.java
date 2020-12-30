@@ -1,11 +1,16 @@
 package com.pgbezerra.bezerras.service;
 
-import java.math.BigDecimal;
-import java.time.DayOfWeek;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import com.pgbezerra.bezerras.entities.model.Category;
+import com.pgbezerra.bezerras.entities.model.Menu;
+import com.pgbezerra.bezerras.entities.model.MenuItem;
+import com.pgbezerra.bezerras.entities.model.Product;
+import com.pgbezerra.bezerras.repository.MenuItemRepository;
+import com.pgbezerra.bezerras.repository.exception.DatabaseException;
+import com.pgbezerra.bezerras.services.MenuItemService;
+import com.pgbezerra.bezerras.services.MenuService;
+import com.pgbezerra.bezerras.services.ProductService;
+import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
+import com.pgbezerra.bezerras.services.impl.MenuItemServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,16 +22,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import com.pgbezerra.bezerras.entities.model.Menu;
-import com.pgbezerra.bezerras.entities.model.MenuItem;
-import com.pgbezerra.bezerras.entities.model.Product;
-import com.pgbezerra.bezerras.repository.MenuItemRepository;
-import com.pgbezerra.bezerras.repository.exception.DatabaseException;
-import com.pgbezerra.bezerras.services.MenuItemService;
-import com.pgbezerra.bezerras.services.MenuService;
-import com.pgbezerra.bezerras.services.ProductService;
-import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
-import com.pgbezerra.bezerras.services.impl.MenuItemServiceImpl;
+import java.math.BigDecimal;
+import java.time.DayOfWeek;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 public class MenuItemServiceTest {
@@ -48,8 +48,10 @@ public class MenuItemServiceTest {
 	
 	@Before
 	public void start() {
-		p1 = new Product(1, "Feijoada", BigDecimal.valueOf(25.0), null);
-		p1 = new Product(2, "Baiao de Dois", BigDecimal.valueOf(25.0), null);
+		Category c1 = new Category(1, "Category 1");
+		c1.setIsMenu(true);
+		p1 = new Product(1, "Feijoada", BigDecimal.valueOf(25.0), c1);
+		p2 = new Product(2, "Baiao de Dois", BigDecimal.valueOf(25.0), c1);
 		m1 = new Menu(1L,"Food", DayOfWeek.FRIDAY);
 		m2 = new Menu(2L,"Food", DayOfWeek.SATURDAY);
 		mi1 = new MenuItem(m1, p1);
@@ -98,7 +100,7 @@ public class MenuItemServiceTest {
 	@Test(expected = DatabaseException.class)
 	public void insertMenuItemExpectedException() {
 		MenuItem obj = new MenuItem(m1, p1);
-		
+		Mockito.when(productService.findById(p1.getId())).thenReturn(p1);
 		Mockito.when(menuItemRepository.insert(obj)).thenThrow(DatabaseException.class);
 		
 		menuItemService.insert(obj);
