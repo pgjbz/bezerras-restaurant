@@ -2,98 +2,100 @@ package com.pgbezerra.bezerras.entities.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class OrderItem implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
-	
-	private Long id;
-	private Product product;
-	private Order order;
-	private Byte quantity;
-	private BigDecimal value;
-	
-	public OrderItem() {
-	}
 
-	public OrderItem(Long id, Product product, Order order, Byte quantity, BigDecimal value) {
-		this.id = id;
-		this.product = product;
-		this.order = order;
-		this.quantity = quantity;
-		this.value = value;
-	}
+    private static final long serialVersionUID = 1L;
 
-	public Long getId() {
-		return id;
-	}
+    private Long id;
+    private Product product;
+    private Order order;
+    private Byte quantity;
+    private BigDecimal value;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public OrderItem() {
+    }
 
-	public Product getProduct() {
-		return product;
-	}
+    public OrderItem(Long id, Product product, Order order, Byte quantity, BigDecimal value) {
+        this.id = id;
+        this.product = product;
+        this.order = order;
+        this.quantity = quantity;
+        this.value = value;
+    }
 
-	public void setProduct(Product product) {
-		this.product = product;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Order getOrder() {
-		return order;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setOrder(Order order) {
-		this.order = order;
-	}
+    public Product getProduct() {
+        return product;
+    }
 
-	public Byte getQuantity() {
-		return quantity;
-	}
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
-	public void setQuantity(Byte quantity) {
-		this.quantity = quantity;
-	}
+    public Order getOrder() {
+        return order;
+    }
 
-	public BigDecimal getValue() {
-		return value;
-	}
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
-	public void setValue(BigDecimal value) {
-		this.value = value;
-	}
+    public Byte getQuantity() {
+        return quantity;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
+    public void setQuantity(Byte quantity) {
+        this.quantity = quantity;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		OrderItem other = (OrderItem) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
+    public BigDecimal getValue() {
+        return value;
+    }
 
-	@Override
-	public String toString() {
-		return "OrderItem [id=" + id + ", product=" + product + ", order=" + order + ", quantity=" + quantity
-				+ ", value=" + value + "]";
-	}
-	
+    public void setValue(BigDecimal value) {
+        this.value = value;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        OrderItem other = (OrderItem) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderItem [id=" + id + ", product=" + (Objects.nonNull(product) ? product.getId() : "null")
+                + ", order=" + (Objects.nonNull(order) ? order.getId() : "null") + ", quantity=" + quantity
+                + ", value=" + value + "]";
+    }
+
 
 }

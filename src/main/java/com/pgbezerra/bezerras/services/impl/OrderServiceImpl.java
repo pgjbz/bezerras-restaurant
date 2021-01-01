@@ -3,6 +3,7 @@ package com.pgbezerra.bezerras.services.impl;
 import com.pgbezerra.bezerras.entities.enums.OrderType;
 import com.pgbezerra.bezerras.entities.model.Order;
 import com.pgbezerra.bezerras.entities.model.OrderItem;
+import com.pgbezerra.bezerras.entities.model.Product;
 import com.pgbezerra.bezerras.repository.OrderRepository;
 import com.pgbezerra.bezerras.services.*;
 import com.pgbezerra.bezerras.services.exception.ResourceBadRequestException;
@@ -45,7 +46,10 @@ public class OrderServiceImpl implements OrderService {
             throw new ResourceBadRequestException("Order items not be empty");
         order.setId(null);
         order.setDate(new Date());
-        if(Objects.nonNull(order.getTable())) {
+        if(order.getOrderType() != OrderType.TABLE)
+            order.setTable(null);
+
+        if(Objects.nonNull(order.getTable()) && order.getOrderType() == OrderType.TABLE) {
             LOG.info(String.format("Finding table with id %s", order.getTable().getId()));
             order.setTable(tableService.findById(order.getTable().getId()));
         }
@@ -115,7 +119,9 @@ public class OrderServiceImpl implements OrderService {
     private void getItems(Order order) {
         for (OrderItem orderItem : order.getItems()) {
             LOG.info(String.format("Finding product %s", orderItem.getProduct().getId()));
-            orderItem.setValue(productService.findById(orderItem.getProduct().getId()).getValue());
+            Product product =  productService.findById(orderItem.getProduct().getId());
+            orderItem.setProduct(product);
+            orderItem.setValue(product.getValue());
         }
     }
 

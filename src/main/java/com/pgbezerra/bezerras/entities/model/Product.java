@@ -2,6 +2,7 @@ package com.pgbezerra.bezerras.entities.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Product implements Serializable {
 	
@@ -83,7 +84,8 @@ public class Product implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", name=" + name + ", value=" + value + ", category=" + category + "]";
+		return "Product [id=" + id + ", name=" + name
+				+ ", value=" + value + ", category=" + (Objects.nonNull(category) ? category.getId() : "null" ) + "]";
 	}
 
 }
