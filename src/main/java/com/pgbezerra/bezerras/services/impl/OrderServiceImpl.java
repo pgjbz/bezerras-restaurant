@@ -1,5 +1,6 @@
 package com.pgbezerra.bezerras.services.impl;
 
+import com.pgbezerra.bezerras.entities.dto.ReportDTO;
 import com.pgbezerra.bezerras.entities.enums.OrderType;
 import com.pgbezerra.bezerras.entities.model.Order;
 import com.pgbezerra.bezerras.entities.model.OrderItem;
@@ -11,6 +12,8 @@ import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -76,12 +79,19 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Boolean update(Order order) {
         Order oldOrder = findById(order.getId());
+        List<OrderItem> bkpOrderItem = new ArrayList<>(oldOrder.getItems());
         getItems(order);
-        updateItems(order, oldOrder);
-        oldOrder.getItems().removeAll(order.getItems());
-        deleteItems(oldOrder);
-        order.calcOrderValue();
-        return orderRepository.update(order);
+        oldOrder.getItems().retainAll(order.getItems());
+        bkpOrderItem.removeAll(order.getItems());
+        oldOrder.getItems().forEach(item -> {
+            OrderItem oi = order.getItems().stream().filter(i -> i.getProduct().equals(item.getProduct())).findFirst().orElse(null);
+            if(Objects.nonNull(oi))
+                item.setQuantity(oi.getQuantity());
+        });
+        updateItems(oldOrder);
+        deleteItems(bkpOrderItem);
+        oldOrder.calcOrderValue();
+        return orderRepository.update(oldOrder);
     }
 
     @Override
@@ -105,7 +115,7 @@ public class OrderServiceImpl implements OrderService {
         LOG.info(String.format("Start deleting order %s", id));
         if(order.getOrderType() == OrderType.DELIVERY)
             orderAddressService.deleteById(order.getOrderAddress().getId());
-        deleteItems(order);
+        deleteItems(order.getItems());
         return orderRepository.deleteById(id);
     }
 
@@ -125,18 +135,18 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private void deleteItems(Order order){
-        for(OrderItem orderItem: order.getItems()) {
+    private void deleteItems(List<OrderItem> items){
+        for(OrderItem orderItem: items) {
             LOG.info(String.format("Deleting order item %s", orderItem.toString()));
             orderItemService.deleteById(orderItem.getId());
         }
     }
 
-    private void updateItems(Order order, Order oldOrder){
-        for(OrderItem orderItem: order.getItems()) {
-            LOG.info(String.format("Updating order item %s", orderItem.toString()));
+    private void updateItems(Order oldOrder){
+        for(OrderItem orderItem: oldOrder.getItems()) {
             OrderItem oldOrderItem = oldOrder.getItems().stream().filter(oi -> oi.equals(orderItem)).findFirst().orElse(null);
-            if(Objects.nonNull(oldOrderItem) && oldOrderItem.getQuantity().compareTo(orderItem.getQuantity()) != 0)
+            LOG.info(String.format("Updating order item %s", oldOrderItem));
+            if(Objects.nonNull(oldOrderItem))
                 orderItemService.update(orderItem);
         }
     }
@@ -145,7 +155,7 @@ public class OrderServiceImpl implements OrderService {
     public Boolean updateStatus(Order order) {
         Order oldOrder = findById(order.getId());
         updateStatus(oldOrder, order);
-        return orderRepository.update(order);
+        return orderRepository.update(oldOrder);
     }
 
     @Override
@@ -154,6 +164,16 @@ public class OrderServiceImpl implements OrderService {
         if(!orders.isEmpty())
             return orders;
         throw new ResourceNotFoundException("No orders found");
+    }
+
+    @Override
+    public List<ReportDTO> findReport(Date initialDate, Date finalDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        LOG.info(String.format("Finding order reports between %s and %s", sdf.format(initialDate), sdf.format(finalDate)));
+        List<ReportDTO> reports = orderRepository.report(initialDate, finalDate);
+        if(!reports.isEmpty())
+            return reports;
+        throw new ResourceNotFoundException(String.format("No orders reports between %s and %s", sdf.format(initialDate), sdf.format(finalDate)));
     }
 
     private void updateStatus(Order oldOrder, Order order) {

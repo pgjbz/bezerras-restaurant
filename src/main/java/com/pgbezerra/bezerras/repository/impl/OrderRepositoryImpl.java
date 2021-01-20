@@ -1,5 +1,6 @@
 package com.pgbezerra.bezerras.repository.impl;
 
+import com.pgbezerra.bezerras.entities.dto.ReportDTO;
 import com.pgbezerra.bezerras.entities.model.Order;
 import com.pgbezerra.bezerras.entities.model.OrderAddress;
 import com.pgbezerra.bezerras.entities.model.Table;
@@ -55,7 +56,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 		sql.append("     ID_ORDER_TYPE, ");
 		sql.append("     ID_ORDER_ADDRESS) ");
 		sql.append(" VALUES ");
-		sql.append("   (:date, ");
+		sql.append("   (TRUNC(:date), ");
 		sql.append("   :value, ");
 		sql.append("   :table, ");
 		sql.append("   :valueDelivery, ");
@@ -346,6 +347,41 @@ public class OrderRepositoryImpl implements OrderRepository {
 			orders = new ArrayList<>();
 		}
 
+		return orders;
+	}
+
+	@Override
+	public List<ReportDTO> report(Date initialDate, Date finalDate) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(" SELECT ");
+		sql.append("   TRUNC(DT_ORDER) AS DT_ORDER, ");
+		sql.append("   SUM(VL_ORDER) AS VL_TOTAL, ");
+		sql.append("   COUNT(ID_ORDER) AS QT_ORDERS ");
+		sql.append(" FROM ");
+		sql.append("   TB_ORDER ");
+		sql.append(" WHERE ");
+		sql.append("   DT_ORDER BETWEEN :initial AND :final ");
+		sql.append("   AND ID_ORDER_STATUS = 3 ");
+		sql.append(" GROUP BY ");
+		sql.append("   TRUNC(DT_ORDER) ");
+
+
+		List<ReportDTO> orders = null;
+		Map<String, Object> params = new HashMap<>();
+		params.put("initial", initialDate);
+		params.put("final", finalDate);
+		try {
+			orders = namedJdbcTemplate.query(sql.toString(), params, (rs, rownum) -> {
+				ReportDTO report = new ReportDTO();
+				report.setDate(rs.getDate("DT_ORDER"));
+				report.setAmount(rs.getBigDecimal("VL_TOTAL"));
+				report.setTotalOrders(rs.getInt("QT_ORDERS"));
+				return report;
+			});
+		} catch (EmptyResultDataAccessException e){
+			orders =  new ArrayList<>();
+		}
+		LOG.info(orders.size());
 		return orders;
 	}
 }

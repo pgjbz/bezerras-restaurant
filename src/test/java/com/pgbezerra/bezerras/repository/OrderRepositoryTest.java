@@ -1,5 +1,6 @@
 package com.pgbezerra.bezerras.repository;
 
+import com.pgbezerra.bezerras.entities.dto.ReportDTO;
 import com.pgbezerra.bezerras.entities.enums.OrderStatus;
 import com.pgbezerra.bezerras.entities.enums.OrderType;
 import com.pgbezerra.bezerras.entities.model.Order;
@@ -18,6 +19,8 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @SpringBootTest
@@ -199,6 +202,26 @@ public class OrderRepositoryTest {
 		List<Order> orderReturn = orderRepository.findPendingOrders();
 		Assert.assertFalse(orderReturn.isEmpty());
 	}
-	
+
+	@Test
+	public void findOrderReportExpectedSuccess() throws ParseException {
+		Table t1 = new Table(1, "Table 1");
+		tableRepository.insert(t1);
+		Date initialDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-01-01");
+		Date finalDate = new Date();
+		Order o1 = new Order(999L, initialDate, BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.COMPLETE, OrderType.TABLE, null);
+		Order o2 = new Order(999L, finalDate, BigDecimal.valueOf(20d), BigDecimal.ZERO, new Table(1, "Table 1"), OrderStatus.COMPLETE, OrderType.TABLE, null);
+		orderRepository.insertAll(Arrays.asList(o1, o2));
+		List<ReportDTO> listReport = orderRepository.report(initialDate, finalDate);
+		Assert.assertFalse(listReport.isEmpty());
+	}
+
+	@Test
+	public void findOrderReportExpectedError() throws ParseException {
+		Date initialDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-01-01");
+		Date finalDate = new Date();
+		List<ReportDTO> listReport = orderRepository.report(initialDate, finalDate);
+		Assert.assertTrue(listReport.isEmpty());
+	}
 
 }

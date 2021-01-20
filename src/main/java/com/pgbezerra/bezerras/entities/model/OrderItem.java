@@ -1,5 +1,7 @@
 package com.pgbezerra.bezerras.entities.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -10,6 +12,7 @@ public class OrderItem implements Serializable {
 
     private Long id;
     private Product product;
+    @JsonIgnore
     private Order order;
     private Byte quantity;
     private BigDecimal value;
@@ -74,20 +77,11 @@ public class OrderItem implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        OrderItem other = (OrderItem) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderItem orderItem = (OrderItem) o;
+        return Objects.equals(product, orderItem.product);
     }
 
     @Override

@@ -271,9 +271,9 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 		sql.append("   OI.ID_PRODUCT, ");
 		sql.append("   OI.QT_ORDER_ITEM, ");
 		sql.append("   OI.VL_ORDER_ITEM, ");
-		sql.append("  P.ID_PRODUCT, ");
+		sql.append("   P.ID_PRODUCT, ");
 		sql.append("   P.NM_PRODUCT, ");
-		sql.append("  P.VL_PRODUCT, ");
+		sql.append("   P.VL_PRODUCT, ");
 		sql.append("   C.ID_CATEGORY, ");
 		sql.append("   C.NM_CATEGORY ");
 		sql.append(" FROM ");
@@ -294,6 +294,7 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 
 		final Map<Integer, Product> products = new HashMap<>();
 		final Map<Integer, Category> categories = new HashMap<>();
+		final Map<Long, Order> orders = new HashMap<>();
 
 		try {
 			orderItems = namedJdbcTemplate.query(sql.toString(), paramSource, (rs, rownum) -> {
@@ -325,6 +326,7 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 					orderItem.setProduct(product);
 					products.put(idProduct, product);
 				}
+				orderItem.setOrder(order);
 				return orderItem;
 			});
 		} catch (EmptyResultDataAccessException e) {

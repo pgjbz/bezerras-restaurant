@@ -1,5 +1,6 @@
 package com.pgbezerra.bezerras.service;
 
+import com.pgbezerra.bezerras.entities.dto.ReportDTO;
 import com.pgbezerra.bezerras.entities.enums.OrderStatus;
 import com.pgbezerra.bezerras.entities.model.*;
 import com.pgbezerra.bezerras.repository.OrderRepository;
@@ -19,10 +20,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 public class OrderServiceTest {
@@ -169,8 +169,8 @@ public class OrderServiceTest {
         o2.setTable(t1);
         o2.setOrderType(2);
         Product p2 = new Product(2, "Feijoada Grande", BigDecimal.valueOf(35.0), null);
-        OrderItem oi2 = new OrderItem(1L, p2, null, Byte.valueOf("1"), null);
-        OrderItem oi3 = new OrderItem(1L, p2, null, Byte.valueOf("3"), null);
+        OrderItem oi2 = new OrderItem(1L, p2, null, Byte.valueOf("1"), BigDecimal.valueOf(35.0));
+        OrderItem oi3 = new OrderItem(1L, p2, null, Byte.valueOf("3"), BigDecimal.valueOf(35.0));
         o1.getItems().addAll(Arrays.asList(oi1, oi2)); //60.0
         o2.getItems().add(oi3); //70
 
@@ -180,6 +180,7 @@ public class OrderServiceTest {
         Mockito.when(orderItemService.update(Mockito.any())).thenReturn(Boolean.TRUE);
 
         orderService.update(o2);
+        o2.calcOrderValue();
 
 
         Assert.isTrue(o2.getValue().doubleValue() == 105.0, "Order value need to be 105.0");
@@ -233,6 +234,31 @@ public class OrderServiceTest {
     @Test(expected = ResourceNotFoundException.class)
     public void findPendingOrdersExpectedException(){
         List<Order> ordersReturn = orderService.findPendingOrders();
+    }
+
+    @Test
+    public void findOrdersReportExpectedSuccess() throws ParseException {
+        Date initialDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-01-01");
+        Date finalDate = new Date();
+        ReportDTO r1 = new ReportDTO();
+        r1.setTotalOrders(20);
+        r1.setAmount(BigDecimal.valueOf(1000.0));
+        r1.setDate(initialDate);
+        ReportDTO r2 = new ReportDTO();
+        r2.setTotalOrders(15);
+        r2.setAmount(BigDecimal.valueOf(750.0));
+        r2.setDate(finalDate);
+        Mockito.when(orderRepository.report(initialDate, finalDate)).thenReturn(Arrays.asList(r1, r2));
+        List<ReportDTO> reports = orderService.findReport(initialDate, finalDate);
+        Assert.isTrue(!reports.isEmpty(), "Reports not be empty");
+        Mockito.verify(orderRepository).report(initialDate, finalDate);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void  findOrdersReportExpectedException() throws ParseException{
+        Date initialDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-01-01");
+        Date finalDate = new Date();
+        List<ReportDTO> reports = orderService.findReport(initialDate, finalDate);
     }
 
 }
