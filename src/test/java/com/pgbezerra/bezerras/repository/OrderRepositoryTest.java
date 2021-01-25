@@ -1,5 +1,6 @@
 package com.pgbezerra.bezerras.repository;
 
+import com.pgbezerra.bezerras.config.EncoderConfig;
 import com.pgbezerra.bezerras.entities.dto.ReportDTO;
 import com.pgbezerra.bezerras.entities.enums.OrderStatus;
 import com.pgbezerra.bezerras.entities.enums.OrderType;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -25,6 +27,7 @@ import java.util.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
+@Import({EncoderConfig.class})
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 public class OrderRepositoryTest {

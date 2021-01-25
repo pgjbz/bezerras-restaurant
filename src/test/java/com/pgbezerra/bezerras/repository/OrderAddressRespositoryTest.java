@@ -1,9 +1,8 @@
 package com.pgbezerra.bezerras.repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.pgbezerra.bezerras.config.EncoderConfig;
+import com.pgbezerra.bezerras.entities.model.OrderAddress;
+import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,15 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.pgbezerra.bezerras.entities.model.OrderAddress;
-import com.pgbezerra.bezerras.repository.exception.DatabaseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
+@Import({EncoderConfig.class})
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 public class OrderAddressRespositoryTest {

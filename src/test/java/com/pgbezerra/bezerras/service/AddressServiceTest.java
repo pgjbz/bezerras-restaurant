@@ -1,5 +1,6 @@
 package com.pgbezerra.bezerras.service;
 
+import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
 import com.pgbezerra.bezerras.services.AddressService;
 import com.pgbezerra.bezerras.services.exception.ResourceBadRequestException;
 import com.pgbezerra.bezerras.services.impl.AddressServiceImpl;
@@ -9,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @RunWith(SpringRunner.class)
+@Import(BCryptConfiguration.class)
 public class AddressServiceTest {
 
     @TestConfiguration

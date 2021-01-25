@@ -1,6 +1,7 @@
 package com.pgbezerra.bezerras.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
 import com.pgbezerra.bezerras.entities.dto.ProductDTO;
 import com.pgbezerra.bezerras.entities.model.Category;
 import com.pgbezerra.bezerras.entities.model.Product;
@@ -16,6 +17,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,6 +32,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ProductResource.class)
+@Import(BCryptConfiguration.class)
 public class ProductResourceTest {
 
     @Autowired

@@ -53,11 +53,10 @@ public class ProductRepositoryImpl implements ProductRepository {
 
 		paramSource.addValue("category", nonNull(category) ? category.getId() : null);
 
-		int rowsAffected = 0;
 		try {
-			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
 			if (rowsAffected > 0) {
-				product.setId(keyHolder.getKey().intValue());
+				product.setId((Integer)keyHolder.getKey());
 				LOG.info(String.format("New row %s inserted successfuly", product.toString()));
 			} else {
 				LOG.error(String.format("Can't insert a new row %s", product.toString()));
@@ -65,6 +64,10 @@ public class ProductRepositoryImpl implements ProductRepository {
 			}
 		} catch (DataIntegrityViolationException e) {
 			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), product.toString());
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
+		} catch (Exception e){
+			String msg = String.format("Error on insert a new row %s|%s", e.getMessage(), product.toString());
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
@@ -98,6 +101,10 @@ public class ProductRepositoryImpl implements ProductRepository {
 		} catch (DataIntegrityViolationException e) {
 			LOG.error(String.format("Error update register with id %s %s", product.getId(), product.toString()));
 			throw new DatabaseException(e.getMessage());
+		} catch (Exception e){
+			String msg = String.format("Error on update product with id %s", product.getId());
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 	}
 
@@ -112,8 +119,13 @@ public class ProductRepositoryImpl implements ProductRepository {
 
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", id);
-
-		return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
+		try {
+			return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
+		} catch (Exception e){
+			String msg = String.format("Error on delete product with id %s", id);
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
+		}
 	}
 
 	@Override
@@ -157,6 +169,10 @@ public class ProductRepositoryImpl implements ProductRepository {
 			return products;
 		} catch (EmptyResultDataAccessException e) {
 			products = new ArrayList<>();
+		} catch (Exception e){
+			String msg = "Error on find all products";
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 
 		return products;
@@ -198,6 +214,10 @@ public class ProductRepositoryImpl implements ProductRepository {
 			LOG.info(String.format("Product with id: %s found successfuly %s", id, product.toString()));
 		} catch (EmptyResultDataAccessException e) {
 			LOG.warn(String.format("No product found with id: %s", id));
+		} catch (Exception e){
+			String msg = String.format("Error on find product with id %s", id);
+			LOG.error(msg);
+			throw new DatabaseException(msg);
 		}
 
 		return Optional.ofNullable(product);
@@ -244,6 +264,10 @@ public class ProductRepositoryImpl implements ProductRepository {
 		} catch (EmptyResultDataAccessException e) {
 			LOG.warn(String.format("No product found with id: %s", category.getId()));
 			products = new ArrayList<>();
+		} catch (Exception e){
+			String msg = String.format("Error on find prodcts by category %s", category.toString());
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 
 		return products;

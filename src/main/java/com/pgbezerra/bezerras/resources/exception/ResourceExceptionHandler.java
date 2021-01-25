@@ -40,7 +40,7 @@ public class ResourceExceptionHandler {
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<StandardError> database(DatabaseException ex, HttpServletRequest request) {
         String error = "Database error";
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         LOG.info(ex.getMessage());
         StandardError standardError = new StandardError(LocalDateTime.now(), status.value(), error, ex.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(standardError);

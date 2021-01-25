@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Repository
@@ -76,12 +77,11 @@ public class OrderRepositoryImpl implements OrderRepository {
 				Objects.nonNull(order.getOrderType()) ? order.getOrderType().getOrderTypeCode() : null);
 		paramSource.addValue("orderAddress",
 				Objects.nonNull(order.getOrderAddress()) ? order.getOrderAddress().getId() : null);
-		int rowsAffected = 0;
 
 		try {
-			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
 			if (rowsAffected > 0) {
-				order.setId(keyHolder.getKey().longValue());
+				order.setId((Long)keyHolder.getKey());
 				LOG.info(String.format("New row %s inserted successfuly", order.toString()));
 			} else {
 				LOG.error(String.format("Can't insert a new row %s", order.toString()));
@@ -89,6 +89,10 @@ public class OrderRepositoryImpl implements OrderRepository {
 			}
 		} catch (DataIntegrityViolationException e) {
 			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), order.toString());
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
+		} catch (Exception e){
+			String msg = String.format("Error a new row %s|%s", e.getMessage(), order.toString());
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
@@ -130,6 +134,10 @@ public class OrderRepositoryImpl implements OrderRepository {
 		} catch (DataIntegrityViolationException e) {
 			LOG.error(String.format("Error update register with id %s %s", order.getId(), order.toString()));
 			throw new DatabaseException(e.getMessage());
+		} catch (Exception e){
+			String msg = String.format("Error update register with id %s %s", order.getId(), order.toString());
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 	}
 
@@ -144,8 +152,13 @@ public class OrderRepositoryImpl implements OrderRepository {
 
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", id);
-
-		return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
+		try {
+			return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
+		} catch (Exception e){
+			String msg= String.format("Error on delete order with id %s", id);
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
+		}
 	}
 
 	@Override
@@ -211,6 +224,10 @@ public class OrderRepositoryImpl implements OrderRepository {
 			});
 		} catch (EmptyResultDataAccessException e) {
 			orders = new ArrayList<>();
+		} catch (Exception e){
+			String msg = "Error on find all orders";
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 
 		return orders;
@@ -264,9 +281,14 @@ public class OrderRepositoryImpl implements OrderRepository {
 
 				return o;
 			});
-			LOG.info(String.format("Order with id: %s found successfuly %s", id, order.toString()));
+			if(Objects.nonNull(order))
+				LOG.info(String.format("Order with id: %s found successfuly %s", id, order.toString()));
 		} catch (EmptyResultDataAccessException e) {
 			LOG.warn(String.format("No order found with id: %s", id));
+		} catch (Exception e) {
+			String msg = String.format("Error on find order with id %s", id);
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 
 		return Optional.ofNullable(order);
@@ -345,6 +367,10 @@ public class OrderRepositoryImpl implements OrderRepository {
 			});
 		} catch (EmptyResultDataAccessException e) {
 			orders = new ArrayList<>();
+		} catch (Exception e){
+			String msg = "Error on find pending orders";
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 
 		return orders;
@@ -380,6 +406,11 @@ public class OrderRepositoryImpl implements OrderRepository {
 			});
 		} catch (EmptyResultDataAccessException e){
 			orders =  new ArrayList<>();
+		} catch (Exception e){
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String msg = String.format("Error on find order report between %s and %s", sdf.format(initialDate), sdf.format(finalDate));
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 		LOG.info(orders.size());
 		return orders;

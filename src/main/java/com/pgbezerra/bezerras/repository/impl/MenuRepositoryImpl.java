@@ -48,12 +48,11 @@ public class MenuRepositoryImpl implements MenuRepository {
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("name", menu.getName());
 		paramSource.addValue("dayOfWeek", Objects.nonNull(menu.getDayOfWeek()) ? menu.getDayOfWeek().getValue() : null);
-		int rowsAffected = 0;
 
 		try {
-			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
 			if (rowsAffected > 0) {
-				menu.setId(keyHolder.getKey().longValue());
+				menu.setId((Long)keyHolder.getKey());
 				LOG.info(String.format("New row %s inserted successfuly", menu.toString()));
 			} else {
 				LOG.error(String.format("Can't insert a new row %s", menu.toString()));
@@ -61,6 +60,10 @@ public class MenuRepositoryImpl implements MenuRepository {
 			}
 		} catch (DataIntegrityViolationException e) {
 			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), menu.toString());
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
+		} catch (Exception e){
+			String msg = String.format("Error insert a new row %s|%s", e.getMessage(), menu.toString());
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
@@ -90,6 +93,10 @@ public class MenuRepositoryImpl implements MenuRepository {
 		} catch (DataIntegrityViolationException e) {
 			LOG.error(String.format("Error update register with id %s %s", menu.getId(), menu.toString()));
 			throw new DatabaseException(e.getMessage());
+		} catch (Exception e){
+			String msg = String.format("Erro on update menu with id %s", menu.getId());
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 	}
 
@@ -104,8 +111,13 @@ public class MenuRepositoryImpl implements MenuRepository {
 
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", id);
-
-		return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
+		try {
+			return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
+		} catch (Exception e){
+			String msg = String.format("Erro on delete menu with id %s", id);
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
+		}
 	}
 
 	@Override
@@ -131,6 +143,10 @@ public class MenuRepositoryImpl implements MenuRepository {
 			});
 		} catch (EmptyResultDataAccessException e) {
 			menus = new ArrayList<>();
+		} catch (Exception e){
+			String msg = "Error on find all menus";
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 
 		return menus;
@@ -164,9 +180,14 @@ public class MenuRepositoryImpl implements MenuRepository {
 				m.getItems().addAll(menuItemRepository.findByMenu(m));
 				return m;
 			});
-			LOG.info(String.format("Menu with id: %s found successfuly %s", id, menu.toString()));
+			if(Objects.nonNull(menu))
+				LOG.info(String.format("Menu with id: %s found successfuly %s", id, menu.toString()));
 		} catch (EmptyResultDataAccessException e) {
 			LOG.warn(String.format("No menu found with id: %s", id));
+		} catch (Exception e){
+			String msg = String.format("Error on find menu with id %s", id);
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 
 		return Optional.ofNullable(menu);
@@ -206,9 +227,14 @@ public class MenuRepositoryImpl implements MenuRepository {
 				m.getItems().addAll(menuItemRepository.findByMenu(m));
 				return m;
 			});
-			LOG.info(String.format("Menu with day of week: %s found successfuly %s", dayOfWeek, menu.toString()));
+			if(Objects.nonNull(menu))
+				LOG.info(String.format("Menu with day of week: %s found successfuly %s", dayOfWeek, menu.toString()));
 		} catch (EmptyResultDataAccessException e) {
-			LOG.warn(String.format("No menu found with id: %s", dayOfWeek));
+			LOG.warn(String.format("No menu found with day of week: %s", dayOfWeek));
+		} catch (Exception e){
+			String msg = String.format(String.format("Error on find menu with day of week: %s", dayOfWeek));
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 
 		return Optional.ofNullable(menu);

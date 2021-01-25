@@ -57,10 +57,9 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 		paramSource.addValue("order", Objects.nonNull(orderItem.getOrder()) ? orderItem.getOrder().getId() : null);
 		paramSource.addValue("quantity", orderItem.getQuantity());
 		paramSource.addValue("value", orderItem.getValue());
-		int rowsAffected = 0;
 
 		try {
-			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
 			if (rowsAffected > 0) {
 				orderItem.setId(keyHolder.getKey().longValue());
 				LOG.info(String.format("New row %s inserted successfuly", orderItem.toString()));
@@ -70,6 +69,10 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 			}
 		} catch (DataIntegrityViolationException e) {
 			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), orderItem.toString());
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
+		} catch (Exception e){
+			String msg = String.format("Error on insert a new row %s|%s", e.getMessage(), orderItem.toString());
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
@@ -102,6 +105,10 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 		} catch (DataIntegrityViolationException e) {
 			LOG.error(String.format("Error update register with id %s %s", orderItem.getId(), orderItem.toString()));
 			throw new DatabaseException(e.getMessage());
+		} catch (Exception e){
+			String msg = String.format("Error on update register with id %s", orderItem.getId());
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 	}
 
@@ -117,8 +124,13 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", id);
-
-		return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
+		try {
+			return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
+		}catch (Exception e){
+			String msg = String.format("Error on delete order item with id %s", id);
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
+		}
 	}
 
 	@Override
@@ -184,6 +196,10 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 			});
 		} catch (EmptyResultDataAccessException e) {
 			ordersItems = new ArrayList<>();
+		} catch (Exception e){
+			String msg= "Error on find all order items";
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 
 		return ordersItems;
@@ -246,9 +262,14 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 
 				return oi;
 			});
-			LOG.info(String.format("Order item with id: %s found successfuly %s", id, orderItem.toString()));
+			if(Objects.nonNull(orderItem))
+				LOG.info(String.format("Order item with id: %s found successfully %s", id, orderItem.toString()));
 		} catch (EmptyResultDataAccessException e) {
 			LOG.warn(String.format("No order item found with id: %s", id));
+		} catch (Exception e){
+			String msg = String.format("Error on find order item with id %s", id);
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 
 		return Optional.ofNullable(orderItem);
@@ -332,6 +353,10 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 		} catch (EmptyResultDataAccessException e) {
 			LOG.error(String.format("No order items founded for order: %s", order.getId()));
 			orderItems = new ArrayList<>();
+		} catch (Exception e){
+			String msg = "Error on find all order items";
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 
 		return orderItems;

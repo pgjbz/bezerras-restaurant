@@ -1,5 +1,6 @@
 package com.pgbezerra.bezerras.service;
 
+import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
 import com.pgbezerra.bezerras.entities.dto.ReportDTO;
 import com.pgbezerra.bezerras.entities.enums.OrderStatus;
 import com.pgbezerra.bezerras.entities.model.*;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
@@ -25,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RunWith(SpringRunner.class)
+@Import(BCryptConfiguration.class)
 public class OrderServiceTest {
 
     public OrderServiceTest() {

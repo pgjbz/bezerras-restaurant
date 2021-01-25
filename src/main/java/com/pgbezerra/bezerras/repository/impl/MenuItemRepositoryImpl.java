@@ -20,224 +20,243 @@ import java.util.*;
 @Repository
 public class MenuItemRepositoryImpl implements MenuItemRepository {
 
-	private static final Logger LOG = Logger.getLogger(MenuItemRepositoryImpl.class);
+    private static final Logger LOG = Logger.getLogger(MenuItemRepositoryImpl.class);
 
-	private final NamedParameterJdbcTemplate namedJdbcTemplate;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
 
-	public MenuItemRepositoryImpl(final NamedParameterJdbcTemplate namedJdbcTemplate) {
-		this.namedJdbcTemplate = namedJdbcTemplate;
-	}
+    public MenuItemRepositoryImpl(final NamedParameterJdbcTemplate namedJdbcTemplate) {
+        this.namedJdbcTemplate = namedJdbcTemplate;
+    }
 
-	@Override
-	@Transactional
-	public MenuItem insert(MenuItem menuItem) {
-		StringBuilder sql = new StringBuilder();
-		sql.append(" INSERT INTO  ");
-		sql.append("   TB_MENU_ITEM( ");
-		sql.append("   ID_MENU, ");
-		sql.append("   ID_PRODUCT) ");
-		sql.append(" VALUES( ");
-		sql.append("   :menu, ");
-		sql.append("   :product) ");
+    @Override
+    @Transactional
+    public MenuItem insert(MenuItem menuItem) {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" INSERT INTO  ");
+        sql.append("   TB_MENU_ITEM( ");
+        sql.append("   ID_MENU, ");
+        sql.append("   ID_PRODUCT) ");
+        sql.append(" VALUES( ");
+        sql.append("   :menu, ");
+        sql.append("   :product) ");
 
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		MapSqlParameterSource paramSource = new MapSqlParameterSource();
-		paramSource.addValue("menu", menuItem.getMenu().getId());
-		paramSource.addValue("product", menuItem.getProduct().getId());
-		int rowsAffected = 0;
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        MapSqlParameterSource paramSource = new MapSqlParameterSource();
+        paramSource.addValue("menu", menuItem.getMenu().getId());
+        paramSource.addValue("product", menuItem.getProduct().getId());
 
-		try {
-			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
-			if (rowsAffected > 0)
-				LOG.info(String.format("New row %s inserted successfuly", menuItem.toString()));
-			else {
-				LOG.error(String.format("Can't insert a new row %s", menuItem.toString()));
-				throw new DatabaseException("Can't insert a new row");
-			}
-		} catch (DataIntegrityViolationException e) {
-			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), menuItem.toString());
-			LOG.error(msg, e);
-			throw new DatabaseException(msg);
-		}
+        try {
+            int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+            if (rowsAffected > 0)
+                LOG.info(String.format("New row %s inserted successfuly", menuItem.toString()));
+            else {
+                LOG.error(String.format("Can't insert a new row %s", menuItem.toString()));
+                throw new DatabaseException("Can't insert a new row");
+            }
+        } catch (DataIntegrityViolationException e) {
+            String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), menuItem.toString());
+            LOG.error(msg, e);
+            throw new DatabaseException(msg);
+        } catch (Exception e) {
+            String msg = String.format("Error on insert a new menu item %s", menuItem.toString());
+            LOG.error(msg, e);
+            throw new DatabaseException(msg);
+        }
 
-		return menuItem;
-	}
+        return menuItem;
+    }
 
-	@Override
-	public Boolean update(MenuItem menuItem) {
-		return Boolean.FALSE;
-	}
+    @Override
+    public Boolean update(MenuItem menuItem) {
+        return Boolean.FALSE;
+    }
 
-	@Override
-	@Transactional
-	public Boolean deleteById(Map<Menu, Product> id) {
-		StringBuilder sql = new StringBuilder();
-		sql.append(" DELETE FROM ");
-		sql.append("   TB_MENU_ITEM ");
-		sql.append(" WHERE ");
-		sql.append("   ID_PRODUCT = :product ");
-		sql.append("   AND ID_MENU = :menu ");
+    @Override
+    @Transactional
+    public Boolean deleteById(Map<Menu, Product> id) {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" DELETE FROM ");
+        sql.append("   TB_MENU_ITEM ");
+        sql.append(" WHERE ");
+        sql.append("   ID_PRODUCT = :product ");
+        sql.append("   AND ID_MENU = :menu ");
 
-		Map<String, Object> parameters = new HashMap<>();
-		Menu menu = id.keySet().stream().findFirst().orElse(new Menu());
-		Product product = id.get(menu);
-		parameters.put("product", product.getId());
-		parameters.put("menu", menu.getId());
+        Map<String, Object> parameters = new HashMap<>();
+        Menu menu = id.keySet().stream().findFirst().orElse(new Menu());
+        Product product = id.get(menu);
+        parameters.put("product", product.getId());
+        parameters.put("menu", menu.getId());
+        try {
+            return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
+        } catch (Exception e) {
+            String msg = String.format("Error on delete menu item %s|%s", menu.toString(), product.toString());
+            LOG.error(msg);
+            throw new DatabaseException(msg);
+        }
+    }
 
-		return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
-	}
+    @Override
+    @Transactional(readOnly = true)
+    public List<MenuItem> findAll() {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT ");
+        sql.append("   P.ID_PRODUCT, ");
+        sql.append("   P.NM_PRODUCT, ");
+        sql.append("   P.VL_PRODUCT ");
+        sql.append(" FROM ");
+        sql.append("   TB_MENU_ITEM MI ");
+        sql.append("   JOIN TB_MENU M ");
+        sql.append("     ON M.ID_MENU = MI.ID_MENU ");
+        sql.append("   JOIN TB_PRODUCT P ");
+        sql.append("     ON P.ID_PRODUCT = MI.ID_PRODUCT ");
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<MenuItem> findAll() {
-		StringBuilder sql = new StringBuilder();
-		sql.append(" SELECT ");
-		sql.append("   P.ID_PRODUCT, ");
-		sql.append("   P.NM_PRODUCT, ");
-		sql.append("   P.VL_PRODUCT ");
-		sql.append(" FROM ");
-		sql.append("   TB_MENU_ITEM MI ");
-		sql.append("   JOIN TB_MENU M ");
-		sql.append("     ON M.ID_MENU = MI.ID_MENU ");
-		sql.append("   JOIN TB_PRODUCT P ");
-		sql.append("     ON P.ID_PRODUCT = MI.ID_PRODUCT ");
+        final Map<Integer, Product> products = new HashMap<>();
 
-		final Map<Integer, Product> products = new HashMap<>();
+        List<MenuItem> menuItems = null;
+        try {
+            return namedJdbcTemplate.query(sql.toString(), (rs, rownum) -> {
+                MenuItem menuItem = new MenuItem();
 
-		List<MenuItem> menuItems = null;
-		try {
-			return namedJdbcTemplate.query(sql.toString(), (rs, rownum) -> {
-				MenuItem menuItem = new MenuItem();
+                Integer idProduct = rs.getInt("ID_PRODUCT");
 
-				Integer idProduct = rs.getInt("ID_PRODUCT");
+                if (products.containsKey(idProduct))
+                    menuItem.setProduct(products.get(idProduct));
+                else {
+                    Product product = new Product();
+                    product.setId(idProduct);
+                    product.setName(rs.getString("ID_PRODUCT"));
+                    product.setValue(rs.getBigDecimal("VL_PRODUCT"));
+                    menuItem.setProduct(product);
+                    products.put(idProduct, product);
+                }
+                return menuItem;
 
-				if (products.containsKey(idProduct))
-					menuItem.setProduct(products.get(idProduct));
-				else {
-					Product product = new Product();
-					product.setId(idProduct);
-					product.setName(rs.getString("ID_PRODUCT"));
-					product.setValue(rs.getBigDecimal("VL_PRODUCT"));
-					menuItem.setProduct(product);
-					products.put(idProduct, product);
-				}
-				return menuItem;
+            });
+        } catch (EmptyResultDataAccessException e) {
+            menuItems = new ArrayList<>();
+        } catch (Exception e) {
+            String msg = "Error on find all menu items";
+            LOG.error(msg, e);
+            throw new DatabaseException(msg);
+        }
 
-			});
-		} catch (EmptyResultDataAccessException e) {
-			menuItems = new ArrayList<>();
-		}
+        return menuItems;
 
-		return menuItems;
+    }
 
-	}
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<MenuItem> findById(Map<Menu, Product> id) {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT ");
+        sql.append("   P.ID_PRODUCT, ");
+        sql.append("   P.NM_PRODUCT, ");
+        sql.append("   P.VL_PRODUCT ");
+        sql.append(" FROM ");
+        sql.append("   TB_MENU_ITEM MI ");
+        sql.append("   JOIN TB_MENU M ");
+        sql.append("     ON M.ID_MENU = MI.ID_MENU ");
+        sql.append("   JOIN TB_PRODUCT P ");
+        sql.append("     ON P.ID_PRODUCT = MI.ID_PRODUCT ");
+        sql.append(" WHERE ");
+        sql.append("   P.ID_PRODUCT = :product ");
+        sql.append("   AND MI.ID_MENU = :menu ");
 
-	@Override
-	@Transactional(readOnly = true)
-	public Optional<MenuItem> findById(Map<Menu, Product> id) {
-		StringBuilder sql = new StringBuilder();
-		sql.append(" SELECT ");
-		sql.append("   P.ID_PRODUCT, ");
-		sql.append("   P.NM_PRODUCT, ");
-		sql.append("   P.VL_PRODUCT ");
-		sql.append(" FROM ");
-		sql.append("   TB_MENU_ITEM MI ");
-		sql.append("   JOIN TB_MENU M ");
-		sql.append("     ON M.ID_MENU = MI.ID_MENU ");
-		sql.append("   JOIN TB_PRODUCT P ");
-		sql.append("     ON P.ID_PRODUCT = MI.ID_PRODUCT ");
-		sql.append(" WHERE ");
-		sql.append("   P.ID_PRODUCT = :product ");
-		sql.append("   AND MI.ID_MENU = :menu ");
+        Map<String, Object> parameters = new HashMap<>();
+        Menu menu = id.keySet().stream().findFirst().orElse(new Menu());
+        Product product = id.get(menu);
+        parameters.put("product", product.getId());
+        parameters.put("menu", menu.getId());
 
-		Map<String, Object> parameters = new HashMap<>();
-		Menu menu = id.keySet().stream().findFirst().orElse(new Menu());
-		Product product = id.get(menu);
-		parameters.put("product", product.getId());
-		parameters.put("menu", menu.getId());
+        MenuItem menuItem = null;
 
-		MenuItem menuItem = null;
+        try {
+            menuItem = namedJdbcTemplate.queryForObject(sql.toString(), parameters, (rs, rownum) -> {
+                MenuItem mi = new MenuItem();
 
-		try {
-			menuItem = namedJdbcTemplate.queryForObject(sql.toString(), parameters, (rs, rownum) -> {
-				MenuItem mi = new MenuItem();
+                Integer idProduct = rs.getInt("ID_PRODUCT");
 
-				Integer idProduct = rs.getInt("ID_PRODUCT");
+                Product p = new Product();
+                p.setId(idProduct);
+                p.setName(rs.getString("NM_PRODUCT"));
+                p.setValue(rs.getBigDecimal("VL_PRODUCT"));
+                mi.setProduct(p);
 
-				Product p = new Product();
-				p.setId(idProduct);
-				p.setName(rs.getString("NM_PRODUCT"));
-				p.setValue(rs.getBigDecimal("VL_PRODUCT"));
-				mi.setProduct(p);
+                return mi;
 
-				return mi;
+            });
+            if(Objects.nonNull(menuItem))
+                LOG.info(String.format("MenuItem with id: %s found successfuly %s", id, menuItem.toString()));
+        } catch (EmptyResultDataAccessException e) {
+            LOG.warn(String.format("No menuItem found with id: %s", id));
+        } catch (Exception e){
+            String msg = String .format("Erro on find menu item %s", id);
+            LOG.error(msg, e);
+            throw new DatabaseException(msg);
+        }
 
-			});
-			LOG.info(String.format("MenuItem with id: %s found successfuly %s", id, menuItem.toString()));
-		} catch (
+        return Optional.ofNullable(menuItem);
+    }
 
-		EmptyResultDataAccessException e) {
-			LOG.warn(String.format("No menuItem found with id: %s", id));
-		}
+    @Override
+    @Transactional
+    public List<MenuItem> insertAll(List<MenuItem> list) {
+        for (MenuItem menuItem : list)
+            insert(menuItem);
+        return list;
+    }
 
-		return Optional.ofNullable(menuItem);
-	}
+    @Override
+    @Transactional(readOnly = true)
+    public List<MenuItem> findByMenu(Menu menu) {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT ");
+        sql.append("   P.ID_PRODUCT, ");
+        sql.append("   P.NM_PRODUCT, ");
+        sql.append("   P.VL_PRODUCT ");
+        sql.append(" FROM ");
+        sql.append("   TB_MENU_ITEM MI ");
+        sql.append("   JOIN TB_MENU M ");
+        sql.append("     ON M.ID_MENU = MI.ID_MENU ");
+        sql.append("   JOIN TB_PRODUCT P ");
+        sql.append("     ON P.ID_PRODUCT = MI.ID_PRODUCT ");
+        sql.append(" WHERE ");
+        sql.append("   MI.ID_MENU = :menu ");
 
-	@Override
-	@Transactional
-	public List<MenuItem> insertAll(List<MenuItem> list) {
-		for (MenuItem menuItem : list)
-			insert(menuItem);
-		return list;
-	}
+        final Map<Integer, Product> products = new HashMap<>();
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<MenuItem> findByMenu(Menu menu) {
-		StringBuilder sql = new StringBuilder();
-		sql.append(" SELECT ");
-		sql.append("   P.ID_PRODUCT, ");
-		sql.append("   P.NM_PRODUCT, ");
-		sql.append("   P.VL_PRODUCT ");
-		sql.append(" FROM ");
-		sql.append("   TB_MENU_ITEM MI ");
-		sql.append("   JOIN TB_MENU M ");
-		sql.append("     ON M.ID_MENU = MI.ID_MENU ");
-		sql.append("   JOIN TB_PRODUCT P ");
-		sql.append("     ON P.ID_PRODUCT = MI.ID_PRODUCT ");
-		sql.append(" WHERE ");
-		sql.append("   MI.ID_MENU = :menu ");
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("menu", menu.getId());
 
-		final Map<Integer, Product> products = new HashMap<>();
+        List<MenuItem> menuItems = null;
+        try {
+            return namedJdbcTemplate.query(sql.toString(), parameters, (rs, rownum) -> {
+                MenuItem menuItem = new MenuItem();
 
-		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("menu", menu.getId());
+                Integer idProduct = rs.getInt("ID_PRODUCT");
 
-		List<MenuItem> menuItems = null;
-		try {
-			return namedJdbcTemplate.query(sql.toString(), parameters, (rs, rownum) -> {
-				MenuItem menuItem = new MenuItem();
+                if (products.containsKey(idProduct))
+                    menuItem.setProduct(products.get(idProduct));
+                else {
+                    Product product = new Product();
+                    product.setId(idProduct);
+                    product.setName(rs.getString("NM_PRODUCT"));
+                    product.setValue(rs.getBigDecimal("VL_PRODUCT"));
+                    menuItem.setProduct(product);
+                    products.put(idProduct, product);
+                }
+                return menuItem;
 
-				Integer idProduct = rs.getInt("ID_PRODUCT");
+            });
+        } catch (EmptyResultDataAccessException e) {
+            menuItems = new ArrayList<>();
+        } catch (Exception e){
+            String msg = String.format("Error on find menu item by menu %s", menu);
+            LOG.error(msg, e);
+            throw new DatabaseException(msg);
+        }
 
-				if (products.containsKey(idProduct))
-					menuItem.setProduct(products.get(idProduct));
-				else {
-					Product product = new Product();
-					product.setId(idProduct);
-					product.setName(rs.getString("NM_PRODUCT"));
-					product.setValue(rs.getBigDecimal("VL_PRODUCT"));
-					menuItem.setProduct(product);
-					products.put(idProduct, product);
-				}
-				return menuItem;
-
-			});
-		} catch (EmptyResultDataAccessException e) {
-			menuItems = new ArrayList<>();
-		}
-
-		return menuItems;
-	}
+        return menuItems;
+    }
 
 }

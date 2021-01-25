@@ -1,5 +1,6 @@
 package com.pgbezerra.bezerras.service;
 
+import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
 import com.pgbezerra.bezerras.entities.model.Category;
 import com.pgbezerra.bezerras.entities.model.Menu;
 import com.pgbezerra.bezerras.entities.model.MenuItem;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
@@ -29,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
+@Import(BCryptConfiguration.class)
 public class MenuItemServiceTest {
 	
 	@TestConfiguration

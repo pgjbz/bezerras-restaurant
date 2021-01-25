@@ -1,9 +1,12 @@
 package com.pgbezerra.bezerras.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
+import com.pgbezerra.bezerras.entities.model.Category;
+import com.pgbezerra.bezerras.repository.CategoryRepository;
+import com.pgbezerra.bezerras.repository.exception.DatabaseException;
+import com.pgbezerra.bezerras.services.CategoryService;
+import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
+import com.pgbezerra.bezerras.services.impl.CategoryServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,17 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import com.pgbezerra.bezerras.entities.model.Category;
-import com.pgbezerra.bezerras.repository.CategoryRepository;
-import com.pgbezerra.bezerras.repository.exception.DatabaseException;
-import com.pgbezerra.bezerras.services.CategoryService;
-import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
-import com.pgbezerra.bezerras.services.impl.CategoryServiceImpl;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
+@Import(BCryptConfiguration.class)
 public class CategoryServiceTest {
 	
 	@TestConfiguration

@@ -1,6 +1,7 @@
 package com.pgbezerra.bezerras.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
 import com.pgbezerra.bezerras.entities.dto.AddressDTO;
 import com.pgbezerra.bezerras.services.AddressService;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -16,7 +18,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AddressResource.class)
+@Import(BCryptConfiguration.class)
 public class AddressResourceTest {
+
 
     @Autowired
     private MockMvc mockMvc;

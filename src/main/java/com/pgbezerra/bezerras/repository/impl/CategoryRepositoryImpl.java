@@ -43,12 +43,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("name", category.getName());
 		paramSource.addValue("menu", category.getIsMenu());
-		int rowsAffected = 0;
 
 		try {
-			rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
 			if (rowsAffected > 0) {
-				category.setId(keyHolder.getKey().intValue());
+				category.setId((Integer)keyHolder.getKey());
 				LOG.info(String.format("New row %s inserted successfuly", category.toString()));
 			} else {
 				LOG.error(String.format("Can't insert a new row %s", category.toString()));
@@ -56,6 +55,10 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 			}
 		} catch (DataIntegrityViolationException e) {
 			String msg = String.format("Can't insert a new row %s|%s", e.getMessage(), category.toString());
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
+		} catch (Exception e){
+			String msg = String.format("Error on insert a new row %s", category.toString());
 			LOG.error(msg, e);
 			throw new DatabaseException(msg);
 		}
@@ -85,6 +88,10 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 		} catch (DataIntegrityViolationException e) {
 			LOG.error(String.format("Error update register with id %s %s", category.getId(), category.toString()));
 			throw new DatabaseException(e.getMessage());
+		} catch (Exception e){
+			String msg = String.format("Error on update category with id %s", category.getId());
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 	}
 
@@ -99,8 +106,13 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("id", id);
-
-		return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
+		try {
+			return namedJdbcTemplate.update(sql.toString(), parameters) > 0;
+		} catch (Exception e){
+			String msg = String.format("Error on delete category with id %s", id);
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
+		}
 	}
 
 	@Override
@@ -118,6 +130,10 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 			return namedJdbcTemplate.query(sql.toString(), rowMapper);
 		} catch (EmptyResultDataAccessException e) {
 			categories = new ArrayList<>();
+		} catch (Exception e){
+			String msg = "Error on find all category";
+			LOG.error(msg, e);
+			throw new DatabaseException(msg);
 		}
 
 		return categories;
@@ -144,9 +160,14 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
 		try {
 			category = namedJdbcTemplate.queryForObject(sql.toString(), paramSource, rowMapper);
-			LOG.info(String.format("Category with id: %s found successfuly %s", id, category.toString()));
+			if(Objects.nonNull(category))
+				LOG.info(String.format("Category with id: %s found successfuly %s", id, category.toString()));
 		} catch (EmptyResultDataAccessException e) {
 			LOG.warn(String.format("No category found with id: %s", id));
+		} catch(Exception e){
+			String msg = String.format("Error on find category with id %s", id);
+			LOG.error(msg, e);
+			LOG.error(msg);
 		}
 
 		return Optional.ofNullable(category);
@@ -160,7 +181,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 		return list;
 	}
 
-	private RowMapper<Category> rowMapper = (rs, rownum) -> {
+	private final RowMapper<Category> rowMapper = (rs, rownum) -> {
 		Category category = new Category();
 		category.setId(rs.getInt("ID_CATEGORY"));
 		category.setName(rs.getString("NM_CATEGORY"));
