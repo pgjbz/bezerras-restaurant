@@ -43,10 +43,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<Role> findAll() {
         List<Role> roles = roleRepository.findAll();
-        LOG.info(String.format("%s tables found", roles.size()));
+        LOG.info(String.format("%s roles found", roles.size()));
         if(!roles.isEmpty())
             return roles;
-        throw new ResourceNotFoundException("No tables found");
+        throw new ResourceNotFoundException("No roles found");
     }
 
     @Override
