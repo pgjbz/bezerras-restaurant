@@ -30,8 +30,8 @@ public class RoleServiceTest {
 	@TestConfiguration
 	static class RoleServiceTestConfiguration {
 		@Bean
-		public RoleService tableService(RoleRepository tableRepository) {
-			return new RoleServiceImpl(tableRepository);
+		public RoleService roleService(RoleRepository roleRepository) {
+			return new RoleServiceImpl(roleRepository);
 		}
 	}
 	
@@ -45,41 +45,41 @@ public class RoleServiceTest {
 	}
 	
 	@Autowired
-	private RoleService tableService;
+	private RoleService roleService;
 	
 	@MockBean
-	private RoleRepository tableRepository;
+	private RoleRepository roleRepository;
 	
 	@Test(expected = ResourceNotFoundException.class)
 	public void findNonexistentRoleExpectedException() {
-		Mockito.when(tableRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(null));
-		tableService.findById(1);
+		Mockito.when(roleRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(null));
+		roleService.findById(1);
 	}
 	
 	@Test
 	public void findRoleExpectedSuccess() {
-		Mockito.when(tableRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(r1));
-		Role table = tableService.findById(1);
+		Mockito.when(roleRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(r1));
+		Role table = roleService.findById(1);
 		Assert.notNull(table, "Role not be null");
-		Mockito.verify(tableRepository).findById(Mockito.anyInt());
+		Mockito.verify(roleRepository).findById(Mockito.anyInt());
 	}
 	
 	@Test(expected =  ResourceNotFoundException.class)
 	public void updateNonexistentRoleExpectedError() {
-		tableService.update(r1);
+		roleService.update(r1);
 	}
 	
 	@Test
 	public void updateRoleExpectedSuccess() {
 		
-		Mockito.when(tableRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(r1));
-		Mockito.when(tableRepository.update(r1)).thenReturn(Boolean.TRUE);
+		Mockito.when(roleRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(r1));
+		Mockito.when(roleRepository.update(r1)).thenReturn(Boolean.TRUE);
 		
-		Boolean success = tableService.update(r1);
+		Boolean success = roleService.update(r1);
 		
 		Assert.isTrue(success, "Expected true");
-		Mockito.verify(tableRepository).findById(Mockito.anyInt());
-		Mockito.verify(tableRepository).update(r1);
+		Mockito.verify(roleRepository).findById(Mockito.anyInt());
+		Mockito.verify(roleRepository).update(r1);
 	}
 	
 	@Test
@@ -87,27 +87,27 @@ public class RoleServiceTest {
 		
 		r1.setId(null);
 		
-		Mockito.when(tableRepository.insert(Mockito.any())).thenReturn(r2);
+		Mockito.when(roleRepository.insert(Mockito.any())).thenReturn(r2);
 		
-		r1 = tableService.insert(r1);
+		r1 = roleService.insert(r1);
 		
 		Assert.isTrue(!r1.getId().equals(0), "Id not be 0");
-		Mockito.verify(tableRepository).insert(Mockito.any());
+		Mockito.verify(roleRepository).insert(Mockito.any());
 	}
 	
 	@Test(expected = DatabaseException.class)
 	public void insertRoleExpectedException() {
 		Role obj = new Role(null, null);
 		
-		Mockito.when(tableRepository.insert(obj)).thenThrow(DatabaseException.class);
+		Mockito.when(roleRepository.insert(obj)).thenThrow(DatabaseException.class);
 		
-		tableService.insert(obj);
+		roleService.insert(obj);
 	}
 	
 	@Test(expected = ResourceNotFoundException.class)
 	public void findAllExpectedResourceNotFoundException() {
-		Mockito.when(tableRepository.findAll()).thenReturn(new ArrayList<>());
-		tableService.findAll();
+		Mockito.when(roleRepository.findAll()).thenReturn(new ArrayList<>());
+		roleService.findAll();
 	}
 	
 	@Test
@@ -115,25 +115,25 @@ public class RoleServiceTest {
 		List<Role> tables = new ArrayList<>();
 		tables.add(r1);
 		tables.add(r2);
-		Mockito.when(tableRepository.findAll()).thenReturn(tables);
-		tables = tableService.findAll();
+		Mockito.when(roleRepository.findAll()).thenReturn(tables);
+		tables = roleService.findAll();
 		Assert.notEmpty(tables, "Return not be empty");
-		Mockito.verify(tableRepository).findAll();
+		Mockito.verify(roleRepository).findAll();
 	}
 	
 	@Test(expected = ResourceNotFoundException.class)
 	public void deleteByIdExpectedResourceNotFoundException() {
-		tableService.deleteById(1);
+		roleService.deleteById(1);
 	}
 	
 	@Test
 	public void deleteByIdExpectedReturnTrue() {
-		Mockito.when(tableRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(r1));
-		Mockito.when(tableRepository.deleteById(1)).thenReturn(Boolean.TRUE);
-		Boolean deleted = tableService.deleteById(1);
+		Mockito.when(roleRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(r1));
+		Mockito.when(roleRepository.deleteById(1)).thenReturn(Boolean.TRUE);
+		Boolean deleted = roleService.deleteById(1);
 		Assert.isTrue(deleted, "Expected no delete");
-		Mockito.verify(tableRepository).findById(Mockito.anyInt());
-		Mockito.verify(tableRepository).deleteById(Mockito.anyInt());
+		Mockito.verify(roleRepository).findById(Mockito.anyInt());
+		Mockito.verify(roleRepository).deleteById(Mockito.anyInt());
 	}
 	
 
