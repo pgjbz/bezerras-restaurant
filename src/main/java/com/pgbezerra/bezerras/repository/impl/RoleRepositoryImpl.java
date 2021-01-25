@@ -120,7 +120,7 @@ public class RoleRepositoryImpl implements RoleRepository {
         } catch (EmptyResultDataAccessException e) {
             roles = new ArrayList<>();
         } catch (Exception e){
-            String msg = "Error on find all tables";
+            String msg = "Error on find all roles";
             LOG.error(msg, e);
             throw new DatabaseException(msg);
         }
