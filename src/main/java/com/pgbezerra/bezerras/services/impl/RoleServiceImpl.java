@@ -31,7 +31,7 @@ public class RoleServiceImpl implements RoleService {
     public Boolean update(Role role) {
         Role oldRole = findById(role.getId());
         updateData(oldRole, role);
-        Boolean updated = roleRepository.update(role);
+        Boolean updated = roleRepository.update(oldRole);
         LOG.info(String.format("Role %s updated: %s", role, updated));
         return updated;
     }
