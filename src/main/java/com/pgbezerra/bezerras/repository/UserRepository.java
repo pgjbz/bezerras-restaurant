@@ -2,5 +2,9 @@ package com.pgbezerra.bezerras.repository;
 
 import com.pgbezerra.bezerras.entities.model.User;
 
-public interface UserRepository extends Repository<User, Long>{
+import java.util.Optional;
+
+public interface UserRepository extends Repository<User, Long> {
+
+    Optional<User> findByUsername(String username);
 }

@@ -198,5 +198,21 @@ public class UserRepositoryTest {
 		Assert.assertTrue(userReturn.isPresent());
 	}
 
+	@Test
+	public void findByUsernameNonexistentUserExpectedError() {
+		Optional<User> user = userRepository.findByUsername("Admin");
+		Assert.assertFalse(user.isPresent());
+	}
+
+	@Test
+	public void findByUsernameExpectedSuccess() {
+		Role role = new Role(null, "ROLE_ADMIN");
+		roleRepository.insert(role);
+		User user = new User(1L, "Admin", "Admin", bCryptPasswordEncoder.encode("admin"), role);
+		userRepository.insert(user);
+		Optional<User> userReturn = userRepository.findByUsername(user.getUsername());
+		Assert.assertTrue(userReturn.isPresent());
+	}
+
 
 }

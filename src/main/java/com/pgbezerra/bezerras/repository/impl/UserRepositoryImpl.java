@@ -210,4 +210,46 @@ public class UserRepositoryImpl implements UserRepository {
             insert(user);
         return list;
     }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT ");
+        sql.append("   ID_USER, ");
+        sql.append("   NM_USER, ");
+        sql.append("   DS_USERNAME, ");
+        sql.append("   ID_ROLE, ");
+        sql.append("   DS_PASSWORD ");
+        sql.append(" FROM ");
+        sql.append("   TB_USER ");
+        sql.append(" WHERE ");
+        sql.append("   DS_USERNAME = :username ");
+
+        MapSqlParameterSource paramSource = new MapSqlParameterSource();
+        paramSource.addValue("username", username);
+
+        User user = null;
+
+        try {
+            user = namedJdbcTemplate.queryForObject(sql.toString(), paramSource, (rs, rowNum) -> {
+                User u = new User();
+                u.setId(rs.getLong("ID_USER"));
+                u.setName(rs.getString("NM_USER"));
+                u.setUsername(rs.getString("DS_USERNAME"));
+                u.setRole(roleRepository.findById(rs.getInt("ID_ROLE")).get());
+                u.setPassword(rs.getString("DS_PASSWORD"));
+                return u;
+            });
+            if(Objects.nonNull(user))
+                LOG.info(String.format("User with username: %s found successfully %s", username, user.toString()));
+        } catch (EmptyResultDataAccessException e) {
+            LOG.warn(String.format("No user found with username: %s", username));
+        } catch (Exception e){
+            String msg = String.format("Error on find user with username: %s", username);
+            LOG.error(msg, e);
+            throw new DatabaseException(msg);
+        }
+
+        return Optional.ofNullable(user);
+    }
 }
