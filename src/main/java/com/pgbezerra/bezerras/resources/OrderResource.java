@@ -7,6 +7,8 @@ import com.pgbezerra.bezerras.entities.dto.ReportDTO;
 import com.pgbezerra.bezerras.entities.model.*;
 import com.pgbezerra.bezerras.services.OrderService;
 import com.pgbezerra.bezerras.services.exception.ResourceBadRequestException;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
@@ -33,23 +35,28 @@ public class OrderResource {
     }
 
     @GetMapping
+    @ApiOperation(value = "Find all orders", notes = "All authenticated users")
     public ResponseEntity<List<Order>> findAll() {
         return ResponseEntity.ok(orderService.findAll());
     }
 
     @GetMapping(value = "/pending")
+    @ApiOperation(value = "Get pending orders", notes = "All authenticated users")
     public ResponseEntity<List<Order>> findPendingOrders() {
         return ResponseEntity.ok(orderService.findPendingOrders());
     }
 
     @GetMapping(value = "/{id}")
+    @ApiOperation(value = "Find order by id", notes = "All authenticated users")
     public ResponseEntity<Order> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(orderService.findById(id));
     }
 
     @GetMapping(value = "/report")
-    public ResponseEntity<List<ReportDTO>> findReport(@RequestParam(value = "initial") String initial,
-                                                      @RequestParam(value = "final", required = false) String finalDate) {
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "Report of completed orders", notes = "Only admins users")
+    public ResponseEntity<List<ReportDTO>> findReport(@RequestParam(value = "initial") @Valid @DateTimeFormat(pattern = "yyyy-MM-dd") String initial,
+                                                      @RequestParam(value = "final", required = false) @Valid @DateTimeFormat(pattern = "yyyy-MM-dd") String finalDate) {
         Date initialDate;
         Date fDate = null;
         try {
@@ -64,6 +71,7 @@ public class OrderResource {
     }
 
     @PutMapping(value = "/{id}")
+    @ApiOperation(value = "Update a order", notes = "All authenticated users")
     public ResponseEntity<Void> update(@PathVariable("id") Long id, @Valid @RequestBody OrderDTO orderDTO) {
         Order order = convertToEntity(orderDTO);
         order.setId(id);
@@ -73,6 +81,7 @@ public class OrderResource {
     }
 
     @PutMapping(value = "/status/{id}")
+    @ApiOperation(value = "Update a order status", notes = "All authenticated users")
     public ResponseEntity<Void> update(@PathVariable("id") Long id, @RequestBody @Valid OrderStatusDTO orderStatus) {
         Order order = new Order();
         order.setId(id);
@@ -82,6 +91,7 @@ public class OrderResource {
     }
 
     @PostMapping
+    @ApiOperation(value = "Create a new order", notes = "All authenticated users")
     public ResponseEntity<Void> insert(@Valid @RequestBody OrderDTO orderDTO) {
         Order order = convertToEntity(orderDTO);
         order = orderService.insert(order);
@@ -91,6 +101,7 @@ public class OrderResource {
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
+    @ApiOperation(value = "Delete a order", notes = "Only admins users")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
         orderService.deleteById(id);
         return ResponseEntity.noContent().build();

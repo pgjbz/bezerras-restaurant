@@ -3,6 +3,7 @@ package com.pgbezerra.bezerras.resources;
 import com.pgbezerra.bezerras.entities.dto.TableDTO;
 import com.pgbezerra.bezerras.entities.model.Table;
 import com.pgbezerra.bezerras.services.TableService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,17 +25,20 @@ public class TableResource {
     }
 
     @GetMapping
+    @ApiOperation(value = "Find all tables", notes = "All Authenticated users")
     public ResponseEntity<List<Table>> findAll(){
         return ResponseEntity.ok(tableService.findAll());
     }
 
     @GetMapping(value = "/{id}")
+    @ApiOperation(value = "Find table by id", notes = "All authenticated users")
     public ResponseEntity<Table> findById(@PathVariable(value = "id") Integer id){
         return ResponseEntity.ok(tableService.findById(id));
     }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "Create a new table", notes = "Only admins users")
     public ResponseEntity<Void> insert(@RequestBody @Valid TableDTO tableDto){
         Table table = convertToEntity(tableDto);
         tableService.insert(table);
@@ -44,6 +48,7 @@ public class TableResource {
 
     @PutMapping(value = "/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "Update a table", notes = "Only admins users")
     public ResponseEntity<Void> update(@PathVariable("id") Integer id, @RequestBody @Valid TableDTO tableDto){
         Table table = convertToEntity(tableDto);
         table.setId(id);
@@ -53,6 +58,7 @@ public class TableResource {
 
     @DeleteMapping(value = "/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "Delete a table", notes = "Only admins users")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id){
         tableService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

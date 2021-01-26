@@ -2,6 +2,7 @@ package com.pgbezerra.bezerras.resources;
 
 import com.pgbezerra.bezerras.entities.dto.AddressDTO;
 import com.pgbezerra.bezerras.services.AddressService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ public class AddressResource {
     }
 
     @GetMapping(value = "/{zip}")
+    @ApiOperation(value = "Find a address by zipcode", notes = "All authenticated users")
     public ResponseEntity<AddressDTO> findByZipCode(@PathVariable(value = "zip") String zipCode){
         return ResponseEntity.ok(addressService.findByZipCode(zipCode));
     }

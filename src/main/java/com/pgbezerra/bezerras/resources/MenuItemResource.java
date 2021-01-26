@@ -5,6 +5,7 @@ import com.pgbezerra.bezerras.entities.model.Menu;
 import com.pgbezerra.bezerras.entities.model.MenuItem;
 import com.pgbezerra.bezerras.entities.model.Product;
 import com.pgbezerra.bezerras.services.MenuItemService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +28,7 @@ public class MenuItemResource {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "Create a new menu item", notes = "Only admins users")
     public ResponseEntity<Void> insert(@RequestBody @Valid MenuItemDTO menuDTO) {
         MenuItem menu = convertToEntity(menuDTO);
         menuService.insert(menu);
@@ -38,6 +40,7 @@ public class MenuItemResource {
 
     @DeleteMapping(value = "/{productId}/{menuId}")
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "Delete a menu item", notes = "Only admins users")
     public ResponseEntity<Void> deleteById(@PathVariable("productId") Integer productId, @PathVariable("menuId") Long menuId) {
         Menu menu = new Menu(menuId, null, null);
         Product product = new Product(productId, null, null, null);

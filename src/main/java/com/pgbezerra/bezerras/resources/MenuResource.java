@@ -5,6 +5,7 @@ import com.pgbezerra.bezerras.entities.dto.MenuResponseDTO;
 import com.pgbezerra.bezerras.entities.dto.ProductDTO;
 import com.pgbezerra.bezerras.entities.model.Menu;
 import com.pgbezerra.bezerras.services.MenuService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,17 +28,20 @@ public class MenuResource {
     }
 
     @GetMapping
+    @ApiOperation(value = "Find all menus", notes = "All authenticated users")
     public ResponseEntity<List<MenuResponseDTO>> findAll() {
         return ResponseEntity.ok(menuService.findAll().stream().map(this::convertToDTO).collect(Collectors.toList()));
     }
 
     @GetMapping(value = "/{id}")
+    @ApiOperation(value = "Find a menu by id", notes = "All authenticated users")
     public ResponseEntity<Menu> findById(@PathVariable(value = "id") Long id) {
         return ResponseEntity.ok(menuService.findById(id));
     }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "Create a new menu", notes = "Only admins users")
     public ResponseEntity<Void> insert(@RequestBody @Valid MenuDTO menuDTO) {
         Menu menu = convertToEntity(menuDTO);
         menuService.insert(menu);
@@ -47,6 +51,7 @@ public class MenuResource {
 
     @PutMapping(value = "/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "Update a menu", notes = "Only admins users")
     public ResponseEntity<Void> update(@PathVariable("id") Long id, @RequestBody @Valid MenuDTO menuDTO) {
         Menu menu = convertToEntity(menuDTO);
         menu.setId(id);
@@ -56,6 +61,7 @@ public class MenuResource {
 
     @DeleteMapping(value = "/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "Create a menu", notes = "Only admins users")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
         menuService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

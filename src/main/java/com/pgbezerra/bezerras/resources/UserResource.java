@@ -5,6 +5,7 @@ import com.pgbezerra.bezerras.entities.model.Role;
 import com.pgbezerra.bezerras.entities.model.User;
 import com.pgbezerra.bezerras.services.UserService;
 import com.pgbezerra.bezerras.services.exception.AuthorizationException;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +29,14 @@ public class UserResource {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "Find all users", notes = "Only admins users")
     public ResponseEntity<List<User>> findAll(){
         return ResponseEntity.ok(userService.findAll());
     }
 
     @GetMapping(value = "/{id}")
+    @ApiOperation(value = "Find user by id", notes = "Only admins users can find any user by id, others users only find yourself")
     public ResponseEntity<User> findById(@PathVariable(value = "id") Long id){
         User userRequest = userService.authenticated();
         if(Objects.isNull(userRequest) || !userRequest.getRole().getRoleName().equals("ROLE_ADMIN") && !userRequest.getId().equals(id))
@@ -42,6 +46,7 @@ public class UserResource {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "Create a new user", notes = "Only admins users")
     public ResponseEntity<Void> insert(@RequestBody @Valid UserDTO userDto){
         User user = convertToEntity(userDto);
         userService.insert(user);
@@ -50,6 +55,7 @@ public class UserResource {
     }
 
     @PutMapping(value = "/{id}")
+    @ApiOperation(value = "Update a user", notes = "Only admins users can update any user, others users only update yourself")
     public ResponseEntity<Void> update(@PathVariable("id") Long id, @RequestBody @Valid UserDTO userDto){
         User userRequest = userService.authenticated();
         if(Objects.isNull(userRequest) || !userRequest.getRole().getRoleName().equals("ROLE_ADMIN") && !userRequest.getId().equals(id))
@@ -62,6 +68,7 @@ public class UserResource {
 
     @DeleteMapping(value = "/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "Delete a user", notes = "Only admins users")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id){
         userService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
