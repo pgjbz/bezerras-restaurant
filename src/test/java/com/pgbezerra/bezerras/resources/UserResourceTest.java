@@ -30,7 +30,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserResource.class)
-@WithMockUser(username = "admin", password = "admin")
+@WithMockUser(username = "admin", password = "admin", roles = {"ADMIN"})
 @Import({BCryptConfiguration.class, JWTUtil.class})
 public class UserResourceTest {
 
@@ -62,6 +62,7 @@ public class UserResourceTest {
     @Test
     public void insertNewUserExpectedCreated() throws Exception {
         UserDTO objDTO = new UserDTO("admin", "admin", "admin", 1);
+        Mockito.when(userService.authenticated()).thenReturn(u1);
         Mockito.when(userService.insert(Mockito.any(User.class)))
                 .thenReturn(users.get(0));
         mockMvc.perform( MockMvcRequestBuilders.post("/users")
@@ -92,6 +93,7 @@ public class UserResourceTest {
     @Test
     public void findUserByIdExpectedNotFound() throws Exception {
         Mockito.when(userService.findById(1L)).thenThrow(ResourceNotFoundException.class);
+        Mockito.when(userService.authenticated()).thenReturn(u1);
         mockMvc.perform(MockMvcRequestBuilders.get("/users/1"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
         Mockito.verify(userService).findById(1L);
@@ -100,6 +102,7 @@ public class UserResourceTest {
     @Test
     public void findUserByIdExpectedOk() throws Exception {
         Mockito.when(userService.findById(1L)).thenReturn(u1);
+        Mockito.when(userService.authenticated()).thenReturn(u1);
         mockMvc.perform(MockMvcRequestBuilders.get("/users/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(u1)));
@@ -132,6 +135,7 @@ public class UserResourceTest {
     @Test
     public void editUserExpectedNotFound() throws Exception {
         UserDTO objDTO = new UserDTO("admin", "admin", "admin", 1);
+        Mockito.when(userService.authenticated()).thenReturn(u1);
         Mockito.when(userService.update(Mockito.any(User.class))).thenThrow(ResourceNotFoundException.class);
         mockMvc.perform(MockMvcRequestBuilders.put("/users/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -143,6 +147,7 @@ public class UserResourceTest {
     public void editUserExpectedOk() throws Exception {
         UserDTO objDTO = new UserDTO("admin", "admin", "admin", 1);
         Mockito.when(userService.update(Mockito.any(User.class))).thenReturn(true);
+        Mockito.when(userService.authenticated()).thenReturn(u1);
         mockMvc.perform(MockMvcRequestBuilders.put("/users/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(objDTO)))

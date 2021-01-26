@@ -1,6 +1,7 @@
 package com.pgbezerra.bezerras.resources.exception;
 
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
+import com.pgbezerra.bezerras.services.exception.AuthorizationException;
 import com.pgbezerra.bezerras.services.exception.ResourceBadRequestException;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
 import org.apache.log4j.Logger;
@@ -41,6 +42,15 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardError> database(DatabaseException ex, HttpServletRequest request) {
         String error = "Database error";
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        LOG.info(ex.getMessage());
+        StandardError standardError = new StandardError(LocalDateTime.now(), status.value(), error, ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(standardError);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<StandardError> authorization(AuthorizationException ex, HttpServletRequest request) {
+        String error = "Forbidden!";
+        HttpStatus status = HttpStatus.FORBIDDEN;
         LOG.info(ex.getMessage());
         StandardError standardError = new StandardError(LocalDateTime.now(), status.value(), error, ex.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(standardError);

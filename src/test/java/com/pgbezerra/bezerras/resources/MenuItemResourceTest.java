@@ -32,7 +32,7 @@ import java.time.DayOfWeek;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(MenuItemResource.class)
-@WithMockUser(username = "admin", password = "admin")
+@WithMockUser(username = "admin", password = "admin", roles = {"ADMIN"})
 @Import({BCryptConfiguration.class, JWTUtil.class})
 public class MenuItemResourceTest {
 

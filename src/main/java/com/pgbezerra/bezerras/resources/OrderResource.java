@@ -8,6 +8,7 @@ import com.pgbezerra.bezerras.entities.model.*;
 import com.pgbezerra.bezerras.services.OrderService;
 import com.pgbezerra.bezerras.services.exception.ResourceBadRequestException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -88,6 +89,7 @@ public class OrderResource {
         return ResponseEntity.created(uri).build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
         orderService.deleteById(id);

@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AddressResource.class)
-@WithMockUser(username = "admin", password = "admin")
+@WithMockUser(username = "admin", password = "admin", roles = {"ADMIN"})
 @Import({BCryptConfiguration.class, JWTUtil.class})
 public class AddressResourceTest {
 

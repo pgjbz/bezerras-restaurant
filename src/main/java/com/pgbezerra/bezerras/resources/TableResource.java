@@ -5,6 +5,7 @@ import com.pgbezerra.bezerras.entities.model.Table;
 import com.pgbezerra.bezerras.services.TableService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -33,6 +34,7 @@ public class TableResource {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> insert(@RequestBody @Valid TableDTO tableDto){
         Table table = convertToEntity(tableDto);
         tableService.insert(table);
@@ -41,6 +43,7 @@ public class TableResource {
     }
 
     @PutMapping(value = "/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> update(@PathVariable("id") Integer id, @RequestBody @Valid TableDTO tableDto){
         Table table = convertToEntity(tableDto);
         table.setId(id);
@@ -49,6 +52,7 @@ public class TableResource {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id){
         tableService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

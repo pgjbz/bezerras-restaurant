@@ -30,7 +30,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(RoleResource.class)
-@WithMockUser(username = "admin", password = "admin")
+@WithMockUser(username = "admin", password = "admin", roles = {"ADMIN"})
 @Import({BCryptConfiguration.class, JWTUtil.class})
 public class RoleResourceTest {
 

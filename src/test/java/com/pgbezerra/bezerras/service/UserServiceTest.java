@@ -89,8 +89,9 @@ public class UserServiceTest {
 
 	@Test
 	public void findUserByIdExpectedSuccess(){
-		Long id = 1L;
-		Mockito.when(userRepository.findById(id)).thenReturn(Optional.ofNullable(users.get(0)));
+		User u = users.get(0);
+		Long id = u.getId();
+		Mockito.when(userRepository.findById(id)).thenReturn(Optional.ofNullable(u));
 		Assertions.assertNotNull(userServiceTest.findById(id));
 		Mockito.verify(userRepository).findById(id);
 	}

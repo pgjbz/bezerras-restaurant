@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(OrderResource.class)
-@WithMockUser(username = "admin", password = "admin")
+@WithMockUser(username = "admin", password = "admin", roles = {"ADMIN"})
 @Import({BCryptConfiguration.class, JWTUtil.class})
 public class OrderResourceTest {
 
