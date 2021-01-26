@@ -19,6 +19,6 @@ Because is easier to find the part of the project what you search
 
 ## Objectives
 
-- [ ] Backend
-- [ ] Webwo
+- [X] Backend*
+- [ ] Web
 - [ ] Mobile
