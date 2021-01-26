@@ -10,8 +10,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,13 +38,12 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
         sql.append("   :menu, ");
         sql.append("   :product) ");
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource paramSource = new MapSqlParameterSource();
         paramSource.addValue("menu", menuItem.getMenu().getId());
         paramSource.addValue("product", menuItem.getProduct().getId());
 
         try {
-            int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+            int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource);
             if (rowsAffected > 0)
                 LOG.info(String.format("New row %s inserted successfuly", menuItem.toString()));
             else {

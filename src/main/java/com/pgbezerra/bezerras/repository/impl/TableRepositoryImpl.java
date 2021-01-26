@@ -43,9 +43,9 @@ public class TableRepositoryImpl implements TableRepository {
 		paramSource.addValue("name", table.getName());
 
 		try {
-			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder,  new String[]{"id_table"});
 			if (rowsAffected > 0) {
-				table.setId((Integer)keyHolder.getKey());
+				table.setId(keyHolder.getKey().intValue());
 				LOG.info(String.format("New row %s inserted successfuly", table.toString()));
 			} else {
 				LOG.error(String.format("Can't insert a new row %s", table.toString()));

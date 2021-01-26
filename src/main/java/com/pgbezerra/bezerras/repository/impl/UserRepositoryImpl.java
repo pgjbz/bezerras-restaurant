@@ -52,9 +52,9 @@ public class UserRepositoryImpl implements UserRepository {
 
 
         try {
-            int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+            int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder,  new String[]{"id_user"});
             if (rowsAffected > 0) {
-                user.setId((Long)keyHolder.getKey());
+                user.setId(keyHolder.getKey().longValue());
                 LOG.info(String.format("New row %s inserted successfully", user.toString()));
             } else {
                 LOG.error(String.format("Can't insert a new row %s", user.toString()));

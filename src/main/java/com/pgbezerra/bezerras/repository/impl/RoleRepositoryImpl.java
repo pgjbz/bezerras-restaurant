@@ -37,7 +37,7 @@ public class RoleRepositoryImpl implements RoleRepository {
         paramSource.addValue("roleName", role.getRoleName());
 
         try {
-            int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+            int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder,  new String[]{"id_role"});
             if (rowsAffected > 0) {
                 role.setId(keyHolder.getKey().intValue());
                 LOG.info(String.format("New row %s inserted successfully", role.toString()));

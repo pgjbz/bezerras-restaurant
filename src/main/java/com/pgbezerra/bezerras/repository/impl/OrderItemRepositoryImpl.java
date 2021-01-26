@@ -59,7 +59,7 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 		paramSource.addValue("value", orderItem.getValue());
 
 		try {
-			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder,  new String[]{"id_order_item"});
 			if (rowsAffected > 0) {
 				orderItem.setId(keyHolder.getKey().longValue());
 				LOG.info(String.format("New row %s inserted successfuly", orderItem.toString()));

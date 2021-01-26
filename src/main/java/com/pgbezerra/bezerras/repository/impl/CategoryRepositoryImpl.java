@@ -45,9 +45,9 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 		paramSource.addValue("menu", category.getIsMenu());
 
 		try {
-			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder, new String[]{"id_category"});
 			if (rowsAffected > 0) {
-				category.setId((Integer)keyHolder.getKey());
+				category.setId(keyHolder.getKey().intValue());
 				LOG.info(String.format("New row %s inserted successfuly", category.toString()));
 			} else {
 				LOG.error(String.format("Can't insert a new row %s", category.toString()));

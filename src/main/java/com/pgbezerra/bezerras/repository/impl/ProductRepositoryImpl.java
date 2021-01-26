@@ -54,9 +54,9 @@ public class ProductRepositoryImpl implements ProductRepository {
 		paramSource.addValue("category", nonNull(category) ? category.getId() : null);
 
 		try {
-			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder,  new String[]{"id_product"});
 			if (rowsAffected > 0) {
-				product.setId((Integer)keyHolder.getKey());
+				product.setId(keyHolder.getKey().intValue());
 				LOG.info(String.format("New row %s inserted successfuly", product.toString()));
 			} else {
 				LOG.error(String.format("Can't insert a new row %s", product.toString()));

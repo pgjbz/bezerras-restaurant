@@ -61,9 +61,9 @@ public class OrderAddressRepositoryImpl implements OrderAddressRepository {
 
 
         try {
-            int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+            int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder,  new String[]{"id_order_address"});
             if (rowsAffected > 0) {
-                orderAddress.setId((Long)keyHolder.getKey());
+                orderAddress.setId(keyHolder.getKey().longValue());
                 LOG.info(String.format("New row %s inserted successfuly", orderAddress.toString()));
             } else {
                 LOG.error(String.format("Can't insert a new row %s", orderAddress.toString()));

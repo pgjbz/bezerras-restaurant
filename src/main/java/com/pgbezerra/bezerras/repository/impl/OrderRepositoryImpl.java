@@ -79,9 +79,9 @@ public class OrderRepositoryImpl implements OrderRepository {
 				Objects.nonNull(order.getOrderAddress()) ? order.getOrderAddress().getId() : null);
 
 		try {
-			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder, new String[]{"id_order"});
 			if (rowsAffected > 0) {
-				order.setId((Long)keyHolder.getKey());
+				order.setId(keyHolder.getKey().longValue());
 				LOG.info(String.format("New row %s inserted successfuly", order.toString()));
 			} else {
 				LOG.error(String.format("Can't insert a new row %s", order.toString()));

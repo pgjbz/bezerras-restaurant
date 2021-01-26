@@ -50,9 +50,9 @@ public class MenuRepositoryImpl implements MenuRepository {
 		paramSource.addValue("dayOfWeek", Objects.nonNull(menu.getDayOfWeek()) ? menu.getDayOfWeek().getValue() : null);
 
 		try {
-			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder);
+			int rowsAffected = namedJdbcTemplate.update(sql.toString(), paramSource, keyHolder,  new String[]{"id_menu"});
 			if (rowsAffected > 0) {
-				menu.setId((Long)keyHolder.getKey());
+				menu.setId(keyHolder.getKey().longValue());
 				LOG.info(String.format("New row %s inserted successfuly", menu.toString()));
 			} else {
 				LOG.error(String.format("Can't insert a new row %s", menu.toString()));
