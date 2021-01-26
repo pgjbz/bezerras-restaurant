@@ -57,7 +57,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 		sql.append("     ID_ORDER_TYPE, ");
 		sql.append("     ID_ORDER_ADDRESS) ");
 		sql.append(" VALUES ");
-		sql.append("   (TRUNC(:date), ");
+		sql.append("   (:date, ");
 		sql.append("   :value, ");
 		sql.append("   :table, ");
 		sql.append("   :valueDelivery, ");
@@ -380,7 +380,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 	public List<ReportDTO> report(Date initialDate, Date finalDate) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
-		sql.append("   TRUNC(DT_ORDER) AS DT_ORDER, ");
+		sql.append("   date_trunc('year', DT_ORDER) AS DT_ORDER, ");
 		sql.append("   SUM(VL_ORDER) AS VL_TOTAL, ");
 		sql.append("   COUNT(ID_ORDER) AS QT_ORDERS ");
 		sql.append(" FROM ");
@@ -389,7 +389,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 		sql.append("   DT_ORDER BETWEEN :initial AND :final ");
 		sql.append("   AND ID_ORDER_STATUS = 3 ");
 		sql.append(" GROUP BY ");
-		sql.append("   TRUNC(DT_ORDER) ");
+		sql.append("   date_trunc('year', DT_ORDER) ");
 
 
 		List<ReportDTO> orders = null;
