@@ -117,7 +117,7 @@ CREATE TABLE TB_USER (
 );
 
 INSERT INTO TB_USER(ID_USER, NM_USER, DS_USERNAME, DS_PASSWORD, ID_ROLE)
-    VALUES(1, 'ADMIN', 'admin', '$2y$12$n/5QMzsk.TPWWP4FYvJnj.F59xft5sue/RhRm72vMiceJe4kWExZ6', 2);
+    VALUES(1, 'admin', 'admin', '$2a$10$K/XgssHrPZO0ED8s/zRiSO54CBIPz5bCWqrmKw1xce96ojtodP6bO', 2);
 
 
 

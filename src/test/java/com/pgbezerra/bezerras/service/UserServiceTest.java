@@ -1,6 +1,6 @@
 package com.pgbezerra.bezerras.service;
 
-import com.pgbezerra.bezerras.config.EncoderConfig;
+import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
 import com.pgbezerra.bezerras.entities.model.Role;
 import com.pgbezerra.bezerras.entities.model.User;
 import com.pgbezerra.bezerras.repository.UserRepository;
@@ -34,7 +34,7 @@ import java.util.Optional;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-@Import({EncoderConfig.class})
+@Import({BCryptConfiguration.class})
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 public class UserServiceTest {
@@ -42,7 +42,7 @@ public class UserServiceTest {
 	@TestConfiguration
 	static class UserServiceTestConfiguration {
 		@Bean
-		public UserService userService(UserRepository userRepository, RoleService roleService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+		public UserService userServiceTest(UserRepository userRepository, RoleService roleService, BCryptPasswordEncoder bCryptPasswordEncoder) {
 			return new UserServiceImpl(userRepository, roleService, bCryptPasswordEncoder);
 		}
 	}
@@ -51,13 +51,13 @@ public class UserServiceTest {
 	private final List<User> users = new ArrayList<>();
 	
 	@Autowired
-	private UserService userService;
+	private UserService userServiceTest;
 	@MockBean
 	private UserRepository userRepository;
 	@MockBean
 	private RoleService roleService;
 	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	private BCryptPasswordEncoder bCrypt;
 	
 	
 	{
@@ -76,7 +76,7 @@ public class UserServiceTest {
 		User u1 = users.get(0);
 		Mockito.when(userRepository.insert(u1)).thenReturn(users.get(0));
 		Mockito.when(roleService.findById(1)).thenReturn(roles.get(0));
-		userService.insert(u1);
+		userServiceTest.insert(u1);
 		Mockito.verify(userRepository).insert(u1);
 		Mockito.verify(roleService).findById(1);
 	}
@@ -84,47 +84,47 @@ public class UserServiceTest {
 	@Test(expected = DatabaseException.class)
 	public void insertNewUserExpectedError(){
 		Mockito.when(userRepository.insert(Mockito.any(User.class))).thenThrow(DatabaseException.class);
-		userService.insert(users.get(0));
+		userServiceTest.insert(users.get(0));
 	}
 
 	@Test
 	public void findUserByIdExpectedSuccess(){
 		Long id = 1L;
 		Mockito.when(userRepository.findById(id)).thenReturn(Optional.ofNullable(users.get(0)));
-		Assertions.assertNotNull(userService.findById(id));
+		Assertions.assertNotNull(userServiceTest.findById(id));
 		Mockito.verify(userRepository).findById(id);
 	}
 
 	@Test(expected = ResourceNotFoundException.class)
 	public void findUserByIdExpectedError(){
-		userService.findById(1L);
+		userServiceTest.findById(1L);
 	}
 
 	@Test
 	public void findUserByUsernameExpectedSuccess(){
 		String username = "Admin";
 		Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.ofNullable(users.get(0)));
-		Assertions.assertNotNull(userService.loadUserByUsername(username));
+		Assertions.assertNotNull(userServiceTest.loadUserByUsername(username));
 		Mockito.verify(userRepository).findByUsername(username);
 	}
 
 	@Test(expected = UsernameNotFoundException.class)
 	public void findUserByUsernameExpectedError(){
 		String username = "Admin";
-		userService.loadUserByUsername(username);
+		userServiceTest.loadUserByUsername(username);
 	}
 
 	@Test
 	public void findAllExpectedSuccess(){
 		Mockito.when(userRepository.findAll()).thenReturn(users);
-		List<User> users = userService.findAll();
+		List<User> users = userServiceTest.findAll();
 		Assertions.assertFalse(users.isEmpty());
 		Mockito.verify(userRepository).findAll();
 	}
 
 	@Test(expected = ResourceNotFoundException.class)
 	public void findAllExpectedError(){
-		List<User> users = userService.findAll();
+		List<User> users = userServiceTest.findAll();
 	}
 
 	@Test
@@ -132,13 +132,13 @@ public class UserServiceTest {
 		Long id = 1L;
 		Mockito.when(userRepository.findById(id)).thenReturn(Optional.ofNullable(users.get(0)));
 		Mockito.when(userRepository.deleteById(id)).thenReturn(Boolean.TRUE);
-		Assertions.assertTrue(userService.deleteById(id));
+		Assertions.assertTrue(userServiceTest.deleteById(id));
 		Mockito.verify(userRepository).deleteById(id);
 	}
 
 	@Test(expected = ResourceNotFoundException.class)
 	public void deleteByIdExpectedError(){
-		userService.deleteById(1L);
+		userServiceTest.deleteById(1L);
 	}
 
 	@Test
@@ -147,7 +147,7 @@ public class UserServiceTest {
 		User u1 = users.get(0);
 		Mockito.when(userRepository.findById(id)).thenReturn(Optional.ofNullable(u1));
 		Mockito.when(userRepository.update(u1)).thenReturn(Boolean.TRUE);
-		Assertions.assertTrue(userService.update(u1));
+		Assertions.assertTrue(userServiceTest.update(u1));
 		Mockito.verify(userRepository).update(u1);
 		Mockito.verify(userRepository).findById(id);
 	}
@@ -155,7 +155,7 @@ public class UserServiceTest {
 	@Test(expected = ResourceNotFoundException.class)
 	public void updateUserExpectedResourceNotFound(){
 		User u1 = users.get(0);
-		userService.update(u1);
+		userServiceTest.update(u1);
 	}
 
 	@Test(expected = DatabaseException.class)
@@ -165,7 +165,7 @@ public class UserServiceTest {
 		Mockito.when(userRepository.findById(id)).thenReturn(Optional.ofNullable(u1));
 		Mockito.when(userRepository.update(u1)).thenThrow(DatabaseException.class);
 		u1.setRole(null);
-		userService.update(u1);
+		userServiceTest.update(u1);
 	}
 
 

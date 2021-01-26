@@ -6,19 +6,23 @@ import com.pgbezerra.bezerras.entities.dto.ProductDTO;
 import com.pgbezerra.bezerras.entities.model.Category;
 import com.pgbezerra.bezerras.entities.model.Product;
 import com.pgbezerra.bezerras.resources.exception.StandardError;
+import com.pgbezerra.bezerras.security.JWTUtil;
 import com.pgbezerra.bezerras.services.CategoryService;
 import com.pgbezerra.bezerras.services.MenuService;
 import com.pgbezerra.bezerras.services.ProductService;
+import com.pgbezerra.bezerras.services.UserService;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -32,7 +36,8 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ProductResource.class)
-@Import(BCryptConfiguration.class)
+@WithMockUser(username = "admin", password = "admin")
+@Import({BCryptConfiguration.class, JWTUtil.class})
 public class ProductResourceTest {
 
     @Autowired
@@ -46,6 +51,10 @@ public class ProductResourceTest {
 
     @MockBean
     private MenuService menuService;
+
+    @MockBean
+    @Qualifier("userServiceImpl")
+    private UserService userService;
 
     @Autowired
     private ObjectMapper objectMapper;

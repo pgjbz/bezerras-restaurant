@@ -4,17 +4,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
 import com.pgbezerra.bezerras.entities.dto.TableDTO;
 import com.pgbezerra.bezerras.entities.model.Table;
+import com.pgbezerra.bezerras.security.JWTUtil;
 import com.pgbezerra.bezerras.services.TableService;
+import com.pgbezerra.bezerras.services.UserService;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,7 +30,8 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(TableResource.class)
-@Import(BCryptConfiguration.class)
+@WithMockUser(username = "admin", password = "admin")
+@Import({BCryptConfiguration.class, JWTUtil.class})
 public class TableResourceTest {
 
     @Autowired
@@ -34,6 +39,10 @@ public class TableResourceTest {
 
     @MockBean
     private TableService tableService;
+
+    @MockBean
+    @Qualifier("userServiceImpl")
+    private UserService userService;
 
     @Autowired
     private ObjectMapper objectMapper;

@@ -4,6 +4,7 @@ import com.pgbezerra.bezerras.entities.dto.UserDTO;
 import com.pgbezerra.bezerras.entities.model.Role;
 import com.pgbezerra.bezerras.entities.model.User;
 import com.pgbezerra.bezerras.services.UserService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class UserResource {
 
     private final UserService userService;
 
-    public UserResource(final UserService userService) {
+    public UserResource(@Qualifier("userServiceImpl") final UserService userService) {
         this.userService = userService;
     }
 

@@ -8,17 +8,21 @@ import com.pgbezerra.bezerras.entities.dto.OrderStatusDTO;
 import com.pgbezerra.bezerras.entities.enums.OrderStatus;
 import com.pgbezerra.bezerras.entities.enums.OrderType;
 import com.pgbezerra.bezerras.entities.model.*;
+import com.pgbezerra.bezerras.security.JWTUtil;
 import com.pgbezerra.bezerras.services.OrderService;
+import com.pgbezerra.bezerras.services.UserService;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -32,7 +36,8 @@ import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(OrderResource.class)
-@Import(BCryptConfiguration.class)
+@WithMockUser(username = "admin", password = "admin")
+@Import({BCryptConfiguration.class, JWTUtil.class})
 public class OrderResourceTest {
 
     @Autowired
@@ -40,6 +45,10 @@ public class OrderResourceTest {
 
     @MockBean
     private OrderService orderService;
+
+    @MockBean
+    @Qualifier("userServiceImpl")
+    private UserService userService;
 
     @Autowired
     private ObjectMapper objectMapper;

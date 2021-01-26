@@ -7,17 +7,21 @@ import com.pgbezerra.bezerras.entities.model.Category;
 import com.pgbezerra.bezerras.entities.model.Menu;
 import com.pgbezerra.bezerras.entities.model.MenuItem;
 import com.pgbezerra.bezerras.entities.model.Product;
+import com.pgbezerra.bezerras.security.JWTUtil;
 import com.pgbezerra.bezerras.services.MenuItemService;
+import com.pgbezerra.bezerras.services.UserService;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -28,7 +32,8 @@ import java.time.DayOfWeek;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(MenuItemResource.class)
-@Import(BCryptConfiguration.class)
+@WithMockUser(username = "admin", password = "admin")
+@Import({BCryptConfiguration.class, JWTUtil.class})
 public class MenuItemResourceTest {
 
     @Autowired
@@ -36,6 +41,10 @@ public class MenuItemResourceTest {
 
     @MockBean
     private MenuItemService menuItemService;
+
+    @MockBean
+    @Qualifier("userServiceImpl")
+    private UserService userService;
 
     @Autowired
     private ObjectMapper objectMapper;

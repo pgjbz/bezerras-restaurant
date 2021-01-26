@@ -5,6 +5,7 @@ import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
 import com.pgbezerra.bezerras.entities.dto.UserDTO;
 import com.pgbezerra.bezerras.entities.model.Role;
 import com.pgbezerra.bezerras.entities.model.User;
+import com.pgbezerra.bezerras.security.JWTUtil;
 import com.pgbezerra.bezerras.services.UserService;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
 import org.junit.Before;
@@ -12,10 +13,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -27,13 +30,15 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserResource.class)
-@Import(BCryptConfiguration.class)
+@WithMockUser(username = "admin", password = "admin")
+@Import({BCryptConfiguration.class, JWTUtil.class})
 public class UserResourceTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
+    @Qualifier("userServiceImpl")
     private UserService userService;
 
     @Autowired

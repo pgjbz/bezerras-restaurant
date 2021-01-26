@@ -104,7 +104,6 @@ public class User implements Serializable, UserDetails {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", role=" + (Objects.nonNull(role) ? role.getId() : "null") +
                 '}';
     }
