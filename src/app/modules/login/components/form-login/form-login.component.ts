@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Credential } from 'src/app/shared/models/credential.model';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-form-login',
@@ -8,13 +9,12 @@ import { Credential } from 'src/app/shared/models/credential.model';
 })
 export class FormLoginComponent implements OnInit {
 
-  credential: Credential = new Credential('', '');
+  credential: Credential = {username: '', password: ''};
 
-  constructor() { }
+  constructor(private auth: AuthService) { }
 
   onSubmit(e: Event) {
-    console.log(e);
-    console.log(this.credential);
+    this.auth.authenticate(this.credential).subscribe(response => console.log(response), error => console.log(error));
   }
 
   ngOnInit(): void {
