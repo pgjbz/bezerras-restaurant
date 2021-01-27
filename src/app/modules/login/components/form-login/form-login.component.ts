@@ -16,7 +16,12 @@ export class FormLoginComponent implements OnInit {
 
   onSubmit(e: Event) {
     this.loading = true;
-    this.auth.authenticate(this.credential).subscribe(response => console.log(response), error => console.log(error));
+    this.auth.authenticate(this.credential).subscribe(
+      response => {
+        this.auth.successfullLogin(response.headers.get('Authorization'));
+      },
+      error => console.log(error)
+    );
     this.loading = false;
   }
 

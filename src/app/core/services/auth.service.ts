@@ -4,7 +4,10 @@ import { StorageService } from './storage.service';
 import { environment } from '../../../environments/environment';
 import { Credential } from 'src/app/shared/models/credential.model';
 
+import jwt_decode from "jwt-decode";
+
 import { Observable } from "rxjs";
+import { LocalUser } from 'src/app/shared/models/local-user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,4 +24,20 @@ export class AuthService {
         'responseType': 'text'
       });
   }
+
+  public successfullLogin(authorizationValue: string): void {
+    let token: string = authorizationValue.substring(7);
+    let username: string = this.decodeToken(token).sub;
+    let user: LocalUser = new LocalUser(username, token);
+    this.storageService.setLocalUser(user);
+  }
+
+  private decodeToken(token: string): any {
+    try {
+      return jwt_decode(token);
+    } catch(Error){
+      return null;
+    }
+  }
+
 }
