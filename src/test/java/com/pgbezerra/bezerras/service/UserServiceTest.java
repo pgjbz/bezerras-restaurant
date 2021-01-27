@@ -35,7 +35,6 @@ import java.util.Optional;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @Import({BCryptConfiguration.class})
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 public class UserServiceTest {
 

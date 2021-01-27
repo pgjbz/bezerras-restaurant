@@ -4,6 +4,7 @@ import com.pgbezerra.bezerras.entities.model.User;
 import com.pgbezerra.bezerras.repository.UserRepository;
 import com.pgbezerra.bezerras.services.RoleService;
 import com.pgbezerra.bezerras.services.UserService;
+import com.pgbezerra.bezerras.services.exception.ResourceBadRequestException;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -32,6 +34,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User insert(User user) {
         user.setId(null);
+        try {
+            if (Objects.nonNull(loadUserByUsername(user.getUsername())))
+                throw new ResourceBadRequestException(String.format("Username %s already exists", user.getUsername()));
+        } catch (UsernameNotFoundException e){
+            LOG.info(String.format("Username %s not exists, creating", user.getUsername()));
+        }
         user.setRole(roleService.findById(user.getRole().getId()));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.insert(user);
