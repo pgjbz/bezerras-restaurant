@@ -9,12 +9,15 @@ import { AuthService } from 'src/app/core/services/auth.service';
 })
 export class FormLoginComponent implements OnInit {
 
-  credential: Credential = {username: '', password: ''};
+  credential: Credential = { username: '', password: '' };
+  loading: boolean = false;
 
   constructor(private auth: AuthService) { }
 
   onSubmit(e: Event) {
+    this.loading = true;
     this.auth.authenticate(this.credential).subscribe(response => console.log(response), error => console.log(error));
+    this.loading = false;
   }
 
   ngOnInit(): void {
