@@ -1,16 +1,14 @@
 <form>
-    <div class="container">
-        <div class="row justify-content-center ">
-            <div class="col-4 border mt-2">
-                <div class="form-group m-3 text-center">
-                    <div>
-                        <strong class="font-size-25">Login</strong>
-                    </div>
-                    <img src="https://picsum.photos/200/200" alt="logo image"/>
-                    <input id="username" name="username" type="text" class="form-control mt-3" placeholder="Username" [(ngModel)]="credential.username" required/>
-                    <input id="password" name="password" type="password" class="form-control mt-2" placeholder="Password" [(ngModel)]="credential.password" required/>
-                    <button type="button" (click)="onSubmit($event)" class="btn btn-success mt-4">Login</button>
+    <div class="container border">
+        <div class="row justify-content-center">
+            <div class="form-group m-3 text-center">
+                <div>
+                    <strong class="font-size-25">Login</strong>
                 </div>
+                <img src="https://picsum.photos/200/200" alt="logo image"/>
+                <input id="username" name="username" type="text" class="form-control mt-3" placeholder="Username" [(ngModel)]="credential.username" required/>
+                <input id="password" name="password" type="password" class="form-control mt-2" placeholder="Password" [(ngModel)]="credential.password" required/>
+                <button type="button" (click)="onSubmit($event)" class="btn btn-success mt-4">Login</button>
             </div>
         </div>
     </div>
