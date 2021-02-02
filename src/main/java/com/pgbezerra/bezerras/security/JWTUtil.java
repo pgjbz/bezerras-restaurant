@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.pgbezerra.bezerras.entities.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -18,12 +19,13 @@ public class JWTUtil {
     @Value("${jwt.secret}")
     private String secret;
 
-    public String generateToken(String username){
+    public String generateToken(User user){
         Algorithm algorithm = Algorithm.HMAC512(secret);
         return JWT.create()
-                .withSubject(username)
+                .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + expiration))
                 .withIssuer("com.pgbezerra")
+                .withClaim("id", user.getId())
                 .sign(algorithm);
     }
 
