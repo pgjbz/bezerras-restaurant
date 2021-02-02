@@ -27,8 +27,10 @@ export class AuthService {
 
   public successfullLogin(authorizationValue: string): void {
     let token: string = authorizationValue.substring(7);
-    let username: string = this.decodeToken(token).sub;
-    let user: LocalUser = new LocalUser(username, token);
+    let decodedToken: any = this.decodeToken(token);
+    let username: string = decodedToken.sub;
+    let id: number = decodedToken.id;
+    let user: LocalUser = new LocalUser(username, token, id);
     this.storageService.setLocalUser(user);
   }
 
