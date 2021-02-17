@@ -1,6 +1,6 @@
 package com.pgbezerra.bezerras.repository.impl;
 
-import com.pgbezerra.bezerras.entities.model.Table;
+import com.pgbezerra.bezerras.models.entity.Table;
 import com.pgbezerra.bezerras.repository.TableRepository;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import org.apache.log4j.Logger;

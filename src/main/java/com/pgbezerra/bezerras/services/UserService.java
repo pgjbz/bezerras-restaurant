@@ -1,8 +1,9 @@
 package com.pgbezerra.bezerras.services;
 
-import com.pgbezerra.bezerras.entities.model.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
+import com.pgbezerra.bezerras.models.entity.User;
 
 public interface UserService extends Service<User, Long>, UserDetailsService {
 

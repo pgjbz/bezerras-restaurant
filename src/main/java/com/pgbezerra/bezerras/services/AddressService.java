@@ -1,6 +1,6 @@
 package com.pgbezerra.bezerras.services;
 
-import com.pgbezerra.bezerras.entities.dto.AddressDTO;
+import com.pgbezerra.bezerras.models.dto.AddressDTO;
 
 public interface AddressService {
 

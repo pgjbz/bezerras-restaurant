@@ -1,4 +1,4 @@
-package com.pgbezerra.bezerras.entities.dto;
+package com.pgbezerra.bezerras.models.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.util.StringUtils;

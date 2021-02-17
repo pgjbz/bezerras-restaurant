@@ -1,7 +1,7 @@
 package com.pgbezerra.bezerras.service;
 
 import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
-import com.pgbezerra.bezerras.entities.model.Category;
+import com.pgbezerra.bezerras.models.entity.Category;
 import com.pgbezerra.bezerras.repository.CategoryRepository;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import com.pgbezerra.bezerras.services.CategoryService;

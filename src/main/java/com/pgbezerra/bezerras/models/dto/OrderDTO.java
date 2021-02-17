@@ -1,6 +1,6 @@
-package com.pgbezerra.bezerras.entities.dto;
+package com.pgbezerra.bezerras.models.dto;
 
-import com.pgbezerra.bezerras.entities.enums.OrderType;
+import com.pgbezerra.bezerras.models.enums.OrderType;
 import com.pgbezerra.bezerras.services.validation.OrderInsert;
 
 import java.io.Serializable;

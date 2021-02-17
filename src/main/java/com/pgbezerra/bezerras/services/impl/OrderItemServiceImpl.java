@@ -1,6 +1,6 @@
 package com.pgbezerra.bezerras.services.impl;
 
-import com.pgbezerra.bezerras.entities.model.OrderItem;
+import com.pgbezerra.bezerras.models.entity.OrderItem;
 import com.pgbezerra.bezerras.repository.OrderItemRepository;
 import com.pgbezerra.bezerras.services.OrderItemService;
 import org.springframework.stereotype.Service;

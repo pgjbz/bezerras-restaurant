@@ -1,4 +1,4 @@
-package com.pgbezerra.bezerras.entities.model;
+package com.pgbezerra.bezerras.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;

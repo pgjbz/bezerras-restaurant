@@ -1,7 +1,7 @@
 package com.pgbezerra.bezerras.service;
 
 import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
-import com.pgbezerra.bezerras.entities.model.Table;
+import com.pgbezerra.bezerras.models.entity.Table;
 import com.pgbezerra.bezerras.repository.TableRepository;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import com.pgbezerra.bezerras.services.TableService;

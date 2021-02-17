@@ -1,8 +1,8 @@
 package com.pgbezerra.bezerras.resources;
 
-import com.pgbezerra.bezerras.entities.dto.UserDTO;
-import com.pgbezerra.bezerras.entities.model.Role;
-import com.pgbezerra.bezerras.entities.model.User;
+import com.pgbezerra.bezerras.models.dto.UserDTO;
+import com.pgbezerra.bezerras.models.entity.Role;
+import com.pgbezerra.bezerras.models.entity.User;
 import com.pgbezerra.bezerras.services.UserService;
 import com.pgbezerra.bezerras.services.exception.AuthorizationException;
 import io.swagger.annotations.ApiOperation;

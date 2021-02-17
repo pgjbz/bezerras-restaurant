@@ -1,7 +1,7 @@
 package com.pgbezerra.bezerras.resources;
 
-import com.pgbezerra.bezerras.entities.dto.CategoryDTO;
-import com.pgbezerra.bezerras.entities.model.Category;
+import com.pgbezerra.bezerras.models.dto.CategoryDTO;
+import com.pgbezerra.bezerras.models.entity.Category;
 import com.pgbezerra.bezerras.services.CategoryService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;

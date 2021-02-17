@@ -1,4 +1,4 @@
-package com.pgbezerra.bezerras.entities.dto;
+package com.pgbezerra.bezerras.models.dto;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;

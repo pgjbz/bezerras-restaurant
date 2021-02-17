@@ -1,8 +1,8 @@
 package com.pgbezerra.bezerras.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pgbezerra.bezerras.entities.dto.CredentialsDTO;
-import com.pgbezerra.bezerras.entities.model.User;
+import com.pgbezerra.bezerras.models.dto.CredentialsDTO;
+import com.pgbezerra.bezerras.models.entity.User;
 import com.pgbezerra.bezerras.security.exception.AuthenticationFailException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
+import com.pgbezerra.bezerras.models.entity.Category;
+import com.pgbezerra.bezerras.models.entity.Menu;
+import com.pgbezerra.bezerras.models.entity.MenuItem;
+import com.pgbezerra.bezerras.models.entity.Product;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,10 +24,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import com.pgbezerra.bezerras.entities.model.Category;
-import com.pgbezerra.bezerras.entities.model.Menu;
-import com.pgbezerra.bezerras.entities.model.MenuItem;
-import com.pgbezerra.bezerras.entities.model.Product;
 import com.pgbezerra.bezerras.repository.ProductRepository;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import com.pgbezerra.bezerras.services.CategoryService;

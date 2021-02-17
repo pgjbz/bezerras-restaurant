@@ -1,6 +1,6 @@
 package com.pgbezerra.bezerras.repository.impl;
 
-import com.pgbezerra.bezerras.entities.model.Menu;
+import com.pgbezerra.bezerras.models.entity.Menu;
 import com.pgbezerra.bezerras.repository.MenuItemRepository;
 import com.pgbezerra.bezerras.repository.MenuRepository;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;

@@ -1,7 +1,7 @@
 package com.pgbezerra.bezerras.resources;
 
-import com.pgbezerra.bezerras.entities.dto.RoleDTO;
-import com.pgbezerra.bezerras.entities.model.Role;
+import com.pgbezerra.bezerras.models.dto.RoleDTO;
+import com.pgbezerra.bezerras.models.entity.Role;
 import com.pgbezerra.bezerras.services.RoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

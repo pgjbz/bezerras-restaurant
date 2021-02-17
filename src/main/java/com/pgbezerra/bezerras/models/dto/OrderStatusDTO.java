@@ -1,8 +1,9 @@
-package com.pgbezerra.bezerras.entities.dto;
-
-import com.pgbezerra.bezerras.entities.enums.OrderStatus;
+package com.pgbezerra.bezerras.models.dto;
 
 import javax.validation.constraints.NotNull;
+
+import com.pgbezerra.bezerras.models.enums.OrderStatus;
+
 import java.io.Serializable;
 
 public class OrderStatusDTO implements Serializable {

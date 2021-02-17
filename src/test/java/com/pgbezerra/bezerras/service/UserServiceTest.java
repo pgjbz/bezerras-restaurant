@@ -1,8 +1,8 @@
 package com.pgbezerra.bezerras.service;
 
 import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
-import com.pgbezerra.bezerras.entities.model.Role;
-import com.pgbezerra.bezerras.entities.model.User;
+import com.pgbezerra.bezerras.models.entity.Role;
+import com.pgbezerra.bezerras.models.entity.User;
 import com.pgbezerra.bezerras.repository.UserRepository;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import com.pgbezerra.bezerras.services.RoleService;

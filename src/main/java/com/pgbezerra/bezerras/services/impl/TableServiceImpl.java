@@ -1,6 +1,6 @@
 package com.pgbezerra.bezerras.services.impl;
 
-import com.pgbezerra.bezerras.entities.model.Table;
+import com.pgbezerra.bezerras.models.entity.Table;
 import com.pgbezerra.bezerras.repository.TableRepository;
 import com.pgbezerra.bezerras.services.TableService;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;

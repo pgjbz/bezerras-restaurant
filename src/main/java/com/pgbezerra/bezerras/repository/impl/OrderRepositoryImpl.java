@@ -1,9 +1,9 @@
 package com.pgbezerra.bezerras.repository.impl;
 
-import com.pgbezerra.bezerras.entities.dto.ReportDTO;
-import com.pgbezerra.bezerras.entities.model.Order;
-import com.pgbezerra.bezerras.entities.model.OrderAddress;
-import com.pgbezerra.bezerras.entities.model.Table;
+import com.pgbezerra.bezerras.models.dto.ReportDTO;
+import com.pgbezerra.bezerras.models.entity.Order;
+import com.pgbezerra.bezerras.models.entity.OrderAddress;
+import com.pgbezerra.bezerras.models.entity.Table;
 import com.pgbezerra.bezerras.repository.OrderAddressRepository;
 import com.pgbezerra.bezerras.repository.OrderItemRepository;
 import com.pgbezerra.bezerras.repository.OrderRepository;

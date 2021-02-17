@@ -1,8 +1,9 @@
-package com.pgbezerra.bezerras.entities.model;
+package com.pgbezerra.bezerras.models.entity;
 
-import com.pgbezerra.bezerras.entities.enums.OrderStatus;
-import com.pgbezerra.bezerras.entities.enums.OrderType;
 import org.apache.log4j.Logger;
+
+import com.pgbezerra.bezerras.models.enums.OrderStatus;
+import com.pgbezerra.bezerras.models.enums.OrderType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

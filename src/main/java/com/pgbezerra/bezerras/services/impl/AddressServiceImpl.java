@@ -1,6 +1,6 @@
 package com.pgbezerra.bezerras.services.impl;
 
-import com.pgbezerra.bezerras.entities.dto.AddressDTO;
+import com.pgbezerra.bezerras.models.dto.AddressDTO;
 import com.pgbezerra.bezerras.services.AddressService;
 import com.pgbezerra.bezerras.services.exception.ResourceBadRequestException;
 import org.springframework.beans.factory.annotation.Qualifier;

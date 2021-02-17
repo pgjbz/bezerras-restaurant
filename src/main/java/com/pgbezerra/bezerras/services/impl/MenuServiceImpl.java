@@ -1,6 +1,6 @@
 package com.pgbezerra.bezerras.services.impl;
 
-import com.pgbezerra.bezerras.entities.model.Menu;
+import com.pgbezerra.bezerras.models.entity.Menu;
 import com.pgbezerra.bezerras.repository.MenuRepository;
 import com.pgbezerra.bezerras.services.MenuService;
 import com.pgbezerra.bezerras.services.exception.ResourceBadRequestException;

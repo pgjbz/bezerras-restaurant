@@ -1,8 +1,8 @@
 package com.pgbezerra.bezerras.services;
 
-import com.pgbezerra.bezerras.entities.model.Menu;
-
 import java.time.DayOfWeek;
+
+import com.pgbezerra.bezerras.models.entity.Menu;
 
 public interface MenuService extends Service<Menu, Long> {
 

@@ -1,8 +1,8 @@
 package com.pgbezerra.bezerras.repository;
 
-import com.pgbezerra.bezerras.entities.model.User;
-
 import java.util.Optional;
+
+import com.pgbezerra.bezerras.models.entity.User;
 
 public interface UserRepository extends Repository<User, Long> {
 

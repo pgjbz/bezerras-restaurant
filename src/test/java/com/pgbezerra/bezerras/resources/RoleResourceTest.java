@@ -2,8 +2,8 @@ package com.pgbezerra.bezerras.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
-import com.pgbezerra.bezerras.entities.dto.RoleDTO;
-import com.pgbezerra.bezerras.entities.model.Role;
+import com.pgbezerra.bezerras.models.dto.RoleDTO;
+import com.pgbezerra.bezerras.models.entity.Role;
 import com.pgbezerra.bezerras.security.JWTUtil;
 import com.pgbezerra.bezerras.services.RoleService;
 import com.pgbezerra.bezerras.services.UserService;

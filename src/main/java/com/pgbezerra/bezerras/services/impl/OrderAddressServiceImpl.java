@@ -1,6 +1,6 @@
 package com.pgbezerra.bezerras.services.impl;
 
-import com.pgbezerra.bezerras.entities.model.OrderAddress;
+import com.pgbezerra.bezerras.models.entity.OrderAddress;
 import com.pgbezerra.bezerras.repository.OrderAddressRepository;
 import com.pgbezerra.bezerras.services.OrderAddressService;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;

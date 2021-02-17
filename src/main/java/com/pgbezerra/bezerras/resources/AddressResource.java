@@ -1,6 +1,6 @@
 package com.pgbezerra.bezerras.resources;
 
-import com.pgbezerra.bezerras.entities.dto.AddressDTO;
+import com.pgbezerra.bezerras.models.dto.AddressDTO;
 import com.pgbezerra.bezerras.services.AddressService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;

@@ -2,7 +2,7 @@ package com.pgbezerra.bezerras.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
-import com.pgbezerra.bezerras.entities.dto.AddressDTO;
+import com.pgbezerra.bezerras.models.dto.AddressDTO;
 import com.pgbezerra.bezerras.security.JWTUtil;
 import com.pgbezerra.bezerras.services.AddressService;
 import com.pgbezerra.bezerras.services.UserService;

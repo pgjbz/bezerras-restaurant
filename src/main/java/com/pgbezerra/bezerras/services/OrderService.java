@@ -1,10 +1,10 @@
 package com.pgbezerra.bezerras.services;
 
-import com.pgbezerra.bezerras.entities.dto.ReportDTO;
-import com.pgbezerra.bezerras.entities.model.Order;
-
 import java.util.Date;
 import java.util.List;
+
+import com.pgbezerra.bezerras.models.dto.ReportDTO;
+import com.pgbezerra.bezerras.models.entity.Order;
 
 public interface OrderService extends Service<Order, Long> {
     Boolean updateStatus(Order order);

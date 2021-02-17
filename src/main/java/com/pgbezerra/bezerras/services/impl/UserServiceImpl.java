@@ -1,6 +1,6 @@
 package com.pgbezerra.bezerras.services.impl;
 
-import com.pgbezerra.bezerras.entities.model.User;
+import com.pgbezerra.bezerras.models.entity.User;
 import com.pgbezerra.bezerras.repository.UserRepository;
 import com.pgbezerra.bezerras.services.RoleService;
 import com.pgbezerra.bezerras.services.UserService;

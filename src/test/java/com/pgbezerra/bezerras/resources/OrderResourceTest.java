@@ -2,12 +2,12 @@ package com.pgbezerra.bezerras.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
-import com.pgbezerra.bezerras.entities.dto.OrderDTO;
-import com.pgbezerra.bezerras.entities.dto.OrderItemDTO;
-import com.pgbezerra.bezerras.entities.dto.OrderStatusDTO;
-import com.pgbezerra.bezerras.entities.enums.OrderStatus;
-import com.pgbezerra.bezerras.entities.enums.OrderType;
-import com.pgbezerra.bezerras.entities.model.*;
+import com.pgbezerra.bezerras.models.dto.OrderDTO;
+import com.pgbezerra.bezerras.models.dto.OrderItemDTO;
+import com.pgbezerra.bezerras.models.dto.OrderStatusDTO;
+import com.pgbezerra.bezerras.models.entity.*;
+import com.pgbezerra.bezerras.models.enums.OrderStatus;
+import com.pgbezerra.bezerras.models.enums.OrderType;
 import com.pgbezerra.bezerras.security.JWTUtil;
 import com.pgbezerra.bezerras.services.OrderService;
 import com.pgbezerra.bezerras.services.UserService;

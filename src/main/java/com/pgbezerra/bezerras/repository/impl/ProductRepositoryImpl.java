@@ -1,7 +1,7 @@
 package com.pgbezerra.bezerras.repository.impl;
 
-import com.pgbezerra.bezerras.entities.model.Category;
-import com.pgbezerra.bezerras.entities.model.Product;
+import com.pgbezerra.bezerras.models.entity.Category;
+import com.pgbezerra.bezerras.models.entity.Product;
 import com.pgbezerra.bezerras.repository.CategoryRepository;
 import com.pgbezerra.bezerras.repository.ProductRepository;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;

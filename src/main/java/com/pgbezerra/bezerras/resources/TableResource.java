@@ -1,7 +1,7 @@
 package com.pgbezerra.bezerras.resources;
 
-import com.pgbezerra.bezerras.entities.dto.TableDTO;
-import com.pgbezerra.bezerras.entities.model.Table;
+import com.pgbezerra.bezerras.models.dto.TableDTO;
+import com.pgbezerra.bezerras.models.entity.Table;
 import com.pgbezerra.bezerras.services.TableService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;

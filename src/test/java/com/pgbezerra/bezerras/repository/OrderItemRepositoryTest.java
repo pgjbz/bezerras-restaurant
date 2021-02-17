@@ -1,9 +1,9 @@
 package com.pgbezerra.bezerras.repository;
 
 import com.pgbezerra.bezerras.config.EncoderConfig;
-import com.pgbezerra.bezerras.entities.enums.OrderStatus;
-import com.pgbezerra.bezerras.entities.enums.OrderType;
-import com.pgbezerra.bezerras.entities.model.*;
+import com.pgbezerra.bezerras.models.entity.*;
+import com.pgbezerra.bezerras.models.enums.OrderStatus;
+import com.pgbezerra.bezerras.models.enums.OrderType;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import org.junit.Assert;
 import org.junit.Test;

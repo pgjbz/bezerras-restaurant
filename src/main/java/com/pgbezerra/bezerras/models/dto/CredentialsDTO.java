@@ -1,4 +1,4 @@
-package com.pgbezerra.bezerras.entities.dto;
+package com.pgbezerra.bezerras.models.dto;
 
 import java.io.Serializable;
 

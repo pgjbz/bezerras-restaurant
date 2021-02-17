@@ -1,6 +1,6 @@
 package com.pgbezerra.bezerras.services.impl;
 
-import com.pgbezerra.bezerras.entities.model.Category;
+import com.pgbezerra.bezerras.models.entity.Category;
 import com.pgbezerra.bezerras.repository.CategoryRepository;
 import com.pgbezerra.bezerras.services.CategoryService;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;

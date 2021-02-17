@@ -1,8 +1,8 @@
 package com.pgbezerra.bezerras.repository;
 
 import com.pgbezerra.bezerras.config.EncoderConfig;
-import com.pgbezerra.bezerras.entities.model.Role;
-import com.pgbezerra.bezerras.entities.model.User;
+import com.pgbezerra.bezerras.models.entity.Role;
+import com.pgbezerra.bezerras.models.entity.User;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,12 +1,12 @@
 package com.pgbezerra.bezerras.repository;
 
 import com.pgbezerra.bezerras.config.EncoderConfig;
-import com.pgbezerra.bezerras.entities.dto.ReportDTO;
-import com.pgbezerra.bezerras.entities.enums.OrderStatus;
-import com.pgbezerra.bezerras.entities.enums.OrderType;
-import com.pgbezerra.bezerras.entities.model.Order;
-import com.pgbezerra.bezerras.entities.model.OrderAddress;
-import com.pgbezerra.bezerras.entities.model.Table;
+import com.pgbezerra.bezerras.models.dto.ReportDTO;
+import com.pgbezerra.bezerras.models.entity.Order;
+import com.pgbezerra.bezerras.models.entity.OrderAddress;
+import com.pgbezerra.bezerras.models.entity.Table;
+import com.pgbezerra.bezerras.models.enums.OrderStatus;
+import com.pgbezerra.bezerras.models.enums.OrderType;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import org.junit.Assert;
 import org.junit.Test;

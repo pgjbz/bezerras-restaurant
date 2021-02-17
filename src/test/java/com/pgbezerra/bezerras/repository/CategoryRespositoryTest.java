@@ -1,7 +1,7 @@
 package com.pgbezerra.bezerras.repository;
 
 import com.pgbezerra.bezerras.config.EncoderConfig;
-import com.pgbezerra.bezerras.entities.model.Category;
+import com.pgbezerra.bezerras.models.entity.Category;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import org.junit.Assert;
 import org.junit.Test;

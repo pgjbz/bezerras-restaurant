@@ -1,7 +1,7 @@
 package com.pgbezerra.bezerras.service;
 
 import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
-import com.pgbezerra.bezerras.entities.model.OrderAddress;
+import com.pgbezerra.bezerras.models.entity.OrderAddress;
 import com.pgbezerra.bezerras.repository.OrderAddressRepository;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import com.pgbezerra.bezerras.services.OrderAddressService;

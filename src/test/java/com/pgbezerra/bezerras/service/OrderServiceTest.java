@@ -1,9 +1,9 @@
 package com.pgbezerra.bezerras.service;
 
 import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
-import com.pgbezerra.bezerras.entities.dto.ReportDTO;
-import com.pgbezerra.bezerras.entities.enums.OrderStatus;
-import com.pgbezerra.bezerras.entities.model.*;
+import com.pgbezerra.bezerras.models.dto.ReportDTO;
+import com.pgbezerra.bezerras.models.entity.*;
+import com.pgbezerra.bezerras.models.enums.OrderStatus;
 import com.pgbezerra.bezerras.repository.OrderRepository;
 import com.pgbezerra.bezerras.services.*;
 import com.pgbezerra.bezerras.services.exception.ResourceBadRequestException;

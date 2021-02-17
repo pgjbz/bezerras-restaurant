@@ -1,7 +1,7 @@
 package com.pgbezerra.bezerras.service;
 
 import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
-import com.pgbezerra.bezerras.entities.model.Menu;
+import com.pgbezerra.bezerras.models.entity.Menu;
 import com.pgbezerra.bezerras.repository.MenuRepository;
 import com.pgbezerra.bezerras.repository.exception.DatabaseException;
 import com.pgbezerra.bezerras.services.MenuService;

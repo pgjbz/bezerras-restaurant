@@ -1,10 +1,10 @@
 package com.pgbezerra.bezerras.resources;
 
-import com.pgbezerra.bezerras.entities.dto.OrderDTO;
-import com.pgbezerra.bezerras.entities.dto.OrderItemDTO;
-import com.pgbezerra.bezerras.entities.dto.OrderStatusDTO;
-import com.pgbezerra.bezerras.entities.dto.ReportDTO;
-import com.pgbezerra.bezerras.entities.model.*;
+import com.pgbezerra.bezerras.models.dto.OrderDTO;
+import com.pgbezerra.bezerras.models.dto.OrderItemDTO;
+import com.pgbezerra.bezerras.models.dto.OrderStatusDTO;
+import com.pgbezerra.bezerras.models.dto.ReportDTO;
+import com.pgbezerra.bezerras.models.entity.*;
 import com.pgbezerra.bezerras.services.OrderService;
 import com.pgbezerra.bezerras.services.exception.ResourceBadRequestException;
 import io.swagger.annotations.ApiOperation;

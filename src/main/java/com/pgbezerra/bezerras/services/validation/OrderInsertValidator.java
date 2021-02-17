@@ -1,7 +1,7 @@
 package com.pgbezerra.bezerras.services.validation;
 
-import com.pgbezerra.bezerras.entities.dto.OrderDTO;
-import com.pgbezerra.bezerras.entities.enums.OrderType;
+import com.pgbezerra.bezerras.models.dto.OrderDTO;
+import com.pgbezerra.bezerras.models.enums.OrderType;
 import com.pgbezerra.bezerras.resources.exception.FieldMessage;
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;

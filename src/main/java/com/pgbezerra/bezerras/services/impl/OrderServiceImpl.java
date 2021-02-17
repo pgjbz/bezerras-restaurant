@@ -1,10 +1,10 @@
 package com.pgbezerra.bezerras.services.impl;
 
-import com.pgbezerra.bezerras.entities.dto.ReportDTO;
-import com.pgbezerra.bezerras.entities.enums.OrderType;
-import com.pgbezerra.bezerras.entities.model.Order;
-import com.pgbezerra.bezerras.entities.model.OrderItem;
-import com.pgbezerra.bezerras.entities.model.Product;
+import com.pgbezerra.bezerras.models.dto.ReportDTO;
+import com.pgbezerra.bezerras.models.entity.Order;
+import com.pgbezerra.bezerras.models.entity.OrderItem;
+import com.pgbezerra.bezerras.models.entity.Product;
+import com.pgbezerra.bezerras.models.enums.OrderType;
 import com.pgbezerra.bezerras.repository.OrderRepository;
 import com.pgbezerra.bezerras.services.*;
 import com.pgbezerra.bezerras.services.exception.ResourceBadRequestException;

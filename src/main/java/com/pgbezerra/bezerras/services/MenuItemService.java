@@ -2,9 +2,9 @@ package com.pgbezerra.bezerras.services;
 
 import java.util.List;
 
-import com.pgbezerra.bezerras.entities.model.Menu;
-import com.pgbezerra.bezerras.entities.model.MenuItem;
-import com.pgbezerra.bezerras.entities.model.Product;
+import com.pgbezerra.bezerras.models.entity.Menu;
+import com.pgbezerra.bezerras.models.entity.MenuItem;
+import com.pgbezerra.bezerras.models.entity.Product;
 
 public interface MenuItemService {
 	

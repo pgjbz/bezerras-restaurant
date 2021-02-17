@@ -3,7 +3,7 @@ package com.pgbezerra.bezerras.repository;
 import java.time.DayOfWeek;
 import java.util.Optional;
 
-import com.pgbezerra.bezerras.entities.model.Menu;
+import com.pgbezerra.bezerras.models.entity.Menu;
 
 public interface MenuRepository extends Repository<Menu, Long> {
 	

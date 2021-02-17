@@ -1,4 +1,4 @@
-package com.pgbezerra.bezerras.entities.enums;
+package com.pgbezerra.bezerras.models.enums;
 
 public enum OrderType {
 	

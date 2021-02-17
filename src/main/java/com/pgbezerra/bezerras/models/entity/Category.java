@@ -1,18 +1,19 @@
-package com.pgbezerra.bezerras.entities.model;
+package com.pgbezerra.bezerras.models.entity;
 
 import java.io.Serializable;
 
-public class Table implements Serializable{
+public class Category implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
 	private Integer id;
 	private String name;
+	private Boolean isMenu;
 	
-	public Table() {
+	public Category() {
 	}
 
-	public Table(Integer id, String name) {
+	public Category(Integer id, String name) {
 		this.id = id;
 		this.name = name;
 	}
@@ -32,6 +33,14 @@ public class Table implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public Boolean getIsMenu() {
+		return isMenu;
+	}
+
+	public void setIsMenu(Boolean isMenu) {
+		this.isMenu = isMenu;
+	}
 
 	@Override
 	public int hashCode() {
@@ -49,7 +58,7 @@ public class Table implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Table other = (Table) obj;
+		Category other = (Category) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -60,8 +69,8 @@ public class Table implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Table [id=" + id + ", name=" + name + "]";
+		return "Category [id=" + id + ", name=" + name + ", isMenu=" + isMenu + "]";
 	}
-	
+
 
 }

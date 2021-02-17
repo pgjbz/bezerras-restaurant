@@ -1,6 +1,6 @@
 package com.pgbezerra.bezerras.services.impl;
 
-import com.pgbezerra.bezerras.entities.model.Role;
+import com.pgbezerra.bezerras.models.entity.Role;
 import com.pgbezerra.bezerras.repository.RoleRepository;
 import com.pgbezerra.bezerras.services.RoleService;
 import com.pgbezerra.bezerras.services.exception.ResourceNotFoundException;

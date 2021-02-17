@@ -2,10 +2,10 @@ package com.pgbezerra.bezerras.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pgbezerra.bezerras.configuration.BCryptConfiguration;
-import com.pgbezerra.bezerras.entities.dto.MenuDTO;
-import com.pgbezerra.bezerras.entities.dto.MenuResponseDTO;
-import com.pgbezerra.bezerras.entities.dto.ProductDTO;
-import com.pgbezerra.bezerras.entities.model.Menu;
+import com.pgbezerra.bezerras.models.dto.MenuDTO;
+import com.pgbezerra.bezerras.models.dto.MenuResponseDTO;
+import com.pgbezerra.bezerras.models.dto.ProductDTO;
+import com.pgbezerra.bezerras.models.entity.Menu;
 import com.pgbezerra.bezerras.security.JWTUtil;
 import com.pgbezerra.bezerras.services.MenuService;
 import com.pgbezerra.bezerras.services.UserService;
